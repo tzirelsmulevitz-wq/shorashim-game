@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Road to 1776">
+<title>Road to 1776</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Libre+Franklin:wght@400;600;800&display=swap">
+<style>
+/* Layout: one centered column (max 780px). Blue and buff of the Continental uniform; period type for headings only. */
+:root {
+  --bg: #f1ead9;          /* buff */
+  --paper: #fbf7ec;
+  --ink: #1c2433;
+  --muted: #5b6272;
+  --line: #d9cfb6;
+  --blue: #1f3a68;        /* Continental blue */
+  --blue-ink: #f7f1e1;
+  --gold: #b8892b;
+  --good: #2f7d4f; --good-bg: #e2f1e6;
+  --bad: #b23a2e;  --bad-bg: #f8e1dd;
+  --shadow: 0 1px 0 rgba(28,36,51,.10), 0 10px 26px rgba(28,36,51,.08);
+  --f-head: "IM Fell English SC", "Iowan Old Style", Georgia, serif;
+  --f-body: "Libre Franklin", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111725; --paper: #1a2234; --ink: #eef0f4; --muted: #a7afc0; --line: #2d3850;
+    --blue: #3f66ad; --blue-ink: #ffffff; --gold: #d9ad52;
+    --good: #5cc287; --good-bg: #173527; --bad: #f08376; --bad-bg: #3f1d1a;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 10px 26px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111725; --paper: #1a2234; --ink: #eef0f4; --muted: #a7afc0; --line: #2d3850;
+  --blue: #3f66ad; --blue-ink: #ffffff; --gold: #d9ad52;
+  --good: #5cc287; --good-bg: #173527; --bad: #f08376; --bad-bg: #3f1d1a;
+  --shadow: 0 1px 0 rgba(0,0,0,.3), 0 10px 26px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--ink); }
+body { margin: 0; font-family: var(--f-body); font-size: 17px; line-height: 1.5; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; touch-action: manipulation; }
+button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+.top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; min-height: 46px; }
+.top h2 { flex: 1; margin: 0; font-family: var(--f-head); font-weight: 400; font-size: 26px; }
+.btn { min-height: 46px; padding: 0 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--paper); cursor: pointer; font-weight: 600; }
+.btn.primary { background: var(--blue); color: var(--blue-ink); border-color: var(--blue); }
+.btn[disabled] { opacity: .4; cursor: default; }
+.stat { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* home */
+.hero { padding: 10px 0 6px; }
+.hero .eyebrow { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.hero h1 { font-family: var(--f-head); font-weight: 400; font-size: clamp(44px, 9vw, 72px); line-height: 1; margin: 6px 0 10px; text-wrap: balance; }
+.hero h1 .yr { color: var(--blue); }
+.hero p { margin: 0; color: var(--muted); max-width: 52ch; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+@media (max-width: 560px) { .modes { grid-template-columns: 1fr; } }
+.mode { text-align: left; background: var(--paper); border: 2px solid var(--line); border-radius: 18px; padding: 18px; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 4px; }
+.mode b { font-family: var(--f-head); font-weight: 400; font-size: 26px; }
+.mode span { color: var(--muted); font-size: 15px; }
+.mode .best { font-size: 13px; font-weight: 600; color: var(--gold); font-variant-numeric: tabular-nums; }
+.note { margin-top: 22px; font-size: 13px; color: var(--muted); }
+
+/* study */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip { min-height: 38px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--line); background: var(--paper); cursor: pointer; font-size: 14px; font-weight: 600; }
+.chip.on { background: var(--blue); color: var(--blue-ink); border-color: var(--blue); }
+.card { background: var(--paper); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 26px 24px; min-height: 300px; display: flex; flex-direction: column; justify-content: center; gap: 14px; cursor: pointer; text-align: center; }
+.card .sect { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.card .term { font-family: var(--f-head); font-size: clamp(32px, 6vw, 46px); line-height: 1.1; text-wrap: balance; }
+.card .def { font-size: clamp(18px, 2.6vw, 21px); text-align: left; max-width: 58ch; margin: 0 auto; }
+.card .hint { font-size: 13px; color: var(--muted); }
+.card img { max-height: 200px; margin: 0 auto; border-radius: 6px; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
+
+/* quiz */
+.bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; margin-bottom: 14px; }
+.bar i { display: block; height: 100%; background: var(--blue); transition: width .3s; }
+.q { background: var(--paper); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 22px; }
+.q .num { font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.q h3 { margin: 6px 0 0; font-size: clamp(20px, 3vw, 24px); line-height: 1.35; text-wrap: balance; }
+.q img { display: block; max-height: 220px; margin: 14px auto 0; border-radius: 6px; }
+.opts { display: grid; gap: 10px; margin-top: 14px; }
+.opt { text-align: left; min-height: 58px; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--paper); cursor: pointer; font-size: 17px; display: flex; gap: 12px; align-items: center; }
+.opt .k { flex: none; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--bg); font-weight: 800; font-size: 14px; }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt[disabled] { cursor: default; }
+.why { margin-top: 14px; padding: 14px 16px; border-radius: 14px; background: var(--bg); border-left: 4px solid var(--blue); }
+.why b.ok { color: var(--good); } .why b.no { color: var(--bad); }
+.pts { color: var(--gold); font-weight: 800; }
+
+/* timeline */
+.events { display: grid; gap: 10px; }
+.ev { text-align: left; min-height: 60px; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--paper); cursor: pointer; display: flex; gap: 12px; align-items: center; font-size: 17px; }
+.ev .slot { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 2px dashed var(--line); display: grid; place-items: center; font-weight: 800; }
+.ev.placed .slot { border-style: solid; border-color: var(--blue); background: var(--blue); color: var(--blue-ink); }
+.ev .yr { margin-left: auto; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ev.good { border-color: var(--good); background: var(--good-bg); }
+.ev.bad { border-color: var(--bad); background: var(--bad-bg); }
+
+/* match */
+.mgrid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 12px; }
+.mcol { display: grid; gap: 10px; align-content: start; }
+.tile { min-height: 64px; padding: 10px 12px; border-radius: 14px; border: 2px solid var(--line); background: var(--paper); cursor: pointer; text-align: left; font-size: 15px; }
+.mcol:first-child .tile { font-weight: 800; font-size: 16px; }
+.tile.sel { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold) inset; }
+.tile.done { border-color: var(--good); background: var(--good-bg); opacity: .6; cursor: default; }
+.tile.oops { border-color: var(--bad); background: var(--bad-bg); }
+@media (max-width: 560px) { .mgrid { grid-template-columns: 1fr 1.3fr; } .tile { font-size: 14px; } }
+
+/* results */
+.res { background: var(--paper); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 24px; text-align: center; }
+.res .big { font-family: var(--f-head); font-size: 56px; line-height: 1; margin: 6px 0; }
+.rank { font-weight: 800; color: var(--blue); letter-spacing: .04em; }
+.miss { text-align: left; margin-top: 18px; display: grid; gap: 10px; }
+.miss div { padding: 12px 14px; border-radius: 12px; background: var(--bg); font-size: 15px; }
+.miss b { display: block; }
+.actions { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="app" aria-live="polite"></main>
+<script>
+/* ===== Content: written from the teacher's 7th grade Review Companion Sheet ===== */
+const SECTIONS = ['Ideas & Government', 'Colonies & Trade', 'Colonial Life', 'Road to Revolution'];
+const TERMS = [
+  ['Enlightenment', 0, 'A period when people began to see the job of government as serving and protecting the people, instead of the people serving the few in power (kings).'],
+  ['John Locke', 0, 'Enlightenment thinker whose ideas of Natural Rights and the Social Contract heavily influenced the Declaration of Independence.'],
+  ['Natural Rights', 0, 'Rights people are born with: Life, Liberty and Property. Government cannot take them away without a good reason.'],
+  ['Social Contract Theory', 0, 'People accept a government’s rule to avoid chaos. But if the government is ineffective, the people have the right to overthrow it.'],
+  ['No Taxation Without Representation', 0, 'People cannot be taxed unless they have a say in how the money is spent. Colonists had no representatives in Parliament, so they felt British taxes were wrong.'],
+  ['Representative Government', 0, 'People take part in governing themselves by voting or electing representatives.'],
+  ['Mercantilism', 1, 'The 1700s economic system: a country’s power is measured by its wealth, so countries gain colonies to grow richer.'],
+  ['Colony', 1, 'An area of land, usually far away, ruled by a foreign country, often because it has valuable resources.'],
+  ['Mother Country', 1, 'The “base” country that rules over a colony.'],
+  ['Import', 1, 'An item brought INTO a country while money LEAVES.'],
+  ['Export', 1, 'An item shipped OUT of a country while money COMES IN.'],
+  ['Favorable Balance of Trade', 1, 'When the value of exports is greater than imports, so money flows into the country and stays there.'],
+  ['Raw Materials', 1, 'Basic items, usually grown from the ground, that can be exported. Mother Countries looked for colonies rich in them.'],
+  ['Smuggling', 1, 'Under mercantilism, colonies could trade only with their Mother Country. Trading directly with other countries was smuggling.'],
+  ['Physical Map', 2, 'A map that shows natural features of the earth: rivers, mountains, lakes, valleys.'],
+  ['Appalachian Mountains', 2, 'The western border of much of the colonial region. Colonists wanted to cross them to find more land to farm.'],
+  ['Settling near Waterways', 2, 'Colonists settled near rivers and harbors to receive shipments and send out crops, because heavy goods were easier to move by ship than over land.'],
+  ['New England Colonies', 2, 'Poor land and a short growing season, so little large farming. Colonists turned to shipbuilding, trade and fishing.'],
+  ['Middle Colonies', 2, 'Grew most of the colonies’ grain, so they were called the “Breadbasket” colonies. They had some industry too.'],
+  ['Southern Colonies', 2, 'A long growing season and fertile soil led to the plantation farming system.'],
+  ['Plantation', 2, 'An enormously large farm that needed a lot of cheap labor. Enslaved people were forced to do that work.'],
+  ['Native Americans', 2, 'Were generally treated very poorly by colonists, and their land was often taken by force.'],
+  ['Peter Zenger', 2, 'NYC newspaper writer put on trial for libel after criticizing the governor. Found not guilty because what he wrote was true: a major milestone for Freedom of the Press.'],
+  ['Albany Plan of Union', 3, 'Benjamin Franklin’s plan to unite the colonies (the “Join, or Die” cartoon). The plan failed.'],
+  ['Salutary Neglect', 3, 'When Britain looked the other way and did not enforce its trade and tax laws, because it was getting wealthy from the colonies anyway. Ended by the French-Indian War.'],
+  ['French-Indian War', 3, 'British soldiers and colonists fought the French and their Native American allies over western land. It left Britain deep in debt, so it began enforcing taxes.'],
+  ['Proclamation of 1763', 3, 'A British line colonists could not settle west of, to avoid more war with Native Americans and the French. Colonists were angry: they wanted the land and many had fought for it.'],
+  ['Stamp Act', 3, 'A British tax on colonial newspapers, legal documents and more. It made relations with Britain much worse.'],
+  ['Boston Massacre', 3, 'British soldiers, taunted and hit with rocks and ice, fired on a crowd of colonists. Some died, and colonists publicized it widely.'],
+  ['Boston Tea Party', 3, 'Angry colonists dumped a very valuable load of tea into Boston Harbor. Colonists had been boycotting the tea.'],
+  ['Intolerable Acts', 3, 'Also called the Coercive Acts. Britain’s punishment for the Tea Party: it closed Boston Harbor and shut down Massachusetts’ government.'],
+  ['Common Sense', 3, 'Pamphlet by Thomas Paine that convinced many colonists that breaking away from Britain made sense.'],
+  ['Continental Congress', 3, 'A meeting of representatives from each colony. It finally united the colonies, joined by their anger at Britain.'],
+  ['Declaration of Independence', 3, 'Written by Thomas Jefferson, based on John Locke’s ideas: Natural Rights and the Social Contract.'],
+].map(([term, s, def], i) => ({ id: i, term, sect: SECTIONS[s], def,
+  img: term === 'Albany Plan of Union' ? 'img/join-or-die.jpg' : term === 'Boston Massacre' ? 'img/boston-massacre.jpg' : null }));
+
+/* Multiple-choice bank: [question, right answer, [3 wrong], explanation, image] */
+const QUIZ = [
+  ['According to John Locke, which are the three Natural Rights?', 'Life, Liberty and Property', ['Life, Liberty and the Pursuit of Happiness', 'Speech, Religion and the Press', 'Voting, Taxes and Land'], 'Locke called them Life, Liberty and Property. Government cannot take them away without a good reason.'],
+  ['Under the Social Contract Theory, when do people have the right to overthrow their government?', 'When the government is ineffective', ['Whenever taxes go up', 'Only when the king dies', 'Never, a contract can’t be broken'], 'People accept government to avoid chaos, but if the government is ineffective, they may overthrow it.'],
+  ['Which thinker’s ideas most influenced the Declaration of Independence?', 'John Locke', ['Thomas Paine', 'Peter Zenger', 'Benjamin Franklin'], 'Jefferson based the Declaration on Locke’s Natural Rights and Social Contract.'],
+  ['During the Enlightenment, people began to believe the job of government was to…', 'Serve and protect the people', ['Make the king wealthy', 'Collect as many taxes as possible', 'Control trade with colonies'], 'Instead of people serving the few in power, government should serve the people.'],
+  ['Why did colonists think British taxes were unfair?', 'They had no representatives in Parliament', ['The taxes were paid in gold', 'Taxes were illegal in Britain', 'The king kept all the money in America'], 'No Taxation Without Representation: you can’t be taxed without a say in how the money is spent.'],
+  ['Colonists voting for representatives to make their laws is an example of…', 'Representative Government', ['Mercantilism', 'Salutary Neglect', 'Social Contract'], 'Representative government is when people govern themselves by voting or electing representatives.'],
+  ['Under mercantilism, a country’s power was measured by its…', 'Wealth', ['Army size', 'Population', 'Number of ships'], 'The more money a country had, the stronger it was, so countries gained colonies to get richer.'],
+  ['Under mercantilism, a colony could export its resources only to…', 'Its Mother Country', ['Any country that paid the most', 'Other colonies', 'France and Spain'], 'This let the Mother Country control trade and gain the most wealth. Trading elsewhere was smuggling.'],
+  ['An IMPORT is an item that…', 'Comes into a country while money leaves', ['Leaves a country while money comes in', 'Is made in a colony and kept there', 'Is taxed by Parliament'], 'Import: item IN, money OUT. Export: item OUT, money IN.'],
+  ['A country has a Favorable Balance of Trade when…', 'Its exports are worth more than its imports', ['Its imports are worth more than its exports', 'It has no colonies', 'It trades only with itself'], 'Then more money comes in than goes out, and it stays in the country.'],
+  ['What is the point of the cartoon of colonies serving the Mother Country gold, food and raw materials?', 'Colonies existed for the benefit of the Mother Country', ['Colonies were richer than the Mother Country', 'Mother Countries fed their colonies', 'Colonies traded freely with everyone'], 'Under mercantilism, colonies existed to make the Mother Country wealthier.'],
+  ['Raw materials are best described as…', 'Basic items, usually grown from the ground, that can be exported', ['Finished goods like furniture and clothing', 'Gold coins used to pay taxes', 'Ships built in New England'], 'Mother Countries looked for colonies rich in raw materials.'],
+  ['A physical map shows…', 'Natural features like rivers, mountains and lakes', ['Borders between colonies', 'Where people voted', 'Trade routes and taxes'], 'Physical maps show the natural features of the earth.'],
+  ['What did the Appalachian Mountains mean for the colonists?', 'They were the western border, and colonists wanted to cross them for farmland', ['They protected the colonies from the British', 'They were the best place to grow grain', 'They separated New England from the Middle colonies'], 'The Appalachians formed the western edge of much of the colonial region.'],
+  ['Why were many settlements built near rivers and harbors?', 'Heavy goods were easier to ship by water than drag over land', ['Rivers protected them from Native Americans', 'The British required it by law', 'Fishing was the only job'], 'Waterways let colonists receive shipments and send out their crops.'],
+  ['Which colonies were called the “Breadbasket” colonies?', 'Middle colonies', ['New England colonies', 'Southern colonies', 'Western colonies'], 'The Middle colonies grew most of the colonies’ grain.'],
+  ['Why did New England turn to shipbuilding, trade and fishing?', 'Poor land and a short growing season', ['Rich soil and a long growing season', 'The British banned farming there', 'There were no forests'], 'With poor land, large farming wasn’t widespread in New England.'],
+  ['What led the Southern colonies to plantation farming?', 'A long growing season and fertile soil', ['A short growing season and rocky soil', 'Lots of harbors for fishing', 'The Proclamation of 1763'], 'Good land and a long season meant valuable crops on huge farms.'],
+  ['Plantations needed a lot of cheap labor. Who was forced to do that work?', 'Enslaved people', ['British soldiers', 'Members of Parliament', 'Newspaper writers'], 'Plantation farming relied on the labor of enslaved people.'],
+  ['How were Native Americans generally treated by colonists?', 'Poorly; their land was often taken by force', ['As equal partners in government', 'They were paid fairly for all land', 'They ruled the Middle colonies'], 'The sheet notes Native Americans were generally treated very poorly.'],
+  ['Why was Peter Zenger found NOT guilty of libel?', 'What he wrote about the governor was true', ['The governor forgave him', 'He apologized in court', 'Newspapers were not allowed to be sued'], 'Truth was his defense, and his win was a major milestone for Freedom of the Press.'],
+  ['Peter Zenger’s trial was a major step toward…', 'Freedom of the Press', ['No Taxation Without Representation', 'The Albany Plan of Union', 'Salutary Neglect'], 'Zenger’s case helped establish freedom of the press in America.'],
+  ['This “Join, or Die” cartoon was used to support…', 'Benjamin Franklin’s Albany Plan of Union', ['The Boston Tea Party', 'The Stamp Act', 'Common Sense'], 'Franklin tried to convince the colonies to unite. The Albany Plan failed.', 'img/join-or-die.jpg'],
+  ['What happened to the Albany Plan of Union?', 'It failed', ['It united the colonies right away', 'It started the French-Indian War', 'It became the Declaration of Independence'], 'The colonies weren’t ready to unite yet.'],
+  ['Salutary Neglect was when…', 'Britain ignored colonists’ smuggling and tax violations', ['Colonists ignored the French-Indian War', 'Parliament neglected to collect any taxes ever', 'Colonists refused to buy British tea'], 'Britain looked the other way because it was getting rich from the colonies anyway.'],
+  ['Why did Britain allow Salutary Neglect for so long?', 'It was growing wealthy from the colonies anyway', ['It didn’t know about the smuggling', 'The colonists paid them not to enforce laws', 'France ordered them to'], 'Making money was the whole point of colonies, so Britain didn’t bother.'],
+  ['What ended Salutary Neglect?', 'The French-Indian War', ['The Boston Tea Party', 'The Zenger trial', 'Common Sense'], 'The war left Britain in debt, so it started enforcing taxes on the colonists.'],
+  ['In the French-Indian War, British colonists fought…', 'Alongside the British, against the French and their Native allies', ['Against the British, alongside the French', 'Against the Spanish', 'Only against Native Americans, without British help'], 'The fighting began as colonists moved west onto land the French and Native Americans claimed.'],
+  ['What was a major effect of the French-Indian War on Britain?', 'It went into debt and began enforcing taxes on the colonists', ['It lost all of its colonies', 'It became allies with France', 'It ended mercantilism'], 'The cost of winning led Britain to tax the colonies, worsening relations.'],
+  ['Why did Britain issue the Proclamation of 1763?', 'To avoid more war with Native Americans and the French', ['To give colonists more farmland', 'To tax newspapers', 'To punish Boston for the Tea Party'], 'It stopped colonists from moving west of the line.'],
+  ['Why were colonists angry about the Proclamation of 1763?', 'They wanted the western land, and many had fought for it', ['It raised taxes on tea', 'It closed Boston Harbor', 'It made them join the British army'], 'Colonists like George Washington had fought in the war for that territory.'],
+  ['The Stamp Act placed a tax on…', 'Newspapers and legal documents', ['Tea', 'Sugar and molasses only', 'Land west of the Appalachians'], 'It was one of several taxes that made relations with Britain much worse.'],
+  ['This picture shows the Boston Massacre. What happened?', 'British soldiers fired on a crowd of colonists who were taunting them', ['Colonists dumped tea into Boston Harbor', 'The French attacked Boston', 'Colonists signed the Declaration'], 'Some colonists died, and colonists publicized the event (like this drawing) to stir up anger.', 'img/boston-massacre.jpg'],
+  ['What did colonists do at the Boston Tea Party?', 'Dumped valuable tea into Boston Harbor', ['Held a party to welcome British soldiers', 'Refused to pay the Stamp Act', 'Wrote Common Sense'], 'Colonists had been boycotting the tea, so it sat on the ships until they dumped it.'],
+  ['The Intolerable Acts were Britain’s response to…', 'The Boston Tea Party', ['The Boston Massacre', 'The Albany Plan', 'The Zenger trial'], 'They closed Boston Harbor and shut down Massachusetts’ government.'],
+  ['Which is another name for the Intolerable Acts?', 'The Coercive Acts', ['The Stamp Act', 'The Proclamation of 1763', 'The Albany Plan'], 'Both names refer to Britain’s punishments after the Tea Party.'],
+  ['Who wrote Common Sense, and what was its goal?', 'Thomas Paine, to convince colonists to break from Britain', ['Thomas Jefferson, to list Natural Rights', 'Benjamin Franklin, to unite the colonies against France', 'John Locke, to explain mercantilism'], 'It succeeded in convincing many colonists independence made sense.'],
+  ['What was the Continental Congress?', 'A meeting of representatives from each colony', ['The British Parliament', 'A trial for Peter Zenger', 'A group of tea merchants'], 'It finally united the colonies, joined by their anger at Britain.'],
+  ['Who wrote the Declaration of Independence?', 'Thomas Jefferson', ['Thomas Paine', 'John Locke', 'George Washington'], 'Jefferson based it on Locke’s Enlightenment ideas.'],
+];
+
+/* Timeline (dates are standard history dates, not from the sheet) */
+const EVENTS = [
+  ['Peter Zenger trial', 1735], ['Albany Plan of Union', 1754], ['Proclamation of 1763', 1763], ['Stamp Act', 1765],
+  ['Boston Massacre', 1770], ['Boston Tea Party', 1773], ['Intolerable Acts', 1774.2], ['First Continental Congress', 1774.7],
+  ['Common Sense published', 1776.0], ['Declaration of Independence', 1776.5],
+];
+const showYear = y => String(Math.floor(y));
+
+/* ===== helpers ===== */
+const $ = id => document.getElementById(id), app = $('app');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const store = { get(k, d) { try { const v = localStorage.getItem('r1776:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem('r1776:' + k, JSON.stringify(v)); } catch (e) {} } };
+const bar = (title, right = '') => `<div class="top"><button class="btn" id="home">‹ Menu</button><h2>${title}</h2>${right}</div>`;
+const wire = () => { const h = $('home'); if (h) h.onclick = home; };
+
+/* ===== HOME ===== */
+function home() {
+  const bq = store.get('quiz', null), bt = store.get('timeline', null), bm = store.get('match', null);
+  app.innerHTML = `
+    <div class="hero"><div class="eyebrow">7th grade review · colonies to independence</div>
+      <h1>Road to <span class="yr">1776</span></h1>
+      <p>Everything on the review sheet, from John Locke and mercantilism to the Declaration. Pick a way to study.</p></div>
+    <div class="modes">
+      <button class="mode" id="mStudy"><b>Study Cards</b><span>${TERMS.length} terms. Tap a card to see the explanation.</span></button>
+      <button class="mode" id="mQuiz"><b>Quiz Challenge</b><span>15 questions, streak bonus points, explanations after each one.</span><span class="best">${bq != null ? 'Best: ' + bq + ' pts' : ''}</span></button>
+      <button class="mode" id="mTime"><b>Timeline</b><span>Put 6 events in order, from Zenger to the Declaration.</span><span class="best">${bt != null ? 'Best: ' + bt + ' / 6' : ''}</span></button>
+      <button class="mode" id="mMatch"><b>Match Up</b><span>Match 6 terms to their meanings against the clock.</span><span class="best">${bm != null ? 'Best: ' + bm + 's' : ''}</span></button>
+    </div>
+    <p class="note">Made from the teacher’s Review Companion Sheet. Timeline years come from standard history dates, not the sheet.</p>`;
+  $('mStudy').onclick = () => startStudy('All');
+  $('mQuiz').onclick = quiz; $('mTime').onclick = timeline; $('mMatch').onclick = match;
+}
+
+/* ===== STUDY ===== */
+let deck = TERMS;
+function startStudy(filter, mixed = false) {
+  const base = filter === 'All' ? TERMS : TERMS.filter(t => t.sect === filter);
+  deck = mixed ? shuffle(base) : base;
+  study(0, filter);
+}
+function study(i, filter, flipped = false) {
+  const t = deck[i];
+  app.innerHTML = bar('Study Cards', `<span class="stat">${i + 1} / ${deck.length}</span>`) + `
+    <div class="chips">${['All', ...SECTIONS].map(s => `<button class="chip ${s === filter ? 'on' : ''}" data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div>
+    <div class="card" id="card" role="button" aria-label="Flip card">
+      <div class="sect">${esc(t.sect)}</div>
+      ${flipped ? `<div class="def">${esc(t.def)}</div>${t.img ? `<img src="${t.img}" alt="">` : ''}<div class="hint">Tap to see the term</div>`
+               : `<div class="term">${esc(t.term)}</div><div class="hint">Can you explain it? Tap to check.</div>`}
+    </div>
+    <div class="row"><button class="btn" id="prev" ${i === 0 ? 'disabled' : ''}>\u2039 Back</button>
+      <button class="btn" id="mix">Shuffle</button>
+      <button class="btn primary" id="next">${i === deck.length - 1 ? 'Done' : 'Next \u203a'}</button></div>`;
+  wire();
+  $('card').onclick = () => study(i, filter, !flipped);
+  $('prev').onclick = () => i > 0 && study(i - 1, filter);
+  $('next').onclick = () => i < deck.length - 1 ? study(i + 1, filter) : home();
+  $('mix').onclick = () => startStudy(filter, true);
+  document.querySelectorAll('.chip').forEach(c => c.onclick = () => startStudy(c.dataset.s));
+}
+
+/* ===== QUIZ ===== */
+let Q;
+function quiz() {
+  Q = { i: 0, pts: 0, streak: 0, right: 0, missed: [], items: shuffle(QUIZ).slice(0, 15).map(([q, a, w, why, img]) => ({ q, a, why, img, opts: shuffle([a, ...w]) })) };
+  quizQ();
+}
+function quizQ() {
+  const it = Q.items[Q.i];
+  app.innerHTML = bar('Quiz Challenge', `<span class="stat"><span class="pts">${Q.pts}</span> pts${Q.streak > 1 ? ' · 🔥' + Q.streak : ''}</span>`) + `
+    <div class="bar"><i style="width:${Q.i / Q.items.length * 100}%"></i></div>
+    <div class="q"><div class="num">Question ${Q.i + 1} of ${Q.items.length}</div><h3>${esc(it.q)}</h3>${it.img ? `<img src="${it.img}" alt="">` : ''}
+      <div class="opts">${it.opts.map((o, k) => `<button class="opt" data-k="${k}"><span class="k">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+      <div id="why"></div></div>`;
+  wire();
+  document.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    const pick = it.opts[+b.dataset.k], ok = pick === it.a;
+    document.querySelectorAll('.opt').forEach(x => { x.disabled = true; if (it.opts[+x.dataset.k] === it.a) x.classList.add('right'); });
+    let gain = 0;
+    if (ok) { Q.streak++; Q.right++; gain = 100 + (Q.streak - 1) * 25; Q.pts += gain; }
+    else { Q.streak = 0; b.classList.add('wrong'); Q.missed.push(it); }
+    $('why').innerHTML = `<div class="why">${ok ? `<b class="ok">Correct! +${gain}</b>` : `<b class="no">Not quite.</b> The answer is <b>${esc(it.a)}</b>.`}<br>${esc(it.why)}
+      <div class="row" style="justify-content:flex-end"><button class="btn primary" id="nx">${Q.i === Q.items.length - 1 ? 'See results' : 'Next ›'}</button></div></div>`;
+    $('nx').onclick = () => { Q.i++; Q.i < Q.items.length ? quizQ() : quizDone(); };
+    $('nx').focus();
+  });
+}
+function quizDone() {
+  const best = store.get('quiz', null); if (best == null || Q.pts > best) store.set('quiz', Q.pts);
+  const pct = Math.round(Q.right / Q.items.length * 100);
+  const rank = pct >= 93 ? 'Founding Father' : pct >= 80 ? 'Continental Delegate' : pct >= 60 ? 'Minuteman' : 'New Recruit';
+  app.innerHTML = bar('Quiz Challenge') + `<div class="res">
+    <div class="rank">${rank}</div><div class="big">${Q.right} / ${Q.items.length}</div>
+    <div><span class="pts">${Q.pts} points</span>${best == null || Q.pts > best ? ' · new best!' : ''}</div>
+    ${Q.missed.length ? `<div class="miss"><b style="text-align:center">Review these</b>${Q.missed.map(m => `<div><b>${esc(m.q)}</b>${esc(m.a)}. ${esc(m.why)}</div>`).join('')}</div>` : '<p>Perfect round!</p>'}
+    <div class="actions"><button class="btn primary" id="again">Play again</button><button class="btn" id="m2">Menu</button></div></div>`;
+  wire(); $('again').onclick = quiz; $('m2').onclick = home;
+}
+
+/* ===== TIMELINE ===== */
+let T;
+function timeline() {
+  let pick;
+  do { pick = shuffle(EVENTS).slice(0, 6); } while (new Set(pick.map(e => showYear(e[1]))).size < 6);
+  T = { evs: pick, order: [], checked: false };
+  timeDraw();
+}
+function timeDraw() {
+  const sorted = T.evs.slice().sort((a, b) => a[1] - b[1]);
+  app.innerHTML = bar('Timeline', `<span class="stat">${T.order.length} / 6</span>`) + `
+    <p style="margin-top:0">Tap the events from <b>earliest</b> to <b>latest</b>. Tap a numbered one to undo it.</p>
+    <div class="events">${T.evs.map((e, k) => {
+      const pos = T.order.indexOf(k), cls = T.checked ? (sorted[pos] === e ? 'good' : 'bad') : '';
+      return `<button class="ev ${pos >= 0 ? 'placed' : ''} ${cls}" data-k="${k}" ${T.checked ? 'disabled' : ''}><span class="slot">${pos >= 0 ? pos + 1 : ''}</span><span>${esc(e[0])}</span>${T.checked ? `<span class="yr">${showYear(e[1])}</span>` : ''}</button>`; }).join('')}</div>
+    <div id="tl"></div>`;
+  wire();
+  if (!T.checked) document.querySelectorAll('.ev').forEach(b => b.onclick = () => {
+    const k = +b.dataset.k, p = T.order.indexOf(k);
+    if (p >= 0) T.order.splice(p, 1); else T.order.push(k);
+    if (T.order.length === 6) { T.checked = true; }
+    timeDraw();
+  });
+  if (T.checked) {
+    const n = T.order.filter((k, p) => sorted[p] === T.evs[k]).length;
+    const best = store.get('timeline', null); if (best == null || n > best) store.set('timeline', n);
+    $('tl').innerHTML = `<div class="why" style="margin-top:16px"><b class="${n === 6 ? 'ok' : 'no'}">${n} of 6 in the right spot.</b> ${n === 6 ? 'Perfect order!' : 'The correct order is:'}
+      ${n === 6 ? '' : `<ol style="margin:8px 0 0">${sorted.map(e => `<li>${esc(e[0])} (${showYear(e[1])})</li>`).join('')}</ol>`}
+      <div class="row" style="justify-content:flex-end"><button class="btn primary" id="tagain">New round</button></div></div>`;
+    $('tagain').onclick = timeline;
+  }
+}
+
+/* ===== MATCH ===== */
+let M;
+function match() {
+  const set = shuffle(TERMS).slice(0, 6);
+  M = { set, left: shuffle(set), right: shuffle(set), sel: null, done: new Set(), misses: 0, t0: Date.now() };
+  matchDraw();
+}
+function matchDraw() {
+  const tile = (t, side) => `<button class="tile ${M.done.has(t.id) ? 'done' : ''}" data-side="${side}" data-id="${t.id}" ${M.done.has(t.id) ? 'disabled' : ''}>${esc(side === 'L' ? t.term : t.def)}</button>`;
+  app.innerHTML = bar('Match Up', `<span class="stat" id="clock">0s · ${M.misses} miss</span>`) + `
+    <p style="margin-top:0">Tap a term, then tap its meaning.</p>
+    <div class="mgrid"><div class="mcol">${M.left.map(t => tile(t, 'L')).join('')}</div><div class="mcol">${M.right.map(t => tile(t, 'R')).join('')}</div></div>`;
+  wire();
+  clearInterval(M.tick); M.tick = setInterval(() => { const c = $('clock'); if (!c) return clearInterval(M.tick); c.textContent = `${Math.round((Date.now() - M.t0) / 1000)}s · ${M.misses} miss`; }, 500);
+  document.querySelectorAll('.tile').forEach(b => b.onclick = () => {
+    if (b.disabled) return;
+    const side = b.dataset.side, id = +b.dataset.id;
+    if (!M.sel || M.sel.side === side) { document.querySelectorAll('.tile.sel').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); M.sel = { side, id, el: b }; return; }
+    const a = M.sel; M.sel = null;
+    if (a.id === id) { M.done.add(id); [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.disabled = true; });
+      if (M.done.size === 6) setTimeout(matchDone, 400); }
+    else { M.misses++; [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('oops'); setTimeout(() => x.classList.remove('oops'), 500); }); }
+  });
+}
+function matchDone() {
+  clearInterval(M.tick);
+  const secs = Math.round((Date.now() - M.t0) / 1000) + M.misses * 5;
+  const best = store.get('match', null); if (best == null || secs < best) store.set('match', secs);
+  app.innerHTML = bar('Match Up') + `<div class="res"><div class="rank">All matched</div><div class="big">${secs}s</div>
+    <div>${M.misses} ${M.misses === 1 ? 'miss' : 'misses'} (+5s each)${best == null || secs < best ? ' · new best!' : ''}</div>
+    <div class="miss">${M.set.map(t => `<div><b>${esc(t.term)}</b>${esc(t.def)}</div>`).join('')}</div>
+    <div class="actions"><button class="btn primary" id="again">Play again</button><button class="btn" id="m2">Menu</button></div></div>`;
+  wire(); $('again').onclick = match; $('m2').onclick = home;
+}
+
+home();
+</script>
+</body>
+</html>
