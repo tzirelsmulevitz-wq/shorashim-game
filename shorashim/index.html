@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Shorashim">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Vayera Shorashim</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one centered play column (max 760px) under a tent-stripe header band; the shoresh is always shown as three letter blocks. */
+:root {
+  --sky: #eaf4f6;          /* page */
+  --sand: #fffaf0;         /* card surface */
+  --ink: #1d2b45;          /* text */
+  --muted: #5d6b82;        /* secondary text */
+  --line: #cfdce3;         /* hairlines */
+  --block: #2f63c9;        /* letter blocks */
+  --block-edge: #1d4596;
+  --block-ink: #ffffff;
+  --sun: #f2b544;          /* accent / stars */
+  --stripe-a: #c95a3c;     /* tent stripes */
+  --stripe-b: #f3e2bf;
+  --good: #2b9a68;
+  --good-bg: #dff3e8;
+  --bad: #d9534f;
+  --bad-bg: #fbe3e2;
+  --btn: #ffffff;
+  --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
+  --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  --f-heb: "Times New Roman", "Arial Hebrew", "Noto Serif Hebrew", "David", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+    --block: #4d7fe0; --block-edge: #2c58b0; --block-ink: #ffffff; --sun: #f5c35f;
+    --stripe-a: #a8482f; --stripe-b: #3a3222;
+    --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+    --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+  --block: #4d7fe0; --block-edge: #2c58b0; --block-ink: #ffffff; --sun: #f5c35f;
+  --stripe-a: #a8482f; --stripe-b: #3a3222;
+  --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+  --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { background: var(--sky); color: var(--ink); }
+body {
+  font-family: var(--f-ui); font-size: 18px; line-height: 1.4;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none;
+}
+button { font: inherit; color: inherit; touch-action: manipulation; }
+button:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+
+.band {
+  height: 14px;
+  background: repeating-linear-gradient(90deg, var(--stripe-a) 0 28px, var(--stripe-b) 28px 56px);
+}
+.wrap {
+  max-width: 760px; margin: 0 auto;
+  padding-block: 18px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 14px; }
+.topbar h1 { font-size: 22px; font-weight: 600; margin: 0; flex: 1; text-wrap: balance; }
+.backlink { display: inline-flex; align-items: center; text-decoration: none; color: var(--ink); }
+.iconbtn {
+  min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px;
+  border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600;
+}
+.pill { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--muted); white-space: nowrap; }
+
+/* ---------- letter blocks ---------- */
+.blocks { display: flex; gap: .18em; justify-content: center; direction: rtl; }
+.blk {
+  width: 1.32em; height: 1.32em; display: grid; place-items: center;
+  background: var(--block); color: var(--block-ink); border-radius: .2em;
+  box-shadow: inset 0 -.09em 0 var(--block-edge);
+  font-family: var(--f-heb); font-weight: 800; line-height: 1; padding-bottom: .06em;
+}
+.blocks.lg { font-size: 64px; }
+.blocks.md { font-size: 44px; }
+.blocks.sm { font-size: 28px; }
+
+/* ---------- home ---------- */
+.hero { text-align: center; padding: 18px 0 8px; }
+.hero .heb { font-family: var(--f-heb); font-size: 56px; font-weight: 800; line-height: 1.1; direction: rtl; }
+.hero p { color: var(--muted); margin: 8px auto 0; max-width: 32ch; }
+.modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
+@media (max-width: 620px) { .modes { grid-template-columns: 1fr; } }
+.mode {
+  background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 20px 16px;
+  text-align: center; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 8px; justify-items: center;
+}
+.mode:active { transform: translateY(2px); }
+.mode .ico { font-size: 34px; line-height: 1; height: 54px; display: grid; place-items: center; }
+.mode b { font-size: 24px; font-weight: 600; }
+.mode span { color: var(--muted); font-size: 16px; }
+.best { margin-top: 22px; text-align: center; color: var(--muted); font-size: 16px; font-variant-numeric: tabular-nums; }
+
+/* ---------- flip card ---------- */
+.stage { perspective: 1400px; }
+.flip {
+  position: relative; width: 100%; aspect-ratio: 3 / 2; max-width: 100%;
+  cursor: pointer; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.3,.7,.3,1);
+}
+.flip.on { transform: rotateY(180deg); }
+.face {
+  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: var(--sand); border-radius: 24px; box-shadow: var(--shadow); border: 2px solid var(--line);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px 28px;
+  overflow: hidden;
+}
+.face.back { transform: rotateY(180deg); }
+.verse { font-family: var(--f-heb); direction: rtl; text-align: center; font-size: clamp(22px, 4.4vw, 34px); line-height: 1.55; text-wrap: balance; }
+.verse u { text-decoration: none; font-weight: 800; color: var(--block); border-bottom: 3px solid var(--sun); }
+.pic { max-height: 52%; max-width: 75%; object-fit: contain; border-radius: 10px; }
+.eng { font-size: clamp(26px, 5vw, 40px); font-weight: 600; text-align: center; }
+.hint { font-size: 15px; color: var(--muted); }
+.cardno { position: absolute; bottom: 10px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nav { display: flex; gap: 12px; justify-content: space-between; align-items: center; margin-top: 18px; }
+.nav .iconbtn { min-width: 110px; font-size: 18px; }
+
+/* ---------- quiz ---------- */
+.dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+.dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); }
+.dot.g { background: var(--good); } .dot.b { background: var(--bad); } .dot.cur { outline: 3px solid var(--sun); outline-offset: 1px; }
+.prompt {
+  background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow);
+  padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; min-height: 230px; justify-content: center;
+}
+.prompt .pic { max-height: 190px; max-width: 65%; }
+.ask { font-size: 20px; font-weight: 600; color: var(--muted); text-align: center; margin: 16px 0 12px; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.opt {
+  min-height: 84px; border-radius: 18px; border: 3px solid var(--line); background: var(--btn); cursor: pointer;
+  padding: 10px; display: grid; place-items: center; font-size: 22px; font-weight: 600; box-shadow: 0 2px 0 var(--line);
+}
+.opt:active { transform: translateY(2px); box-shadow: none; }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); animation: shake .35s; }
+.opt[disabled] { cursor: default; }
+.feedback { min-height: 64px; display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 14px; font-size: 22px; font-weight: 600; }
+.feedback .yes { color: var(--good); } .feedback .no { color: var(--bad); }
+.go { min-height: 56px; padding: 0 28px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-size: 20px; font-weight: 600; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
+
+/* ---------- match ---------- */
+.mcols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.mcol { display: grid; gap: 10px; align-content: start; }
+.tile {
+  min-height: 72px; border-radius: 16px; border: 3px solid var(--line); background: var(--btn); cursor: pointer;
+  display: grid; place-items: center; padding: 8px; font-size: 20px; font-weight: 600; text-align: center;
+  transition: opacity .3s, transform .15s;
+}
+.tile.sel { border-color: var(--sun); transform: scale(1.03); }
+.tile.done { border-color: var(--good); background: var(--good-bg); opacity: .55; cursor: default; }
+.tile.oops { border-color: var(--bad); background: var(--bad-bg); animation: shake .35s; }
+
+/* ---------- results ---------- */
+.result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
+.stars { font-size: 54px; letter-spacing: 6px; line-height: 1; }
+.stars .on { color: var(--sun); } .stars .off { color: var(--line); }
+.big { font-size: 44px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 10px 0 4px; }
+.review { margin-top: 18px; display: grid; gap: 10px; text-align: start; }
+.review h3 { margin: 6px 0 0; font-size: 18px; color: var(--muted); font-weight: 600; text-align: center; }
+.rrow { display: flex; align-items: center; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.ghost { min-height: 56px; padding: 0 24px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 600; cursor: pointer; }
+
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.popin { animation: pop .35s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .flip { transition: none; } .opt.wrong, .tile.oops, .popin { animation: none; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="band" aria-hidden="true"></div>
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<script>
+const CARDS = [{"n": 1, "root": "פ.ת.ח", "verse": "וְהוּא יֹשֵׁב פֶּתַח־הָאֹהֶל כְּחֹם הַיּוֹם", "target": "פֶּתַח", "eng": "To open", "img": "pics/01.jpg"}, {"n": 2, "root": "י.ש.ב", "verse": "וְהוּא יֹשֵׁב פֶּתַח־הָאֹהֶל כְּחֹם הַיּוֹם", "target": "יֹשֵׁב", "eng": "To sit / live", "img": "pics/02.jpg"}, {"n": 3, "root": "ר.א.ה", "verse": "וַיֵּרָא אֵלָיו ה׳ בְּאֵלֹנֵי מַמְרֵא", "target": "וַיֵּרָא", "eng": "To see / show / appear", "img": "pics/03.jpg"}, {"n": 4, "root": "נ.צ.ב", "verse": "וַיִּשָּׂא עֵינָיו וַיַּרְא וְהִנֵּה שְׁלֹשָׁה אֲנָשִׁים נִצָּבִים עָלָיו", "target": "נִצָּבִים", "eng": "To stand", "img": "pics/04.jpg"}, {"n": 5, "root": "נ.ש.א", "verse": "וַיִּשָּׂא עֵינָיו וַיַּרְא וְהִנֵּה שְׁלֹשָׁה אֲנָשִׁים נִצָּבִים עָלָיו", "target": "וַיִּשָּׂא", "eng": "To lift / carry", "img": "pics/05.jpg"}, {"n": 6, "root": "ר.ו.צ", "verse": "וַיַּרְא וַיָּרָץ לִקְרָאתָם מִפֶּתַח הָאֹהֶל וַיִּשְׁתַּחוּ אָרְצָה", "target": "וַיָּרָץ", "eng": "To run", "img": "pics/06.jpg"}, {"n": 7, "root": "ל.ק.ח", "verse": "וְאֶקְחָה פַת־לֶחֶם וְסַעֲדוּ לִבְּכֶם אַחַר תַּעֲבֹרוּ", "target": "וְאֶקְחָה", "eng": "To take", "img": "pics/07.jpg"}, {"n": 8, "root": "ע.ב.ר", "verse": "אַל־נָא תַעֲבֹר מֵעַל עַבְדֶּךָ", "target": "תַעֲבֹר", "eng": "To pass", "img": "pics/08.jpg"}, {"n": 9, "root": "א.מ.ר", "verse": "וַיֹּאמַר אֲדֹנָי אִם־נָא מָצָאתִי חֵן בְּעֵינֶיךָ", "target": "וַיֹּאמַר", "eng": "To say", "img": "pics/09.jpg"}, {"n": 10, "root": "מ.צ.א", "verse": "וַיֹּאמַר אֲדֹנָי אִם־נָא מָצָאתִי חֵן בְּעֵינֶיךָ", "target": "מָצָאתִי", "eng": "To find", "img": "pics/10.jpg"}, {"n": 11, "root": "ש.ח.ה", "verse": "וַיַּרְא וַיָּרָץ לִקְרָאתָם מִפֶּתַח הָאֹהֶל וַיִּשְׁתַּחוּ אָרְצָה", "target": "וַיִּשְׁתַּחוּ", "eng": "To bow down", "img": "pics/11.jpg"}, {"n": 12, "root": "ק.ר.א", "verse": "וַיַּרְא וַיָּרָץ לִקְרָאתָם מִפֶּתַח הָאֹהֶל וַיִּשְׁתַּחוּ אָרְצָה", "target": "לִקְרָאתָם", "eng": "To read / call", "img": "pics/12.jpg"}, {"n": 13, "root": "מ.ה.ר", "verse": "מַהֲרִי שְׁלֹשׁ סְאִים קֶמַח סֹלֶת", "target": "מַהֲרִי", "eng": "To hurry", "img": "pics/13.jpg"}, {"n": 14, "root": "ל.ו.ש", "verse": "לוּשִׁי וַעֲשִׂי עֻגוֹת", "target": "לוּשִׁי", "eng": "To knead", "img": "pics/14.jpg"}, {"n": 15, "root": "ע.ש.ה", "verse": "כֵּן תַּעֲשֶׂה כַּאֲשֶׁר דִּבַּרְתָּ", "target": "תַּעֲשֶׂה", "eng": "To do / make", "img": "pics/15.jpg"}, {"n": 16, "root": "ד.ב.ר", "verse": "כֵּן תַּעֲשֶׂה כַּאֲשֶׁר דִּבַּרְתָּ", "target": "דִּבַּרְתָּ", "eng": "To speak", "img": "pics/16.jpg"}, {"n": 17, "root": "ר.ח.צ", "verse": "יֻקַּח־נָא מְעַט־מַיִם וְרַחֲצוּ רַגְלֵיכֶם", "target": "וְרַחֲצוּ", "eng": "To wash", "img": "pics/17.jpg"}, {"n": 18, "root": "ס.ע.ד", "verse": "וְאֶקְחָה פַת־לֶחֶם וְסַעֲדוּ לִבְּכֶם אַחַר תַּעֲבֹרוּ", "target": "וְסַעֲדוּ", "eng": "To make a meal", "img": "pics/18.jpg"}];
+
+/* ---------- small helpers ---------- */
+const $app = document.getElementById('app');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const blocks = (root, size) => `<div class="blocks ${size}" aria-label="${esc(root)}">${root.split('.').map(l => `<span class="blk">${esc(l)}</span>`).join('')}</div>`;
+const verseHTML = c => { const i = c.verse.indexOf(c.target); return `<div class="verse">${esc(c.verse.slice(0, i))}<u>${esc(c.target)}</u>${esc(c.verse.slice(i + c.target.length))}</div>`; };
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('shorashim:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('shorashim:' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- sound (starts only after a tap) ---------- */
+let soundOn = store.get('sound', true), actx = null;
+function tone(freqs, dur = .12) {
+  if (!soundOn) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    let t = actx.currentTime;
+    freqs.forEach(f => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.18, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur + .02); t += dur * .9;
+    });
+  } catch (e) {}
+}
+const yay = () => tone([523, 659, 784]);
+const nope = () => tone([220, 196], .16);
+
+function topbar(title, right = '') {
+  return `<div class="topbar">
+    <button class="iconbtn" id="homeBtn" aria-label="Back to menu">‹ Menu</button>
+    <h1>${title}</h1>${right}
+    <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button>
+  </div>`;
+}
+function wireTop() {
+  const h = document.getElementById('homeBtn'); if (h) h.onclick = home;
+  const s = document.getElementById('sndBtn');
+  if (s) s.onclick = () => { soundOn = !soundOn; store.set('sound', soundOn); s.textContent = soundOn ? '🔊' : '🔈'; };
+}
+
+/* ---------- HOME ---------- */
+function home() {
+  const bq = store.get('bestQuiz', null), bm = store.get('bestMatch', null);
+  $app.innerHTML = `
+    <div class="topbar"><a class="iconbtn backlink" href="../">‹ Jack's Games</a></div>
+    <div class="hero">
+      <div class="heb">שָׁרָשִׁים</div>
+      ${blocks('ש.ר.ש', 'md')}
+      <p>18 shorashim from Parshas Vayera. Pick a game.</p>
+    </div>
+    <div class="modes">
+      <button class="mode" id="mLearn"><div class="ico">${blocks('ל.מ.ד', 'sm')}</div><b>Flip Cards</b><span>See the pasuk, tap to check the shoresh</span></button>
+      <button class="mode" id="mQuiz"><div class="ico" style="font-size:40px">⭐</div><b>Quiz</b><span>10 questions, earn up to 3 stars</span></button>
+      <button class="mode" id="mMatch"><div class="ico" style="font-size:40px">🧩</div><b>Match</b><span>Match each shoresh to its meaning</span></button>
+    </div>
+    <div class="best">${bq != null ? `Best quiz: ${bq} / 10` : 'No quiz played yet'} · ${bm != null ? `Best match: ${bm} ${bm === 1 ? 'mistake' : 'mistakes'}` : 'No match played yet'}</div>`;
+  document.getElementById('mLearn').onclick = () => learn(0);
+  document.getElementById('mQuiz').onclick = quiz;
+  document.getElementById('mMatch').onclick = match;
+}
+
+/* ---------- FLIP CARDS ---------- */
+let deck = CARDS.slice();
+function learn(i, shuffled = false) {
+  const c = deck[i];
+  $app.innerHTML = topbar('Flip Cards', `<span class="pill">${i + 1} / ${deck.length}</span>`) + `
+    <div class="stage"><div class="flip" id="card" role="button" aria-label="Flip card">
+      <div class="face front">${verseHTML(c)}<img class="pic" src="${c.img}" alt="" decoding="async"><div class="hint">Which shoresh is the underlined word from? Tap to flip</div><div class="cardno">#${c.n}</div></div>
+      <div class="face back">${blocks(c.root, 'lg')}<div class="eng">${esc(c.eng)}</div><div class="hint">Tap to flip back</div><div class="cardno">#${c.n}</div></div>
+    </div></div>
+    <div class="nav">
+      <button class="iconbtn" id="prev" ${i === 0 ? 'disabled style="opacity:.4"' : ''}>‹ Back</button>
+      <button class="iconbtn" id="mix">${shuffled ? 'In order' : 'Shuffle'}</button>
+      <button class="iconbtn" id="next">${i === deck.length - 1 ? 'Done' : 'Next ›'}</button>
+    </div>`;
+  wireTop();
+  const card = document.getElementById('card');
+  card.onclick = () => card.classList.toggle('on');
+  document.getElementById('prev').onclick = () => i > 0 && learn(i - 1, shuffled);
+  document.getElementById('next').onclick = () => i < deck.length - 1 ? learn(i + 1, shuffled) : home();
+  document.getElementById('mix').onclick = () => { deck = shuffled ? CARDS.slice() : shuffle(CARDS); learn(0, !shuffled); };
+  let x0 = null;
+  card.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  card.addEventListener('touchend', e => {
+    if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 60) { e.preventDefault(); if (dx < 0 && i < deck.length - 1) learn(i + 1, shuffled); if (dx > 0 && i > 0) learn(i - 1, shuffled); }
+  });
+}
+
+/* ---------- QUIZ ---------- */
+let Q = null;
+function quiz() {
+  const types = ['verse', 'meaning', 'reverse'];
+  const picks = shuffle(CARDS).slice(0, 10);
+  Q = { i: 0, score: 0, results: [], missed: [],
+    qs: picks.map((c, k) => {
+      const type = types[(k + Math.floor(Math.random() * 3)) % 3];
+      const field = type === 'meaning' ? 'eng' : 'root';
+      const others = shuffle(CARDS.filter(o => o.n !== c.n && o[field] !== c[field]));
+      const seen = new Set([c[field]]), opts = [c];
+      for (const o of others) { if (!seen.has(o[field])) { seen.add(o[field]); opts.push(o); } if (opts.length === 4) break; }
+      return { c, type, field, opts: shuffle(opts) };
+    }) };
+  quizQ();
+}
+function quizQ() {
+  const q = Q.qs[Q.i], c = q.c;
+  const dots = Q.qs.map((_, k) => `<span class="dot ${Q.results[k] === true ? 'g' : Q.results[k] === false ? 'b' : ''} ${k === Q.i ? 'cur' : ''}"></span>`).join('');
+  let prompt, ask;
+  if (q.type === 'verse') { prompt = `${verseHTML(c)}<img class="pic" src="${c.img}" alt="" decoding="async">`; ask = 'Which shoresh is the underlined word from?'; }
+  else if (q.type === 'meaning') { prompt = blocks(c.root, 'lg'); ask = 'What does this shoresh mean?'; }
+  else { prompt = `<div class="eng">${esc(c.eng)}</div>`; ask = 'Which shoresh means this?'; }
+  const optHTML = o => q.field === 'root' ? blocks(o.root, 'sm') : esc(o.eng);
+  $app.innerHTML = topbar('Quiz', `<span class="pill">⭐ ${Q.score}</span>`) + `
+    <div class="dots" aria-label="Question ${Q.i + 1} of 10">${dots}</div>
+    <div class="prompt popin">${prompt}</div>
+    <div class="ask">${ask}</div>
+    <div class="opts">${q.opts.map(o => `<button class="opt" data-n="${o.n}">${optHTML(o)}</button>`).join('')}</div>
+    <div class="feedback" id="fb"></div>`;
+  wireTop();
+  document.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(b));
+}
+function answer(btn) {
+  const q = Q.qs[Q.i], ok = btn.dataset.n === String(q.c.n);
+  document.querySelectorAll('.opt').forEach(b => { b.disabled = true; if (b.dataset.n === String(q.c.n)) b.classList.add('right'); });
+  const fb = document.getElementById('fb');
+  Q.results[Q.i] = ok;
+  if (ok) {
+    Q.score++; yay();
+    fb.innerHTML = `<span class="yes popin">${shuffle(['Yes!', 'Great job!', 'Correct!', 'You got it!'])[0]}</span>`;
+    setTimeout(nextQ, 1100);
+  } else {
+    btn.classList.add('wrong'); nope(); Q.missed.push(q.c);
+    fb.innerHTML = `<span class="no">It's ${blocks(q.c.root, 'sm').replace('class="blocks sm"', 'class="blocks sm" style="display:inline-flex;vertical-align:middle"')} · ${esc(q.c.eng)}</span><button class="go" id="nx">Next</button>`;
+    document.getElementById('nx').onclick = nextQ;
+  }
+}
+function nextQ() { if (!Q) return; Q.i++; Q.i < Q.qs.length ? quizQ() : quizDone(); }
+function quizDone() {
+  const s = Q.score, stars = s >= 9 ? 3 : s >= 7 ? 2 : s >= 5 ? 1 : 0;
+  const best = store.get('bestQuiz', null), isBest = best == null || s > best;
+  if (isBest) store.set('bestQuiz', s);
+  const uniq = [...new Map(Q.missed.map(c => [c.n, c])).values()];
+  $app.innerHTML = topbar('Quiz') + `
+    <div class="result popin">
+      <div class="stars">${[0, 1, 2].map(k => `<span class="${k < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
+      <div class="big">${s} / 10</div>
+      <div>${s === 10 ? 'Perfect! Every one right.' : stars >= 2 ? 'Great work!' : 'Good try. Practice and play again!'}${isBest && best != null ? ' New best score!' : ''}</div>
+      ${uniq.length ? `<div class="review"><h3>Practice these</h3>${uniq.map(c => `<div class="rrow">${blocks(c.root, 'sm')}<span>${esc(c.eng)}</span></div>`).join('')}</div>` : ''}
+      <div class="actions"><button class="go" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  if (stars === 3) yay();
+  document.getElementById('again').onclick = quiz;
+  document.getElementById('menu').onclick = home;
+  Q = null;
+}
+
+/* ---------- MATCH ---------- */
+let M = null;
+function match() {
+  const set = [];
+  for (const c of shuffle(CARDS)) { if (!set.some(o => o.eng === c.eng)) set.push(c); if (set.length === 6) break; }
+  M = { set, left: shuffle(set), right: shuffle(set), sel: null, done: new Set(), mistakes: 0 };
+  matchDraw();
+}
+function matchDraw() {
+  const t = (c, side) => `<button class="tile ${M.done.has(c.n) ? 'done' : ''}" data-side="${side}" data-n="${c.n}" ${M.done.has(c.n) ? 'disabled' : ''}>${side === 'L' ? blocks(c.root, 'sm') : esc(c.eng)}</button>`;
+  $app.innerHTML = topbar('Match', `<span class="pill">Mistakes: ${M.mistakes}</span>`) + `
+    <div class="ask" style="margin-top:0">Tap a shoresh, then tap what it means.</div>
+    <div class="mcols"><div class="mcol">${M.left.map(c => t(c, 'L')).join('')}</div><div class="mcol">${M.right.map(c => t(c, 'R')).join('')}</div></div>`;
+  wireTop();
+  document.querySelectorAll('.tile').forEach(b => b.onclick = () => pick(b));
+}
+function pick(b) {
+  if (b.disabled) return;
+  const side = b.dataset.side, n = +b.dataset.n;
+  if (!M.sel || M.sel.side === side) {
+    document.querySelectorAll('.tile.sel').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); M.sel = { side, n, el: b }; return;
+  }
+  const a = M.sel; M.sel = null;
+  if (a.n === n) {
+    M.done.add(n); yay();
+    [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.disabled = true; });
+    if (M.done.size === M.set.length) setTimeout(matchDone, 600);
+  } else {
+    M.mistakes++; nope();
+    document.querySelector('.pill').textContent = `Mistakes: ${M.mistakes}`;
+    [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('oops'); setTimeout(() => x.classList.remove('oops'), 450); });
+  }
+}
+function matchDone() {
+  const m = M.mistakes, best = store.get('bestMatch', null), isBest = best == null || m < best;
+  if (isBest) store.set('bestMatch', m);
+  const stars = m === 0 ? 3 : m <= 2 ? 2 : 1;
+  $app.innerHTML = topbar('Match') + `
+    <div class="result popin">
+      <div class="stars">${[0, 1, 2].map(k => `<span class="${k < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
+      <div class="big">All matched!</div>
+      <div>${m === 0 ? 'No mistakes at all!' : `${m} ${m === 1 ? 'mistake' : 'mistakes'}.`}${isBest && best != null ? ' New best!' : ''}</div>
+      <div class="review">${M.set.map(c => `<div class="rrow">${blocks(c.root, 'sm')}<span>${esc(c.eng)}</span></div>`).join('')}</div>
+      <div class="actions"><button class="go" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  document.getElementById('again').onclick = match;
+  document.getElementById('menu').onclick = home;
+}
+
+home();
+</script>
+
+</body>
+</html>

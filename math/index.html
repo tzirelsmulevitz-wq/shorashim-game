@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Times Tables">
+<title>Jack's Times Tables</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one centered column (max 620px). Problem written like a worksheet line, big number pad underneath. Same palette as Jack's other games. */
+:root {
+  --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
+  --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff; --sun: #f2b544;
+  --stripe-a: #2f9e8f; --stripe-b: #d8efe9;
+  --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2; --btn: #ffffff;
+  --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
+  --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+    --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --stripe-a: #23786c; --stripe-b: #1d3a3a;
+    --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+    --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+  --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --stripe-a: #23786c; --stripe-b: #1d3a3a;
+  --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+  --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--sky); color: var(--ink); }
+body { margin: 0; font-family: var(--f-ui); font-size: 18px; line-height: 1.4; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+[hidden] { display: none !important; }
+button, a { font: inherit; color: inherit; touch-action: manipulation; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+.band { height: 14px; background: repeating-linear-gradient(90deg, var(--stripe-a) 0 28px, var(--stripe-b) 28px 56px); }
+.wrap { max-width: 620px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 14px; }
+.topbar h1 { font-size: 22px; font-weight: 600; margin: 0; flex: 1; }
+.iconbtn { min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none; }
+.pill { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); white-space: nowrap; }
+
+/* home */
+.hero { text-align: center; padding: 6px 0 4px; }
+.hero .sign { font-size: 64px; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.hero .sign span { color: var(--block); }
+.hero p { color: var(--muted); margin: 8px 0 0; }
+.label { font-weight: 700; margin: 22px 0 10px; display: flex; justify-content: space-between; align-items: baseline; }
+.label small { color: var(--muted); font-weight: 600; font-size: 15px; }
+.tables { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.tbl { height: 56px; border-radius: 14px; border: 3px solid var(--line); background: var(--btn); font-size: 22px; font-weight: 800; cursor: pointer; font-variant-numeric: tabular-nums; }
+.tbl.on { background: var(--block); color: var(--block-ink); border-color: var(--block-edge); }
+.tbl.all { grid-column: span 2; font-size: 17px; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.mode { background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 6px; justify-items: center; }
+.mode .ico { font-size: 38px; line-height: 1; }
+.mode b { font-size: 22px; }
+.mode span { color: var(--muted); font-size: 15px; }
+.mode .best { color: var(--block); font-weight: 700; font-variant-numeric: tabular-nums; }
+.warn { color: var(--bad); text-align: center; margin-top: 12px; min-height: 24px; font-weight: 600; }
+
+/* play */
+.status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.clock { font-size: 26px; }
+.clock.low { color: var(--bad); }
+.timebar { height: 10px; border-radius: 99px; background: var(--line); overflow: hidden; margin-bottom: 14px; }
+.timebar i { display: block; height: 100%; background: var(--stripe-a); }
+.sheet { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 16px 30px; text-align: center; transition: background .15s, border-color .15s; }
+.sheet.ok { background: var(--good-bg); border-color: var(--good); }
+.sheet.no { background: var(--bad-bg); border-color: var(--bad); }
+.eq { display: flex; justify-content: center; align-items: baseline; gap: .28em; font-size: clamp(56px, 15vw, 92px); font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.ans { min-width: 2.1em; border-bottom: 6px solid var(--ink); text-align: center; color: var(--block); }
+.ans.empty::after { content: "\00a0"; }
+.fix { min-height: 30px; margin-top: 8px; font-size: 20px; font-weight: 700; color: var(--bad); }
+.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.key { height: 74px; border-radius: 18px; border: 2px solid var(--line); background: var(--btn); font-size: 34px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.key:active { transform: translateY(3px); box-shadow: none; }
+.key.go { background: var(--good); color: #fff; border-color: var(--good); box-shadow: 0 3px 0 rgba(0,0,0,.25); font-size: 28px; }
+.key.del { font-size: 26px; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); }
+.dot.g { background: var(--good); } .dot.b { background: var(--bad); }
+
+/* results */
+.result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
+.big { font-size: 64px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.05; }
+.stars { font-size: 54px; letter-spacing: 6px; line-height: 1; }
+.stars .on { color: var(--sun); } .stars .off { color: var(--line); }
+.missed { margin-top: 18px; }
+.missed h3 { font-size: 18px; color: var(--muted); margin: 0 0 10px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+.fact { padding: 10px; border-radius: 12px; background: var(--bad-bg); font-weight: 800; font-size: 20px; font-variant-numeric: tabular-nums; }
+.actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.btnbig { min-height: 56px; padding: 0 24px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
+.ghost { min-height: 56px; padding: 0 22px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="band" aria-hidden="true"></div>
+<main class="wrap" id="app" aria-live="polite"></main>
+<script>
+const $ = id => document.getElementById(id), app = $('app');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const store = { get(k, d) { try { const v = localStorage.getItem('jackmath:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem('jackmath:' + k, JSON.stringify(v)); } catch (e) {} } };
+const X = '×';
+
+let tables = new Set(store.get('tables', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+const key = () => [...tables].sort((a, b) => a - b).join(',');
+const saveTables = () => store.set('tables', [...tables]);
+
+/* facts: each chosen table times 0-10, shown in either order like a test sheet */
+function factPool() {
+  const pool = [];
+  for (const t of tables) for (let n = 0; n <= 10; n++) pool.push(Math.random() < .5 ? [t, n] : [n, t]);
+  return pool;
+}
+function makeDealer(list) {
+  let bag = [], last = '';
+  return () => { if (!bag.length) bag = shuffle(list || factPool()); let f = bag.pop();
+    if (f.join() === last && bag.length) { bag.unshift(f); f = bag.pop(); } last = f.join(); return f; };
+}
+
+/* sound, started by a tap */
+let actx = null;
+function tone(fs, d = .1) { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); let t = actx.currentTime;
+  fs.forEach(f => { const o = actx.createOscillator(), g = actx.createGain(); o.type = 'triangle'; o.frequency.value = f;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.16, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g).connect(actx.destination); o.start(t); o.stop(t + d + .02); t += d * .9; }); } catch (e) {} }
+
+/* ---------- HOME ---------- */
+function home(msg = '') {
+  stopClock();
+  const bc = store.get('clock:' + key(), null), bq = store.get('quiz:' + key(), null);
+  app.innerHTML = `
+    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
+    <div class="hero"><div class="sign">7 <span>${X}</span> 8</div><p>Type the answer, just like on your timed test.</p></div>
+    <div class="label">Which tables? <small>${tables.size === 11 ? 'All of them' : tables.size + ' picked'}</small></div>
+    <div class="tables">
+      ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(t => `<button class="tbl ${tables.has(t) ? 'on' : ''}" data-t="${t}" aria-pressed="${tables.has(t)}">${t}</button>`).join('')}
+      <button class="tbl all" id="allBtn">${tables.size === 11 ? 'Clear' : 'All'}</button>
+    </div>
+    <div class="modes">
+      <button class="mode" id="mClock"><div class="ico">⏱️</div><b>Beat the Clock</b><span>How many in 60 seconds?</span><span class="best">${bc != null ? 'Best: ' + bc : ''}</span></button>
+      <button class="mode" id="mQuiz"><div class="ico">⭐</div><b>Star Quiz</b><span>10 problems, earn 3 stars</span><span class="best">${bq != null ? 'Best: ' + bq + ' / 10' : ''}</span></button>
+    </div>
+    <div class="warn" id="warn">${msg}</div>`;
+  document.querySelectorAll('.tbl[data-t]').forEach(b => b.onclick = () => { const t = +b.dataset.t; tables.has(t) ? tables.delete(t) : tables.add(t); saveTables(); home(); });
+  $('allBtn').onclick = () => { tables = tables.size === 11 ? new Set() : new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]); saveTables(); home(); };
+  const need = () => tables.size ? true : ($('warn').textContent = 'Pick at least one table first.', false);
+  $('mClock').onclick = () => need() && play('clock');
+  $('mQuiz').onclick = () => need() && play('quiz');
+}
+
+/* ---------- PLAY (both modes) ---------- */
+let G = null, timer = null;
+function stopClock() { clearInterval(timer); timer = null; }
+function play(mode, list = null) {
+  stopClock();
+  const deal = makeDealer(list);
+  G = { mode, deal, typed: '', right: 0, done: 0, missed: [], marks: [], locked: false, list,
+        total: mode === 'quiz' ? Math.min(10, list ? list.length : 10) : Infinity, end: Date.now() + 60000, f: deal() };
+  app.innerHTML = `
+    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${mode === 'clock' ? 'Beat the Clock' : list ? 'Practice Missed' : 'Star Quiz'}</h1></div>
+    ${mode === 'clock' ? `<div class="status"><span class="clock" id="clk">60</span><span class="pill" id="sc">0 right</span></div><div class="timebar"><i id="tb" style="width:100%"></i></div>`
+                       : `<div class="status"><div class="dots" id="dots"></div><span class="pill" id="sc"></span></div>`}
+    <div class="sheet" id="sheet"><div class="eq" id="eq"></div><div class="fix" id="fix"></div></div>
+    <div class="pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="key" data-k="${n}">${n}</button>`).join('')}
+      <button class="key del" data-k="del" aria-label="Erase">⌫</button><button class="key" data-k="0">0</button><button class="key go" data-k="ok" aria-label="Check answer">✓</button></div>`;
+  $('quit').onclick = () => home();
+  document.querySelectorAll('.key').forEach(b => b.onclick = () => press(b.dataset.k));
+  draw();
+  if (mode === 'clock') timer = setInterval(tick, 200);
+}
+function draw() {
+  const [a, b] = G.f;
+  $('eq').innerHTML = `<span>${a}</span><span>${X}</span><span>${b}</span><span>=</span><span class="ans ${G.typed ? '' : 'empty'}">${G.typed}</span>`;
+  if (G.mode === 'quiz') {
+    $('dots').innerHTML = Array.from({ length: G.total }, (_, i) => `<span class="dot ${G.marks[i] === true ? 'g' : G.marks[i] === false ? 'b' : ''}"></span>`).join('');
+    $('sc').textContent = `${Math.min(G.done + 1, G.total)} of ${G.total}`;
+  } else $('sc').textContent = `${G.right} right`;
+}
+function tick() {
+  const left = Math.max(0, G.end - Date.now()), s = Math.ceil(left / 1000);
+  const c = $('clk'); if (!c) return stopClock();
+  c.textContent = s; c.classList.toggle('low', s <= 10); $('tb').style.width = (left / 600) + '%';
+  if (left <= 0) { stopClock(); finish(); }
+}
+function press(k) {
+  if (G.locked) return;
+  if (k === 'del') G.typed = G.typed.slice(0, -1);
+  else if (k === 'ok') return check();
+  else if (G.typed.length < 3) G.typed = (G.typed === '0' ? '' : G.typed) + k;
+  draw();
+}
+function check() {
+  if (!G.typed) return;
+  const [a, b] = G.f, ok = +G.typed === a * b, sheet = $('sheet');
+  G.done++; G.marks.push(ok);
+  if (ok) { G.right++; tone([660, 880], .08); }
+  else { G.missed.push([a, b]); tone([220, 196], .14); $('fix').textContent = `${a} ${X} ${b} = ${a * b}`; }
+  sheet.className = 'sheet ' + (ok ? 'ok' : 'no'); G.locked = true;
+  setTimeout(() => {
+    if (!G || !$('sheet')) return;
+    G.locked = false; G.typed = ''; $('sheet').className = 'sheet'; $('fix').textContent = '';
+    if (G.mode === 'quiz' && G.done >= G.total) return finish();
+    if (G.mode === 'clock' && Date.now() >= G.end) return;
+    G.f = G.deal(); draw();
+  }, ok ? 350 : 1300);
+  draw();
+}
+function finish() {
+  stopClock();
+  const uniq = [...new Map(G.missed.map(([a, b]) => [Math.min(a, b) + 'x' + Math.max(a, b), [a, b]])).values()];
+  let head, isBest = false;
+  if (G.mode === 'clock') {
+    const k = 'clock:' + key(), best = store.get(k, null); isBest = best == null || G.right > best; if (isBest) store.set(k, G.right);
+    head = `<div style="font-weight:700;color:var(--muted)">In 60 seconds you got</div><div class="big">${G.right} right</div>
+      <div>${G.done} answered${isBest && best != null ? ' · new best!' : best != null ? ' · best is ' + best : ''}</div>`;
+  } else {
+    const stars = G.right >= G.total ? 3 : G.right >= G.total - 2 ? 2 : G.right >= G.total / 2 ? 1 : 0;
+    if (!G.list) { const k = 'quiz:' + key(), best = store.get(k, null); isBest = best == null || G.right > best; if (isBest) store.set(k, G.right); }
+    head = `<div class="stars">${[0, 1, 2].map(i => `<span class="${i < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
+      <div class="big">${G.right} / ${G.total}</div><div>${G.right === G.total ? 'Perfect!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}</div>`;
+  }
+  if (G.right > 0 && (G.mode === 'clock' || G.right === G.total)) tone([523, 659, 784], .12);
+  const again = G.mode, list = G.list;
+  app.innerHTML = `<div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${again === 'clock' ? 'Beat the Clock' : 'Star Quiz'}</h1></div>
+    <div class="result">${head}
+      ${uniq.length ? `<div class="missed"><h3>Facts to practice</h3><div class="facts">${uniq.map(([a, b]) => `<div class="fact">${a} ${X} ${b} = ${a * b}</div>`).join('')}</div></div>` : ''}
+      <div class="actions">
+        ${uniq.length ? `<button class="btnbig" id="prac">Practice these</button>` : ''}
+        <button class="${uniq.length ? 'ghost' : 'btnbig'}" id="again">Play again</button>
+        <button class="ghost" id="menu">Menu</button></div></div>`;
+  $('quit').onclick = () => home(); $('menu').onclick = () => home();
+  $('again').onclick = () => play(again, list);
+  if (uniq.length) $('prac').onclick = () => {
+    const drill = []; for (let r = 0; r < Math.ceil(10 / uniq.length); r++) drill.push(...uniq);   // repeat missed facts to fill 10
+    play('quiz', drill.slice(0, Math.max(10, uniq.length)));
+  };
+  G = null;
+}
+/* physical keyboard too */
+document.addEventListener('keydown', e => {
+  if (!G) return;
+  if (/^[0-9]$/.test(e.key)) press(e.key);
+  else if (e.key === 'Backspace') press('del');
+  else if (e.key === 'Enter') press('ok');
+});
+home();
+</script>
+</body>
+</html>
