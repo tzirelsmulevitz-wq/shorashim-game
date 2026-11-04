@@ -4,7 +4,7 @@ The main page (https://tzirelsmulevitz-wq.github.io/shorashim-game/) is Jack's m
 
 ## Shorashim
 
-A flash card game for 18 shorashim (Hebrew roots) from Parshas Vayera: flip cards, a 10-question quiz, and a match game.
+A flash card game for 24 shorashim (Hebrew roots) from Parshas Vayera: flip cards, a 10-question quiz, and a match game.
 
 Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/shorashim/
 
