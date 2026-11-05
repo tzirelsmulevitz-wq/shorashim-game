@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Reading">
+<title>Jack's Reading</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one centered column (max 760px) under a court-stripe band. Story text is set large for reading; answers are full-width tap targets. */
+:root {
+  --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
+  --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff;
+  --sun: #f2b544; --court-a: #e07a2e; --court-b: #fde3c8;
+  --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2;
+  --btn: #ffffff; --mark: #ffe08a; --mark-ink: #1d2b45;
+  --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
+  --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  --f-read: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+    --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --court-a: #b8601f; --court-b: #3a2a1c;
+    --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+    --mark: #6b5414; --mark-ink: #fff6dc;
+    --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+  --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --court-a: #b8601f; --court-b: #3a2a1c;
+  --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+  --mark: #6b5414; --mark-ink: #fff6dc;
+  --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { background: var(--sky); color: var(--ink); }
+body {
+  margin: 0; font-family: var(--f-ui); font-size: 18px; line-height: 1.4;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+button { font: inherit; color: inherit; touch-action: manipulation; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.band { height: 14px; background: repeating-linear-gradient(90deg, var(--court-a) 0 28px, var(--court-b) 28px 56px); }
+.wrap {
+  max-width: 760px; margin: 0 auto; padding-block: 18px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 14px; }
+.topbar h1 { font-size: 22px; font-weight: 600; margin: 0; flex: 1; text-wrap: balance; }
+.iconbtn {
+  min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600; text-decoration: none; color: var(--ink);
+}
+.pill { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--muted); white-space: nowrap; }
+
+/* ---------- home ---------- */
+.hero { text-align: center; padding: 14px 0 6px; }
+.hero .ball { font-size: 56px; line-height: 1; }
+.hero h2 { font-size: clamp(36px, 7vw, 52px); margin: 8px 0 4px; line-height: 1.05; }
+.hero p { color: var(--muted); margin: 0 auto; max-width: 34ch; }
+.list { display: grid; gap: 14px; margin-top: 24px; }
+.scard {
+  display: flex; align-items: center; gap: 18px; text-align: start; width: 100%;
+  background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 18px 20px; box-shadow: var(--shadow); cursor: pointer;
+}
+.scard:active { transform: translateY(2px); }
+.scard .emo { font-size: 46px; line-height: 1; }
+.scard b { display: block; font-size: 26px; font-weight: 600; }
+.scard span { color: var(--muted); font-size: 16px; font-variant-numeric: tabular-nums; }
+.scard .chev { margin-inline-start: auto; font-size: 30px; color: var(--muted); }
+
+/* ---------- story ---------- */
+.story {
+  background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow);
+  padding: 26px clamp(20px, 5vw, 44px) 30px;
+}
+.tag { display: inline-block; font-size: 15px; font-weight: 600; color: var(--court-a); background: var(--court-b); border-radius: 999px; padding: 4px 12px; }
+.story h2 { font-size: clamp(32px, 6vw, 44px); margin: 10px 0 14px; line-height: 1.1; }
+.prose { font-family: var(--f-read); font-size: clamp(20px, 2.7vw, 24px); line-height: 1.65; max-width: 62ch; }
+.prose p { margin: 0 0 .8em; }
+.prose p:last-child { margin-bottom: 0; }
+mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padding: .05em .15em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.go {
+  min-height: 60px; padding: 0 28px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink);
+  font-size: 21px; font-weight: 600; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge);
+}
+.go:active { transform: translateY(2px); }
+.go.wide { width: 100%; margin-top: 20px; }
+.ghost { min-height: 56px; padding: 0 22px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 19px; font-weight: 600; cursor: pointer; }
+
+/* ---------- questions ---------- */
+.dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+.dot { width: 16px; height: 16px; border-radius: 50%; background: var(--line); }
+.dot.g { background: var(--good); } .dot.b { background: var(--bad); } .dot.cur { outline: 3px solid var(--sun); outline-offset: 2px; }
+.qcard {
+  background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow);
+  padding: 22px 22px 20px; font-size: clamp(22px, 3.2vw, 27px); font-weight: 600; line-height: 1.35; text-wrap: pretty;
+}
+.qnum { display: block; font-size: 15px; color: var(--muted); font-weight: 600; margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.opts { display: grid; gap: 12px; margin-top: 16px; }
+.opt {
+  min-height: 66px; width: 100%; text-align: start; padding: 12px 18px; border-radius: 18px; border: 3px solid var(--line);
+  background: var(--btn); cursor: pointer; font-size: 20px; font-weight: 600; line-height: 1.3; box-shadow: 0 2px 0 var(--line);
+  display: flex; align-items: center; gap: 14px;
+}
+.opt .let { flex: none; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--sky); color: var(--muted); font-size: 18px; }
+.opt:active { transform: translateY(2px); box-shadow: none; }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.right .let { background: var(--good); color: #fff; }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); animation: shake .35s; }
+.opt.wrong .let { background: var(--bad); color: #fff; }
+.opt[disabled] { cursor: default; }
+.opt[disabled]:not(.right):not(.wrong) { opacity: .55; }
+.fb { margin-top: 16px; border-radius: 20px; padding: 16px 18px; border: 2px solid; }
+.fb.yes { background: var(--good-bg); border-color: var(--good); }
+.fb.no { background: var(--bad-bg); border-color: var(--bad); }
+.fb h3 { margin: 0 0 6px; font-size: 24px; }
+.fb.yes h3 { color: var(--good); } .fb.no h3 { color: var(--bad); }
+.fb p { margin: 0; font-size: 19px; }
+.fb blockquote { margin: 12px 0 0; padding: 8px 0 8px 14px; border-left: 4px solid var(--sun); font-family: var(--f-read); font-size: 19px; color: var(--ink); }
+.row { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap; margin-top: 16px; }
+.row .go { margin-inline-start: auto; }
+
+/* ---------- look-back sheet ---------- */
+.sheetback { position: fixed; inset: 0; background: rgba(10,16,30,.5); display: flex; align-items: flex-end; justify-content: center; z-index: 10; }
+.sheet {
+  width: min(760px, 100%); max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  background: var(--sand); border-radius: 24px 24px 0 0; padding: 0 clamp(20px, 5vw, 40px) calc(24px + env(safe-area-inset-bottom, 0px));
+  animation: up .25s ease-out;
+}
+.sheethead { position: sticky; top: 0; background: var(--sand); display: flex; align-items: center; gap: 12px; padding: 16px 0 12px; border-bottom: 2px solid var(--line); margin-bottom: 16px; }
+.sheethead b { flex: 1; font-size: 22px; }
+
+/* ---------- results ---------- */
+.result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
+.stars { font-size: 54px; letter-spacing: 6px; line-height: 1; }
+.stars .on { color: var(--sun); } .stars .off { color: var(--line); }
+.big { font-size: 46px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 10px 0 4px; }
+.review { margin-top: 20px; display: grid; gap: 10px; text-align: start; }
+.review h3 { margin: 4px 0 0; font-size: 18px; color: var(--muted); font-weight: 600; text-align: center; }
+.rv { background: var(--sky); border-radius: 16px; padding: 12px 16px; }
+.rv b { display: block; font-size: 18px; }
+.rv span { color: var(--good); font-weight: 600; }
+.actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes pop { 0% { transform: scale(.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.popin { animation: pop .3s ease-out; }
+@media (prefers-reduced-motion: reduce) { .opt.wrong, .popin, .sheet { animation: none; } }
+</style>
+</head>
+<body>
+<div class="band" aria-hidden="true"></div>
+<main class="wrap" id="app" aria-live="polite"></main>
+<div id="sheet" hidden></div>
+
+<script>
+/* Stories. Each question's first answer is the right one (answers are shuffled on screen).
+   "look" holds sentences copied exactly from the story; they get highlighted when Jack looks back. */
+const STORIES = [
+  {
+    id: 'last-shot', title: 'The Last Shot', sport: 'Basketball', emoji: '🏀',
+    paras: [
+      'Everyone on the Hawks knew Noah was the best shooter on the team. Ben was not. Ben had played in every game that season, and he hadn’t scored a single basket.',
+      'But every day at recess, while the other kids played tag, Ben stood alone at the old hoop behind the school. Shot after shot clanged off the rim. Noah watched him from the swings. Little by little, more of Ben’s shots started going in.',
+      'On Sunday, the Hawks played the Tigers in the championship game. With ten seconds left, the Hawks were losing by one point. Coach called a time-out.',
+      '“Get the ball to Noah,” she said. “Noah takes the last shot.”',
+      'The crowd roared as the game started again. Noah dribbled down the court. Right away, two Tigers rushed at him, waving their arms like windmills. He couldn’t even see the basket.',
+      'Five seconds. Four.',
+      'Out of the corner of his eye, Noah saw Ben standing all alone near the hoop. Nobody was guarding him.',
+      'Noah bounced the ball between the two defenders, straight into Ben’s hands.',
+      'Three. Two.',
+      'Ben took a deep breath. He shot the ball the same way he had practiced a hundred times.',
+      '*Swish!*',
+      'The buzzer blared. The Hawks had won by one point! The whole team piled onto Ben, cheering and jumping.',
+      'Later, Coach patted Noah on the back. “I told you to take the last shot,” she said with a smile. “Why didn’t you?”',
+      'Noah shrugged. “Ben was ready,” he said. “I’ve seen him practice.”'
+    ],
+    qs: [
+      { q: 'Why didn’t anyone expect Ben to score?',
+        a: ['He hadn’t scored a single basket all season', 'He was hurt', 'He was new on the team', 'He played for the Tigers'],
+        why: 'Ben played in every game, but he hadn’t scored even one basket.',
+        look: ['Ben had played in every game that season, and he hadn’t scored a single basket.'] },
+      { q: 'What did Ben do every day at recess?',
+        a: ['Practiced shooting at the old hoop', 'Played tag', 'Sat on the swings', 'Read a book'],
+        why: 'While the other kids played tag, Ben practiced shooting all by himself. (Noah was the one on the swings!)',
+        look: ['every day at recess, while the other kids played tag, Ben stood alone at the old hoop behind the school.'] },
+      { q: 'The Tigers were “waving their arms like windmills.” What were they trying to do?',
+        a: ['Block Noah so he couldn’t shoot', 'Wave hello to the crowd', 'Cheer for their team', 'Call a time-out'],
+        why: 'They waved their arms to block Noah. He couldn’t even see the basket!',
+        look: ['two Tigers rushed at him, waving their arms like windmills. He couldn’t even see the basket.'] },
+      { q: 'Coach told Noah to take the last shot. Why did he pass to Ben instead?',
+        a: ['Ben was open, and Noah knew Ben had been practicing', 'Noah was too tired to shoot', 'Ben yelled for the ball', 'Noah forgot what Coach said'],
+        why: 'Two Tigers were guarding Noah, but nobody was guarding Ben. Noah had watched Ben practice, so he knew Ben could make it.',
+        look: ['Noah saw Ben standing all alone near the hoop. Nobody was guarding him.', '“I’ve seen him practice.”'] },
+      { q: 'What does “blared” mean in “The buzzer blared”?',
+        a: ['Made a loud sound', 'Broke', 'Stayed quiet', 'Flashed a light'],
+        why: 'A buzzer makes a loud noise when the game ends. “Blared” means made a loud sound.',
+        look: ['The buzzer blared.'] },
+      { q: 'What lesson does this story teach?',
+        a: ['Practice pays off, and good teammates share the ball', 'The best player should always take the last shot', 'Recess is only for playing tag', 'Winning is the only thing that matters'],
+        why: 'Ben’s practice paid off, and Noah was a good teammate when he passed.',
+        look: ['He shot the ball the same way he had practiced a hundred times.', '“Ben was ready,”'] }
+    ]
+  }
+];
+
+/* ---------- helpers ---------- */
+const $app = document.getElementById('app'), $sheet = document.getElementById('sheet');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('reading:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('reading:' + k, JSON.stringify(v)); } catch (e) {} }
+};
+function prose(s, marks = []) {
+  return s.paras.map(p => {
+    let h = esc(p);
+    marks.forEach(m => { const e = esc(m); h = h.split(e).join('<mark>' + e + '</mark>'); });
+    return '<p>' + h.replace(/\*(.+?)\*/g, '<em>$1</em>') + '</p>';
+  }).join('');
+}
+const starsFor = (s, n) => s === n ? 3 : s >= n - 1 ? 2 : s >= n - 2 ? 1 : 0;
+const starRow = k => '<div class="stars">' + [0, 1, 2].map(i => `<span class="${i < k ? 'on' : 'off'}">★</span>`).join('') + '</div>';
+
+/* ---------- sound (starts only after a tap) ---------- */
+let soundOn = store.get('sound', true), actx = null;
+function tone(freqs, dur = .12) {
+  if (!soundOn) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    let t = actx.currentTime;
+    freqs.forEach(f => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.18, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur + .02); t += dur * .9;
+    });
+  } catch (e) {}
+}
+const yay = () => tone([523, 659, 784]);
+const nope = () => tone([220, 196], .16);
+
+function topbar(back, title, right = '') {
+  return `<div class="topbar">
+    <button class="iconbtn" id="backBtn">‹ ${back}</button>
+    <h1>${title}</h1>${right}
+    <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button>
+  </div>`;
+}
+function wireTop(onBack) {
+  document.getElementById('backBtn').onclick = onBack;
+  const s = document.getElementById('sndBtn');
+  s.onclick = () => { soundOn = !soundOn; store.set('sound', soundOn); s.textContent = soundOn ? '🔊' : '🔈'; };
+}
+const top0 = () => window.scrollTo(0, 0);
+
+/* ---------- HOME: list of stories ---------- */
+function home() {
+  closeSheet();
+  $app.innerHTML = `
+    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
+    <div class="hero"><div class="ball">📖</div><h2>Reading</h2><p>Read a story, then answer the questions.</p></div>
+    <div class="list">${STORIES.map(s => {
+      const b = store.get('best:' + s.id, null);
+      return `<button class="scard" data-id="${s.id}"><span class="emo">${s.emoji}</span><span><b>${esc(s.title)}</b><span>${esc(s.sport)} · ${s.qs.length} questions${b != null ? ` · Best: ${b} / ${s.qs.length}` : ''}</span></span><span class="chev">›</span></button>`;
+    }).join('')}</div>`;
+  document.querySelectorAll('.scard').forEach(b => b.onclick = () => read(STORIES.find(s => s.id === b.dataset.id)));
+  top0();
+}
+
+/* ---------- READ ---------- */
+function read(s) {
+  $app.innerHTML = topbar('Stories', '') + `
+    <article class="story">
+      <span class="tag">${s.emoji} ${esc(s.sport)}</span>
+      <h2>${esc(s.title)}</h2>
+      <div class="prose">${prose(s)}</div>
+    </article>
+    <button class="go wide" id="toQs">I’m done reading · Answer the questions ›</button>`;
+  wireTop(home);
+  document.getElementById('toQs').onclick = () => startQs(s);
+  top0();
+}
+
+/* ---------- LOOK BACK (story sheet) ---------- */
+function openSheet(s, marks = []) {
+  $sheet.innerHTML = `<div class="sheetback" id="sb"><div class="sheet" role="dialog" aria-label="The story">
+    <div class="sheethead"><b>${s.emoji} ${esc(s.title)}</b><button class="go" id="closeSheet">Back to the question</button></div>
+    <div class="prose">${prose(s, marks)}</div></div></div>`;
+  $sheet.hidden = false; document.body.style.overflow = 'hidden';
+  document.getElementById('closeSheet').onclick = closeSheet;
+  document.getElementById('sb').onclick = e => { if (e.target.id === 'sb') closeSheet(); };
+  const m = $sheet.querySelector('mark');
+  if (m) setTimeout(() => m.scrollIntoView({ block: 'center' }), 60);
+}
+function closeSheet() { $sheet.hidden = true; $sheet.innerHTML = ''; document.body.style.overflow = ''; }
+
+/* ---------- QUESTIONS ---------- */
+let R = null;
+function startQs(s) { R = { s, i: 0, score: 0, res: [], missed: [] }; ask(); }
+function ask() {
+  const { s, i } = R, q = s.qs[i];
+  const opts = shuffle(q.a.map((t, k) => ({ t, ok: k === 0 })));
+  const dots = s.qs.map((_, k) => `<span class="dot ${R.res[k] === true ? 'g' : R.res[k] === false ? 'b' : ''} ${k === i ? 'cur' : ''}"></span>`).join('');
+  $app.innerHTML = topbar('Stories', '', `<span class="pill">⭐ ${R.score}</span>`) + `
+    <div class="dots" aria-label="Question ${i + 1} of ${s.qs.length}">${dots}</div>
+    <div class="qcard popin"><span class="qnum">Question ${i + 1} of ${s.qs.length}</span>${esc(q.q)}</div>
+    <div class="opts">${opts.map((o, k) => `<button class="opt" data-ok="${o.ok ? 1 : 0}"><span class="let">${'ABCD'[k]}</span><span>${esc(o.t)}</span></button>`).join('')}</div>
+    <div id="after"><div class="row"><button class="ghost" id="peek">📖 Look back at the story</button></div></div>`;
+  wireTop(home);
+  document.getElementById('peek').onclick = () => openSheet(s);
+  document.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(b));
+  top0();
+}
+function answer(btn) {
+  const { s, i } = R, q = s.qs[i], ok = btn.dataset.ok === '1';
+  document.querySelectorAll('.opt').forEach(b => { b.disabled = true; if (b.dataset.ok === '1') b.classList.add('right'); });
+  R.res[i] = ok;
+  if (ok) { R.score++; yay(); document.querySelector('.pill').textContent = '⭐ ' + R.score; }
+  else { btn.classList.add('wrong'); nope(); R.missed.push(q); }
+  const last = i === s.qs.length - 1;
+  document.getElementById('after').innerHTML = `
+    <div class="fb ${ok ? 'yes' : 'no'} popin">
+      <h3>${ok ? shuffle(['Yes!', 'Great job!', 'Correct!', 'You got it!'])[0] : 'Not quite.'}</h3>
+      <p>${ok ? '' : `The answer is: <b>${esc(q.a[0])}</b>. `}${esc(q.why)}</p>
+      <blockquote>${q.look.map(esc).join(' … ')}</blockquote>
+    </div>
+    <div class="row"><button class="ghost" id="show">📖 Show me in the story</button><button class="go" id="next">${last ? 'See my score ›' : 'Next ›'}</button></div>`;
+  document.getElementById('show').onclick = () => openSheet(s, q.look);
+  document.getElementById('next').onclick = () => { R.i++; R.i < s.qs.length ? ask() : done(); };
+  document.getElementById('next').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+/* ---------- RESULTS ---------- */
+function done() {
+  const { s, score } = R, n = s.qs.length, k = starsFor(score, n);
+  const best = store.get('best:' + s.id, null), isBest = best == null || score > best;
+  if (isBest) store.set('best:' + s.id, score);
+  $app.innerHTML = topbar('Stories', '') + `
+    <div class="result popin">
+      ${starRow(k)}
+      <div class="big">${score} / ${n}</div>
+      <div>${score === n ? 'Perfect! You understood the whole story.' : k >= 2 ? 'Great reading!' : 'Good try! Read it again and try once more.'}${isBest && best != null ? ' New best score!' : ''}</div>
+      ${R.missed.length ? `<div class="review"><h3>Let’s look at these again</h3>${R.missed.map(q => `<div class="rv"><b>${esc(q.q)}</b><span>${esc(q.a[0])}</span></div>`).join('')}</div>` : ''}
+      <div class="actions">
+        <button class="go" id="again">Try the questions again</button>
+        <button class="ghost" id="reread">Read the story again</button>
+        <button class="ghost" id="menu">All stories</button>
+      </div>
+    </div>`;
+  wireTop(home);
+  if (k === 3) yay();
+  document.getElementById('again').onclick = () => startQs(s);
+  document.getElementById('reread').onclick = () => read(s);
+  document.getElementById('menu').onclick = home;
+  top0();
+}
+
+home();
+</script>
+</body>
+</html>

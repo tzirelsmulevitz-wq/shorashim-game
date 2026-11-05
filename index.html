@@ -8,11 +8,11 @@
 <title>Jack's Games</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* Layout: two big game tiles, stacked on a phone, side by side on the iPad. Same palette as the games. */
+/* Layout: game tiles, stacked on a phone, three across on the iPad. Same palette as the games. */
 :root {
   --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
   --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff;
-  --tent-a: #c95a3c; --tent-b: #f3e2bf; --math-a: #2f9e8f; --math-b: #d8efe9;
+  --tent-a: #c95a3c; --tent-b: #f3e2bf; --math-a: #2f9e8f; --math-b: #d8efe9; --court-a: #e07a2e; --court-b: #fde3c8;
   --shadow: 0 2px 0 rgba(29,43,69,.12), 0 10px 28px rgba(29,43,69,.10);
   --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
   --f-heb: "Times New Roman", "Arial Hebrew", serif;
@@ -22,13 +22,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
-    --block: #4d7fe0; --block-edge: #2c58b0; --tent-a: #a8482f; --tent-b: #3a3222; --math-a: #23786c; --math-b: #1d3a3a;
+    --block: #4d7fe0; --block-edge: #2c58b0; --tent-a: #a8482f; --tent-b: #3a3222; --math-a: #23786c; --math-b: #1d3a3a; --court-a: #b8601f; --court-b: #3a2a1c;
     --shadow: 0 2px 0 rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.3); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
-  --block: #4d7fe0; --block-edge: #2c58b0; --tent-a: #a8482f; --tent-b: #3a3222; --math-a: #23786c; --math-b: #1d3a3a;
+  --block: #4d7fe0; --block-edge: #2c58b0; --tent-a: #a8482f; --tent-b: #3a3222; --math-a: #23786c; --math-b: #1d3a3a; --court-a: #b8601f; --court-b: #3a2a1c;
   --shadow: 0 2px 0 rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.3); color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -38,17 +38,20 @@ a:focus-visible { outline: 3px solid var(--block); outline-offset: 4px; }
 .wrap { max-width: 760px; margin: 0 auto; padding-block: 36px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 h1 { font-size: clamp(40px, 8vw, 60px); line-height: 1.05; margin: 0 0 6px; text-align: center; text-wrap: balance; }
 .sub { text-align: center; color: var(--muted); margin: 0 0 28px; }
-.games { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-@media (max-width: 560px) { .games { grid-template-columns: 1fr; } }
+.games { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 700px) { .games { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .games { grid-template-columns: 1fr; } }
 .game { display: block; text-decoration: none; color: var(--ink); background: var(--sand); border: 2px solid var(--line); border-radius: 26px; overflow: hidden; box-shadow: var(--shadow); }
 .game:active { transform: translateY(2px); }
 .stripe { height: 16px; }
 .heb .stripe { background: repeating-linear-gradient(90deg, var(--tent-a) 0 28px, var(--tent-b) 28px 56px); }
 .math .stripe { background: repeating-linear-gradient(90deg, var(--math-a) 0 28px, var(--math-b) 28px 56px); }
+.read .stripe { background: repeating-linear-gradient(90deg, var(--court-a) 0 28px, var(--court-b) 28px 56px); }
+.book { font-size: 76px; line-height: 1; }
 .art { height: 150px; display: grid; place-items: center; }
 .blocks { display: flex; gap: 8px; direction: rtl; }
-.blk { width: 62px; height: 62px; display: grid; place-items: center; background: var(--block); color: var(--block-ink); border-radius: 12px; box-shadow: inset 0 -5px 0 var(--block-edge); font-family: var(--f-heb); font-weight: 800; font-size: 40px; }
-.times { font-size: 64px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.blk { width: 58px; height: 58px; display: grid; place-items: center; background: var(--block); color: var(--block-ink); border-radius: 12px; box-shadow: inset 0 -5px 0 var(--block-edge); font-family: var(--f-heb); font-weight: 800; font-size: 40px; }
+.times { font-size: 58px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
 .times span { color: var(--math-a); }
 .text { padding: 0 20px 22px; text-align: center; }
 .text b { display: block; font-size: 28px; }
@@ -63,12 +66,17 @@ h1 { font-size: clamp(40px, 8vw, 60px); line-height: 1.05; margin: 0 0 6px; text
     <a class="game heb" href="shorashim/">
       <div class="stripe"></div>
       <div class="art"><div class="blocks"><span class="blk">ש</span><span class="blk">ר</span><span class="blk">ש</span></div></div>
-      <div class="text"><b>Shorashim</b><span>18 shorashim from Parshas Vayera</span></div>
+      <div class="text"><b>Shorashim</b><span>24 shorashim from Parshas Vayera</span></div>
     </a>
     <a class="game math" href="math/">
       <div class="stripe"></div>
       <div class="art"><div class="times">6 <span>×</span> 7</div></div>
       <div class="text"><b>Times Tables</b><span>Beat the clock or earn 3 stars</span></div>
+    </a>
+    <a class="game read" href="reading/">
+      <div class="stripe"></div>
+      <div class="art"><div class="book">📖</div></div>
+      <div class="text"><b>Reading</b><span>Read a story, answer the questions</span></div>
     </a>
   </div>
 </main>

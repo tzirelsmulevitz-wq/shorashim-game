@@ -1,12 +1,18 @@
 # Jack's Games
 
-The main page (https://tzirelsmulevitz-wq.github.io/shorashim-game/) is Jack's menu: Shorashim and Times Tables.
+The main page (https://tzirelsmulevitz-wq.github.io/shorashim-game/) is Jack's menu: Shorashim, Times Tables and Reading.
 
 ## Shorashim
 
 A flash card game for 24 shorashim (Hebrew roots) from Parshas Vayera: flip cards, a 10-question quiz, and a match game.
 
 Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/shorashim/
+
+## Reading
+
+Short stories at reading levels O–P with tap-to-answer comprehension questions. After each answer, "Show me in the story" highlights the sentences that prove it. To add a story, add an entry to `STORIES` in `reading/index.html` (the first answer listed is the right one; `look` sentences must be copied exactly from the story).
+
+Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/reading/
 
 ## Road to 1776
 
