@@ -395,5 +395,39 @@ function matchDone() {
 
 home();
 </script>
+<!-- auto-update -->
+<script>
+/* Auto-update. Safari can keep showing an old copy of a page for up to 10 minutes after it changes.
+   On load: compare this copy with the live one and switch to the new version if they differ.
+   If a newer version appears while the page is open, show a tap-to-update button instead,
+   so a game in progress isn't lost. The ?v= check means it can never reload in a loop. */
+(function () {
+  if (!window.fetch || !window.Promise) return;
+  var path = location.pathname, busy = false;
+  function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function text(url, mode) { return fetch(url, { cache: mode }).then(function (r) { return r.ok ? r.text() : null; }); }
+  function go(v) { location.replace(path + '?v=' + v + location.hash); }
+  function offer(v) {
+    if (document.getElementById('autoUpd')) return;
+    var b = document.createElement('button');
+    b.id = 'autoUpd'; b.type = 'button'; b.textContent = '✨ New update! Tap to get it';
+    b.style.cssText = 'position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);z-index:99;border:none;border-radius:999px;padding:14px 26px;font:600 19px system-ui,sans-serif;background:#2f63c9;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap';
+    b.onclick = function () { go(v); };
+    document.body.appendChild(b);
+  }
+  function check(onLoad) {
+    if (busy) return; busy = true;
+    Promise.all([text(location.href, 'force-cache'), text(path + '?t=' + Date.now(), 'no-store')]).then(function (r) {
+      var mine = r[0], live = r[1];
+      if (!mine || !live || mine === live) return;
+      var v = hash(live);
+      if (new URLSearchParams(location.search).get('v') === v) return;
+      if (onLoad) go(v); else offer(v);
+    }).catch(function () {}).then(function () { busy = false; });
+  }
+  check(true);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') check(false); });
+})();
+</script>
 </body>
 </html>

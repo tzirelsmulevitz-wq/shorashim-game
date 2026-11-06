@@ -10,7 +10,9 @@ Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/shorashim/
 
 ## Reading
 
-Short stories at reading levels O–P with tap-to-answer comprehension questions. After each answer, "Show me in the story" highlights the sentences that prove it. To add a story, add an entry to `STORIES` in `reading/index.html` (the first answer listed is the right one; `look` sentences must be copied exactly from the story).
+Short stories at reading levels O–P with tap-to-answer comprehension questions. After each answer, "Show me in the story" highlights the sentences that prove it. To add a story, add an entry at the top of `STORIES` in `reading/index.html` (the first answer listed is the right one; `look` sentences must be copied exactly from the story; a paragraph starting with `## ` becomes a heading). Then run `node tools/check-reading.js` and fix anything it reports. Stories Jack hasn't opened yet show a NEW badge.
+
+A scheduled task posts a new story on random days (about 2–3 a week), rotating through many kinds: sports, magic tricks, true stories about real people, fun facts, how-tos, science experiments, cards, building, Lego, places near home, Shabbos and the Jewish holidays. Its commits start with `Reading: add`.
 
 Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/reading/
 
@@ -29,3 +31,7 @@ Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/math/
 ### Handwriting
 
 `math/digits-model.json` is a small neural network that reads handwritten digits on the iPad itself (`math/recognizer.js`). It was trained with `tools/train_digits.py` on the MNIST handwritten digit sample included in the `mnist` npm package (MNIST by Yann LeCun, Corinna Cortes and Christopher Burges, CC BY-SA 3.0). It reads about 96% of single digits correctly, so the game shows what it read before the answer is checked.
+
+## Auto-update
+
+Safari can keep an old copy of a page for up to 10 minutes after a change. Every page includes the snippet in `tools/auto-update.html` (just before `</body>`): on load it compares the page with the live copy and switches to the new version if they differ, and if an update lands while a page is open it shows a "New update! Tap to get it" button. New pages should include the same snippet.
