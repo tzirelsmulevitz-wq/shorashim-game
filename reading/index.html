@@ -168,7 +168,56 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padd
    "look" holds sentences copied exactly from the story; they get highlighted when Jack looks back. */
 const STORIES = [
   {
-    id: 'last-shot', title: 'The Last Shot', sport: 'Basketball', emoji: '🏀',
+    id: 'vanishing-coin', title: 'The Vanishing Coin', topic: 'Magic', emoji: '🎩',
+    paras: [
+      'Every Sunday, Grandpa did the same magic trick for Sam. He held up a shiny quarter in his right hand. Then he passed it into his left hand, closed his fingers, and blew on them. When he opened his hand, the quarter was gone!',
+      '“Where did it go?” Sam always asked.',
+      'Grandpa would just smile and pull the quarter out from behind Sam’s ear.',
+      'One Sunday, Sam crossed his arms. “Please teach me, Grandpa. I want to do the trick at the class talent show.”',
+      'Grandpa leaned close and lowered his voice. “Here is the secret. The coin never goes into my left hand at all. I only pretend to pass it over. It stays hidden in my right hand the whole time.”',
+      '“But I always watch your left hand,” Sam said.',
+      '“Exactly,” said Grandpa. “I look at my left hand, so you look there too. People’s eyes follow the magician’s eyes. That’s the real magic.”',
+      'For two weeks, Sam practiced in front of the bathroom mirror. At first the quarter kept slipping through his fingers and clattering into the sink. But little by little, his hands grew smoother.',
+      'On the day of the talent show, Sam’s heart thumped like a drum as he walked onto the stage. He held up the quarter. He pretended to pass it to his left hand. Then he stared at his left hand as if it held a treasure.',
+      'Every eye in the room stared at it too.',
+      'Sam blew on his fingers and opened them. Empty!',
+      'The audience gasped. Then Sam walked over to his teacher in the front row, reached behind her ear, and pulled out the quarter. The room exploded with clapping.',
+      'After the show, his friend Max ran up to him. “How did you do that?”',
+      'Sam grinned, just like Grandpa. “A magician never tells his secrets.”'
+    ],
+    qs: [
+      { q: 'What trick did Grandpa do every Sunday?',
+        a: ['He made a quarter disappear, then found it behind Sam’s ear', 'He pulled a rabbit out of a hat', 'He made a card float in the air', 'He turned a quarter into a dollar'],
+        why: 'Grandpa made the quarter vanish from his hand, then pulled it out from behind Sam’s ear.',
+        look: ['When he opened his hand, the quarter was gone!', 'pull the quarter out from behind Sam’s ear.'] },
+      { q: 'Where was the coin really hiding during the trick?',
+        a: ['In the magician’s right hand the whole time', 'In the magician’s left hand', 'Up the magician’s sleeve', 'Behind Sam’s ear the whole time'],
+        why: 'The coin never went into the left hand. The magician only pretended to pass it over.',
+        look: ['The coin never goes into my left hand at all. I only pretend to pass it over. It stays hidden in my right hand the whole time.'] },
+      { q: 'Why does everyone watch the magician’s left hand?',
+        a: ['Because the magician is looking at it', 'Because the coin is really in it', 'Because it is waving', 'Because it is wearing a glove'],
+        why: 'People look where the magician looks. That’s Grandpa’s “real magic.”',
+        look: ['I look at my left hand, so you look there too. People’s eyes follow the magician’s eyes.'] },
+      { q: 'How did Sam get good at the trick?',
+        a: ['He practiced in front of the mirror for two weeks', 'He got it right the very first time', 'Grandpa gave him a special coin', 'Max showed him how'],
+        why: 'At first the quarter kept slipping, but Sam kept practicing until his hands got smoother.',
+        look: ['For two weeks, Sam practiced in front of the bathroom mirror.', 'little by little, his hands grew smoother.'] },
+      { q: 'The story says, “Sam’s heart thumped like a drum.” How was Sam feeling?',
+        a: ['Nervous', 'Sleepy', 'Bored', 'Angry'],
+        why: 'When you’re nervous, your heart beats hard and fast, like a drum.',
+        look: ['Sam’s heart thumped like a drum as he walked onto the stage.'] },
+      { q: 'What does “audience” mean in “The audience gasped”?',
+        a: ['The people watching the show', 'The stage', 'The magician’s helper', 'A kind of coin'],
+        why: 'The audience is everyone watching the show. They gasped because the coin was gone!',
+        look: ['The audience gasped.'] },
+      { q: 'Why did Sam say, “A magician never tells his secrets”?',
+        a: ['He wanted to be like Grandpa and keep the trick a surprise', 'He forgot how the trick worked', 'He was angry at Max', 'Max already knew the secret'],
+        why: 'Sam grinned “just like Grandpa.” He kept the secret, just like Grandpa did for so long.',
+        look: ['Sam grinned, just like Grandpa.'] }
+    ]
+  },
+  {
+    id: 'last-shot', title: 'The Last Shot', topic: 'Basketball', emoji: '🏀',
     paras: [
       'Everyone on the Hawks knew Noah was the best shooter on the team. Ben was not. Ben had played in every game that season, and he hadn’t scored a single basket.',
       'But every day at recess, while the other kids played tag, Ben stood alone at the old hoop behind the school. Shot after shot clanged off the rim. Noah watched him from the swings. Little by little, more of Ben’s shots started going in.',
@@ -272,7 +321,7 @@ function home() {
     <div class="hero"><div class="ball">📖</div><h2>Reading</h2><p>Read a story, then answer the questions.</p></div>
     <div class="list">${STORIES.map(s => {
       const b = store.get('best:' + s.id, null);
-      return `<button class="scard" data-id="${s.id}"><span class="emo">${s.emoji}</span><span><b>${esc(s.title)}</b><span>${esc(s.sport)} · ${s.qs.length} questions${b != null ? ` · Best: ${b} / ${s.qs.length}` : ''}</span></span><span class="chev">›</span></button>`;
+      return `<button class="scard" data-id="${s.id}"><span class="emo">${s.emoji}</span><span><b>${esc(s.title)}</b><span>${esc(s.topic)} · ${s.qs.length} questions${b != null ? ` · Best: ${b} / ${s.qs.length}` : ''}</span></span><span class="chev">›</span></button>`;
     }).join('')}</div>`;
   document.querySelectorAll('.scard').forEach(b => b.onclick = () => read(STORIES.find(s => s.id === b.dataset.id)));
   top0();
@@ -282,7 +331,7 @@ function home() {
 function read(s) {
   $app.innerHTML = topbar('Stories', '') + `
     <article class="story">
-      <span class="tag">${s.emoji} ${esc(s.sport)}</span>
+      <span class="tag">${s.emoji} ${esc(s.topic)}</span>
       <h2>${esc(s.title)}</h2>
       <div class="prose">${prose(s)}</div>
     </article>
