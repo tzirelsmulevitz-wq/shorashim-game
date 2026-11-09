@@ -171,6 +171,55 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padd
    "look" holds sentences copied exactly from the story; they get highlighted when Jack looks back. */
 const STORIES = [
   {
+    id: 'octopus-three-hearts', title: 'Three Hearts and Blue Blood', topic: 'Fun facts', emoji: '🐙',
+    paras: [
+      'Imagine an animal with three hearts, blue blood, and arms that can taste. It sounds like a monster from a cartoon, but it’s real. It’s the octopus!',
+      '## A Very Strange Body',
+      'An octopus has three hearts. Two of them pump blood through the gills, where the octopus gets air from the water. The third heart sends blood to the rest of its body.',
+      'Its blood is blue, not red. That’s because octopus blood uses copper to carry oxygen.',
+      'An octopus has eight arms, and each arm is covered in hundreds of suckers. The suckers don’t just grab things. They can feel, taste, and smell, too! Imagine tasting your lunch just by touching it.',
+      '## Smart Arms',
+      'Octopuses are clever. They can solve puzzles and use tools. They can even take apart a lock! An octopus has one main brain, but more than half of its *neurons*, the tiny nerve cells that send messages, are in its arms. So in a way, each arm can do some of its own thinking.',
+      '## Masters of Escape',
+      'When danger comes, an octopus has tricks. It can change its color, pattern, and even the bumpiness of its skin in a flash. That lets it blend in with rocks like a chameleon.',
+      'Many octopuses can also squirt a cloud of dark ink and zoom away on a jet of water. By the time the ink clears, the octopus is gone.',
+      'In 2016, an octopus at an aquarium in New Zealand slipped out of its tank. It crawled across the floor and escaped down a drainpipe that led straight to the sea!',
+      '## The Biggest One',
+      'The largest kind is the giant Pacific octopus. It can weigh as much as 600 pounds and stretch 30 feet from arm tip to arm tip. That’s longer than a school bus!',
+      'So next time you see an octopus, wave hello. It might be thinking about you with all eight arms.'
+    ],
+    qs: [
+      { q: 'What do two of the octopus’s three hearts do?',
+        a: ['Pump blood through the gills', 'Pump blood to the arms only', 'Make the octopus’s ink', 'Help the octopus change color'],
+        why: 'Two hearts pump blood through the gills. The third sends blood to the rest of the body.',
+        look: ['Two of them pump blood through the gills, where the octopus gets air from the water.'] },
+      { q: 'Why is octopus blood blue?',
+        a: ['It uses copper to carry oxygen', 'The octopus drinks blue ocean water', 'It is mixed with ink', 'It is very cold'],
+        why: 'The copper in octopus blood is what makes it blue instead of red.',
+        look: ['That’s because octopus blood uses copper to carry oxygen.'] },
+      { q: 'What can an octopus’s suckers do besides grab things?',
+        a: ['Feel, taste, and smell', 'See in the dark', 'Make loud sounds', 'Squirt ink'],
+        why: 'The suckers can feel, taste, and smell, not just hold on.',
+        look: ['They can feel, taste, and smell, too!'] },
+      { q: 'What does the word *neurons* mean in the story?',
+        a: ['Tiny nerve cells that send messages', 'Suckers on the arms', 'Spots of color on the skin', 'Small hearts'],
+        why: 'The sentence explains it right after the word: neurons are tiny nerve cells that send messages.',
+        look: ['more than half of its *neurons*, the tiny nerve cells that send messages, are in its arms.'] },
+      { q: 'Why does it help an octopus to change color when danger comes?',
+        a: ['It can blend in so enemies can’t find it', 'It looks scary to its friends', 'It helps it swim faster', 'It keeps it warm'],
+        why: 'Changing color lets the octopus blend in with rocks, so an enemy can’t spot it.',
+        look: ['That lets it blend in with rocks like a chameleon.'] },
+      { q: 'The heading “Masters of Escape” tells you that this part is about…',
+        a: ['How octopuses get away from danger', 'How big octopuses grow', 'What octopuses eat', 'How octopus hearts work'],
+        why: 'This part tells about color changing, ink, and the octopus that escaped from its tank.',
+        look: ['When danger comes, an octopus has tricks.'] },
+      { q: 'What is the main idea of this article?',
+        a: ['Octopuses have amazing bodies and are very clever', 'Octopuses are monsters from cartoons', 'All octopuses live in New Zealand', 'Octopuses are smaller than school buses'],
+        why: 'The whole article shows how strange and smart octopuses are, from their hearts to their escapes.',
+        look: ['It sounds like a monster from a cartoon, but it’s real.', 'Octopuses are clever.'] }
+    ]
+  },
+  {
     id: 'vanishing-coin', title: 'The Vanishing Coin', topic: 'Magic', emoji: '🎩',
     paras: [
       'Every Sunday, Grandpa did the same magic trick for Sam. He held up a shiny quarter in his right hand. Then he passed it into his left hand, closed his fingers, and blew on them. When he opened his hand, the quarter was gone!',
