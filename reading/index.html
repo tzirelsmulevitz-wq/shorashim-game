@@ -171,6 +171,55 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padd
    "look" holds sentences copied exactly from the story; they get highlighted when Jack looks back. */
 const STORIES = [
   {
+    id: 'tomato-thief', title: 'The Tomato Thief', topic: 'Mystery', emoji: '🍅',
+    paras: [
+      'Somebody was stealing Grandma’s tomatoes, and Yael was going to find out who.',
+      '“Three yesterday, and two more this morning,” Grandma sighed. She pointed at the empty green stems. “I waited all summer for these tomatoes!”',
+      'Yael pulled out her notebook and pencil. “Don’t worry, Grandma. Avi and I will solve this case.”',
+      'Her little brother Avi grinned. “Every detective needs clues!”',
+      'It was Sunday morning, so they had plenty of time. They walked slowly around the garden, looking at everything. Yael found a half-eaten tomato under the fence. It had tiny bite marks all around the edge. Avi found a small hole dug in the soft dirt near the shed.',
+      '“Our first *suspect*,” said Avi, “the one we think might have done it, is Mr. Levi’s dog, Biscuit.”',
+      'Yael shook her head. “Biscuit is huge, and these bites are tiny. Besides, he can’t get over the fence.”',
+      'Then Yael had an idea. She asked Grandma for a cup of flour. She sprinkled it in a thin white line along the garden path, like powdered sugar on a cake.',
+      '“If the thief comes back tonight, it will leave footprints,” she explained.',
+      'The next morning, Yael and Avi raced outside in their pajamas. Two more tomatoes were gone! But this time there were small footprints in the flour, each one with tiny claw marks. The trail led straight to the big oak tree.',
+      'Avi looked up and gasped. High on a branch sat a fat gray squirrel, happily munching a bright red tomato.',
+      '“There’s our thief!” Yael laughed, writing it in her notebook. “Case closed.”',
+      'That afternoon, they helped Grandma spread a net over the tomato plants. Then Grandma set a little dish of sunflower seeds under the oak tree.',
+      '“Everyone deserves a snack,” she said with a wink. “Even a thief.”'
+    ],
+    qs: [
+      { q: 'What did Yael find under the fence?',
+        a: ['A half-eaten tomato with tiny bite marks', 'A muddy shoe', 'A dish of sunflower seeds', 'Mr. Levi’s dog'],
+        why: 'Yael found a half-eaten tomato with tiny bites all around the edge. That was an important clue.',
+        look: ['Yael found a half-eaten tomato under the fence.', 'It had tiny bite marks all around the edge.'] },
+      { q: 'Why did Yael think Biscuit was NOT the thief?',
+        a: ['He is too big and can’t get over the fence', 'He was asleep all night', 'He doesn’t like tomatoes', 'He was at the park'],
+        why: 'Biscuit is huge, but the bites were tiny, and he can’t get over the fence.',
+        look: ['“Biscuit is huge, and these bites are tiny. Besides, he can’t get over the fence.”'] },
+      { q: 'What does the word *suspect* mean in the story?',
+        a: ['Someone you think might have done it', 'A detective’s notebook', 'A kind of garden plant', 'Someone who helps solve a case'],
+        why: 'Avi explains it right after the word: a suspect is the one we think might have done it.',
+        look: ['“Our first *suspect*,” said Avi, “the one we think might have done it, is Mr. Levi’s dog, Biscuit.”'] },
+      { q: 'Why did Yael sprinkle flour on the path?',
+        a: ['So the thief would leave footprints', 'To bake a cake for Grandma', 'To feed the squirrel', 'To help the tomatoes grow'],
+        why: 'Yael knew that anything walking through the flour would leave tracks to follow.',
+        look: ['“If the thief comes back tonight, it will leave footprints,” she explained.'] },
+      { q: 'The flour looked “like powdered sugar on a cake.” What does that tell you?',
+        a: ['It was a thin, light, white sprinkle', 'It tasted sweet', 'It was piled very high', 'It was wet and sticky'],
+        why: 'Powdered sugar on a cake is a light, white dusting, just like Yael’s thin line of flour.',
+        look: ['She sprinkled it in a thin white line along the garden path, like powdered sugar on a cake.'] },
+      { q: 'Where did the footprints in the flour lead?',
+        a: ['To the big oak tree', 'To Mr. Levi’s house', 'To the shed', 'To Grandma’s kitchen'],
+        why: 'The trail of little clawed footprints went straight to the oak tree, where the squirrel was.',
+        look: ['The trail led straight to the big oak tree.'] },
+      { q: 'What is the lesson of this story?',
+        a: ['Look carefully at clues to solve a problem', 'Never plant tomatoes', 'Dogs always cause trouble', 'Squirrels are dangerous'],
+        why: 'Yael and Avi solved the case by noticing clues and testing an idea, not by guessing.',
+        look: ['They walked slowly around the garden, looking at everything.', 'Then Yael had an idea.'] }
+    ]
+  },
+  {
     id: 'octopus-three-hearts', title: 'Three Hearts and Blue Blood', topic: 'Fun facts', emoji: '🐙',
     paras: [
       'Imagine an animal with three hearts, blue blood, and arms that can taste. It sounds like a monster from a cartoon, but it’s real. It’s the octopus!',
