@@ -154,6 +154,34 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padd
 .rv span { color: var(--good); font-weight: 600; }
 .actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
 
+/* ---------- choose your path ---------- */
+.tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag.path { color: #fff; background: var(--block); }
+.pageno { margin-top: 10px; font-size: 15px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.check { margin-top: 18px; background: var(--sand); border: 3px dashed var(--sun); border-radius: 22px; padding: 18px 18px 16px; }
+.check .label { font-size: 14px; font-weight: 700; color: var(--court-a); letter-spacing: .06em; text-transform: uppercase; }
+.check .cq { font-size: clamp(21px, 3vw, 25px); font-weight: 600; line-height: 1.3; margin: 6px 0 2px; }
+.choices { margin-top: 22px; display: grid; gap: 12px; }
+.choices h3 { margin: 0 0 2px; font-size: 24px; text-align: center; }
+.choice {
+  min-height: 70px; width: 100%; text-align: start; padding: 14px 20px; border: none; border-radius: 18px; cursor: pointer;
+  font-size: 21px; font-weight: 600; line-height: 1.3; color: #fff; display: flex; align-items: center; gap: 14px;
+}
+.choice .arrow { font-size: 26px; flex: none; }
+.choice.c0 { background: var(--block); box-shadow: inset 0 -5px 0 var(--block-edge); }
+.choice.c1 { background: #d96f26; box-shadow: inset 0 -5px 0 #a24f15; }
+.choice.c2 { background: #2b9384; box-shadow: inset 0 -5px 0 #1d6d61; }
+.choice:active { transform: translateY(2px); }
+.ending { text-align: center; margin-top: 18px; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 24px 20px; }
+.ending .medal { font-size: 66px; line-height: 1; }
+.ending .kind { font-size: 15px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--court-a); margin-top: 8px; }
+.ending h3 { font-size: clamp(26px, 4vw, 32px); margin: 4px 0 8px; line-height: 1.15; }
+.ending .tip { color: var(--muted); max-width: 40ch; margin: 0 auto; }
+.found { margin: 20px auto 0; display: grid; gap: 8px; text-align: start; max-width: 520px; }
+.found > b { text-align: center; font-variant-numeric: tabular-nums; }
+.found div { background: var(--sky); border-radius: 14px; padding: 10px 14px; font-weight: 600; }
+.found .no { color: var(--muted); font-weight: 500; }
+
 @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 @keyframes pop { 0% { transform: scale(.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -168,8 +196,156 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padd
 
 <script>
 /* Stories. Each question's first answer is the right one (answers are shuffled on screen).
-   "look" holds sentences copied exactly from the story; they get highlighted when Jack looks back. */
+   "look" holds sentences copied exactly from the story; they get highlighted when Jack looks back.
+   A "choose your path" adventure has type: 'adventure', start: '<page>', and nodes: { <page>: { paras,
+   check?: { q, a, why, look }, choices: [{ text, to }] } or { paras, ending: { kind: super|good|oops, title, tip } } }. */
 const STORIES = [
+  {
+    id: 'grandpas-map', type: 'adventure', title: 'The Map in Grandpa’s Garage', topic: 'Treasure hunt', emoji: '🗺️',
+    start: 'start',
+    nodes: {
+      'start': {
+        paras: [
+          'Jack sneezed. Grandpa’s garage was packed with dusty boxes, rusty bikes, and things nobody had touched in fifty years.',
+          '“Hey, look at this!” Eitan pulled a rolled-up paper out of an old baseball glove.',
+          'It was a map. At the top, in shaky pencil, someone had written: *TREASURE. Do not open until 2026.*',
+          'Under that was a drawing of the park down the street, a big X, and a riddle: *Start at the bench with the lion’s head. Walk toward the water, not the trees.*',
+          'Ben’s eyes got as round as cookies. “It’s 2026 right now!”',
+          'Jack’s heart thumped. A real treasure map! But who made it?'
+        ],
+        check: { q: 'When was the treasure supposed to be opened?',
+          a: ['In 2026', 'Fifty years ago', 'On Jack’s birthday'],
+          why: 'The top of the map said not to open it until 2026, and it’s 2026 now!',
+          look: ['Do not open until 2026.'] },
+        choices: [
+          { text: 'Show Grandpa the map first', to: 'grandpa' },
+          { text: 'Grab a shovel and race to the park!', to: 'bench' }
+        ]
+      },
+      'grandpa': {
+        paras: [
+          'Grandpa put on his glasses and squinted at the map. Then he laughed so hard his belly jiggled like a bowl of jelly.',
+          '“I drew this when I was eight years old!” he said. “My friends and I buried a time capsule in that park. A time capsule is a box of special things you hide for people to find in the future.”',
+          '“What’s inside?” Jack asked.',
+          'Grandpa winked. “That’s for you to find out. Here’s my only hint: read every word of the clues very carefully.”',
+          'He handed Jack a small shovel. “Be home before dinner, detectives.”'
+        ],
+        check: { q: 'What is a time capsule?',
+          a: ['A box of special things hidden for the future', 'A kind of clock', 'A very old map'],
+          why: 'Grandpa explains it right after he says it: a box of special things you hide for people to find in the future.',
+          look: ['A time capsule is a box of special things you hide for people to find in the future.'] },
+        choices: [ { text: 'Run to the park', to: 'bench' } ]
+      },
+      'bench': {
+        paras: [
+          'At the park, the three friends found an old stone bench with a lion’s head carved on each end. The lions looked grumpy, like they had been waiting a very long time.',
+          'Jack read the riddle out loud again. “Walk toward the water, not the trees.”',
+          'On one side of the bench was the duck pond. On the other side was a thick, dark row of pine trees.',
+          '“Ooh, the trees are a perfect hiding spot,” said Ben. “I bet it’s in there.”'
+        ],
+        check: { q: 'How did the stone lions on the bench look?',
+          a: ['Grumpy, like they had waited a long time', 'Happy and smiling', 'Fast asleep'],
+          why: 'The story says the lions looked grumpy, like they had been waiting a very long time.',
+          look: ['The lions looked grumpy, like they had been waiting a very long time.'] },
+        choices: [
+          { text: 'Walk toward the duck pond', to: 'pond' },
+          { text: 'Search the pine trees', to: 'trees' }
+        ]
+      },
+      'trees': {
+        paras: [
+          'Branches scratched their arms. Pine needles stuck in their hair. Then: *SPLAT!*',
+          'Ben stepped into a mud puddle up to his ankle. When he pulled his foot out, his sneaker stayed behind with a loud *SHLURP*.',
+          'Eitan laughed so hard he had to sit down on a log. Even Ben started giggling as he fished out his muddy sneaker.',
+          'Jack unrolled the map and groaned. “Guys, the riddle said toward the water, NOT the trees. We went the wrong way!”'
+        ],
+        check: { q: 'What happened to Ben’s sneaker?',
+          a: ['It got stuck in the mud', 'A squirrel took it', 'It fell in the pond'],
+          why: 'Ben’s foot came out of the mud, but his sneaker stayed behind!',
+          look: ['his sneaker stayed behind'] },
+        choices: [ { text: 'Go back and head for the pond', to: 'pond' } ]
+      },
+      'pond': {
+        paras: [
+          'At the edge of the pond, Jack flipped the map over. On the back was one more clue, so faint they almost missed it: *Find the turtle that never swims. Dig where its nose points.*',
+          '“There!” Eitan pointed at a log in the water. A real turtle was sitting on top, soaking up the sun.',
+          'But Ben was pointing the other way, at a big gray rock in the grass. It was shaped exactly like a turtle, with a bumpy shell and a little stone head.',
+          'Jack read the clue again. A turtle that never swims…'
+        ],
+        check: { q: 'Where did Jack find the second clue?',
+          a: ['On the back of the map', 'Under the lion bench', 'Inside the baseball glove'],
+          why: 'Jack flipped the map over and found one more clue on the back.',
+          look: ['Jack flipped the map over. On the back was one more clue'] },
+        choices: [
+          { text: 'Wade out to the real turtle on the log', to: 'soggy' },
+          { text: 'Check the rock shaped like a turtle', to: 'rock' }
+        ]
+      },
+      'soggy': {
+        paras: [
+          'Jack kicked off his sneakers and stepped into the pond. *Brrr!* The water was as cold as a freezer.',
+          'He reached for the log. *Plop!* The turtle slid into the water and swam away. There was nothing on the log but green slime.',
+          '“No wading in the pond, boys!” called the park ranger.',
+          'Dripping and shivering, Jack squished all the way home. The treasure would have to wait for another day.'
+        ],
+        ending: { kind: 'oops', title: 'The Soggy Ending', tip: 'A real turtle swims! Next time, look for the turtle that never swims.' }
+      },
+      'rock': {
+        paras: [
+          'The turtle rock’s little stone nose pointed at a bare patch of dirt about five steps away.',
+          'Jack dug. Eitan dug. Ben dug with his hands like a puppy. Dirt flew everywhere.',
+          '*CLUNK!* The shovel hit something hard.',
+          'Jack brushed away the dirt. It was a rusty metal box with a heavy lock. Taped to the top was a note: *The key is where it all began.*',
+          '“Where it all began?” said Ben. “What does that mean?”'
+        ],
+        check: { q: 'How did Ben dig?',
+          a: ['With his hands, like a puppy', 'With a giant shovel', 'He didn’t dig at all'],
+          why: 'Ben dug with his hands like a puppy, and dirt flew everywhere!',
+          look: ['Ben dug with his hands like a puppy.'] },
+        choices: [
+          { text: 'Bang the lock open with a rock', to: 'bang' },
+          { text: 'Search the lion bench, where the clues started', to: 'lions' },
+          { text: 'Race back to the garage, where they found the map', to: 'garage' }
+        ]
+      },
+      'lions': {
+        paras: [
+          'They carried the heavy box back to the lion bench and searched every inch. Under the seat. Behind the lions. Inside a lion’s mouth.',
+          'All they found was an old piece of gum, as hard as a pebble.',
+          '“Wait,” said Eitan slowly. “The bench is where the clues started. But where did the whole adventure start?”',
+          'Jack’s eyes lit up.'
+        ],
+        check: { q: 'What did they find at the lion bench?',
+          a: ['An old piece of hard gum', 'The key', 'Another map'],
+          why: 'All they found was an old piece of gum, as hard as a pebble.',
+          look: ['All they found was an old piece of gum, as hard as a pebble.'] },
+        choices: [
+          { text: 'Race to Grandpa’s garage', to: 'garage' },
+          { text: 'Forget it. Bang the lock with a rock!', to: 'bang' }
+        ]
+      },
+      'bang': {
+        paras: [
+          '*CLANG! CLANG! CLANG!* Jack banged the lock with a rock until his arm was sore. The lock didn’t even get a scratch.',
+          'So they lugged the heavy box all the way back to Grandpa’s house.',
+          'Grandpa took one look and chuckled. “The key is where it all began,” he said. “Where did you find the map?”',
+          'Inside the old baseball glove, tucked in the thumb, was a tiny brass key. It fit perfectly! Inside the box were old baseball cards, a silver whistle, and a photo of Grandpa at eight years old, grinning with his friends.'
+        ],
+        ending: { kind: 'good', title: 'The Helping-Hand Ending', tip: 'You found the treasure, but Grandpa had to help with the last clue. Can you solve it all by yourselves?' }
+      },
+      'garage': {
+        paras: [
+          'The friends ran all the way back to Grandpa’s garage, the box bouncing between them.',
+          'Jack grabbed the old baseball glove, where the map had been hiding. He stuck his fingers inside. There, tucked in the thumb, was a tiny brass key!',
+          '*Click.* The lock popped open.',
+          'Inside were old baseball cards, a silver whistle, and a photo of Grandpa at eight years old, grinning with his friends. At the bottom was a letter: *If you solved every clue, you are real detectives. Now bury a treasure of your own for the kids of the future.*',
+          'Grandpa stood in the doorway, smiling. “Well, detectives,” he said, “what are you going to put in yours?”',
+          'Jack, Eitan, and Ben looked at each other and grinned. They already had a plan.'
+        ],
+        ending: { kind: 'super', title: 'The Super Detective Ending', tip: 'You solved every clue yourselves. That’s real detective reading!' }
+      }
+    }
+  },
   {
     id: 'lucky-pink-stick', title: 'The Lucky Pink Stick', topic: 'Hockey', emoji: '🏒',
     paras: [
@@ -478,12 +654,18 @@ function home() {
   const seen = store.get('seen', []);
   $app.innerHTML = `
     <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
-    <div class="hero"><div class="ball">📖</div><h2>Reading</h2><p>Read a story, then answer the questions.</p></div>
+    <div class="hero"><div class="ball">📖</div><h2>Reading</h2><p>Read a story and answer the questions, or choose your own path!</p></div>
     <div class="list">${STORIES.map(s => {
       const b = store.get('best:' + s.id, null), isNew = !seen.includes(s.id) && b == null;
-      return `<button class="scard" data-id="${s.id}"><span class="emo">${s.emoji}</span><span><b>${esc(s.title)}${isNew ? '<em class="new">NEW</em>' : ''}</b><span>${esc(s.topic)} · ${s.qs.length} questions${b != null ? ` · Best: ${b} / ${s.qs.length}` : ''}</span></span><span class="chev">›</span></button>`;
+      const sub = s.type === 'adventure'
+        ? `🧭 Choose your path · ${store.get('endings:' + s.id, []).length} of ${endingIds(s).length} endings found`
+        : `${esc(s.topic)} · ${s.qs.length} questions${b != null ? ` · Best: ${b} / ${s.qs.length}` : ''}`;
+      return `<button class="scard" data-id="${s.id}"><span class="emo">${s.emoji}</span><span><b>${esc(s.title)}${isNew ? '<em class="new">NEW</em>' : ''}</b><span>${sub}</span></span><span class="chev">›</span></button>`;
     }).join('')}</div>`;
-  document.querySelectorAll('.scard').forEach(b => b.onclick = () => read(STORIES.find(s => s.id === b.dataset.id)));
+  document.querySelectorAll('.scard').forEach(b => b.onclick = () => {
+    const s = STORIES.find(x => x.id === b.dataset.id);
+    if (s.type === 'adventure') adventure(s); else read(s);
+  });
   top0();
 }
 
@@ -501,6 +683,79 @@ function read(s) {
   wireTop(home);
   document.getElementById('toQs').onclick = () => startQs(s);
   top0();
+}
+
+/* ---------- CHOOSE YOUR PATH ---------- */
+const ENDING = { super: { medal: '🏆', label: 'Super ending!' }, good: { medal: '⭐', label: 'Good ending' }, oops: { medal: '😅', label: 'Oops ending' } };
+const endingIds = s => Object.keys(s.nodes).filter(k => s.nodes[k].ending);
+let A = null;
+function adventure(s) {
+  const seen = store.get('seen', []);
+  if (!seen.includes(s.id)) { seen.push(s.id); store.set('seen', seen); }
+  A = { s, path: [], right: 0, asked: 0 };
+  page(s.start);
+}
+function page(id) {
+  const { s } = A, n = s.nodes[id], pg = { title: s.title, emoji: s.emoji, paras: n.paras };
+  A.path.push(id);
+  $app.innerHTML = topbar('Stories', '') + `
+    <article class="story">
+      <div class="tags"><span class="tag path">🧭 Choose your path</span><span class="tag">${s.emoji} ${esc(s.topic)}</span></div>
+      ${A.path.length === 1 ? `<h2>${esc(s.title)}</h2>` : `<div class="pageno">Page ${A.path.length}</div>`}
+      <div class="prose" id="pgText">${prose(pg)}</div>
+    </article>
+    <div id="adv"></div>`;
+  wireTop(home); top0();
+  if (n.ending) endPage(id); else if (n.check) checkFor(n, pg); else showChoices(n, false);
+}
+function checkFor(n, pg) {
+  const c = n.check, opts = shuffle(c.a.map((t, k) => ({ t, ok: k === 0 })));
+  const adv = document.getElementById('adv');
+  adv.innerHTML = `<div class="check popin"><div class="label">Quick check</div><div class="cq">${esc(c.q)}</div>
+    <div class="opts">${opts.map((o, k) => `<button class="opt" data-ok="${o.ok ? 1 : 0}"><span class="let">${'ABCD'[k]}</span><span>${esc(o.t)}</span></button>`).join('')}</div>
+    <div id="cfb"></div></div>`;
+  adv.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    const ok = b.dataset.ok === '1';
+    adv.querySelectorAll('.opt').forEach(x => { x.disabled = true; if (x.dataset.ok === '1') x.classList.add('right'); });
+    A.asked++;
+    if (ok) { A.right++; yay(); } else { b.classList.add('wrong'); nope(); }
+    document.getElementById('pgText').innerHTML = prose(pg, c.look);
+    document.getElementById('cfb').innerHTML = `<div class="fb ${ok ? 'yes' : 'no'} popin">
+      <h3>${ok ? shuffle(['Yes!', 'Great job!', 'Correct!', 'You got it!'])[0] : 'Not quite.'}</h3>
+      <p>${ok ? '' : `The answer is: <b>${esc(c.a[0])}</b>. `}${esc(c.why)}</p></div>
+      <div class="row"><button class="ghost" id="showUp">📖 Show me in the story ↑</button></div>`;
+    document.getElementById('showUp').onclick = () => { const m = document.querySelector('#pgText mark'); if (m) m.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+    showChoices(n, true);
+  });
+}
+function showChoices(n, scroll) {
+  const box = document.createElement('div');
+  box.className = 'choices popin';
+  box.innerHTML = `<h3>${n.choices.length > 1 ? 'You choose! What should they do?' : 'Keep reading…'}</h3>` +
+    n.choices.map((ch, k) => `<button class="choice c${k}" data-to="${ch.to}"><span class="arrow">➜</span><span>${esc(ch.text)}</span></button>`).join('');
+  document.getElementById('adv').appendChild(box);
+  box.querySelectorAll('.choice').forEach(b => b.onclick = () => { tone([392, 523], .1); page(b.dataset.to); });
+  if (scroll) setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 120);
+}
+function endPage(id) {
+  const { s } = A, n = s.nodes[id], e = ENDING[n.ending.kind], all = endingIds(s);
+  const found = store.get('endings:' + s.id, []), fresh = !found.includes(id);
+  if (fresh) { found.push(id); store.set('endings:' + s.id, found); }
+  document.getElementById('adv').innerHTML = `
+    <div class="ending popin">
+      <div class="medal">${e.medal}</div>
+      <div class="kind">${e.label}</div>
+      <h3>${esc(n.ending.title)}</h3>
+      <p class="tip">${esc(n.ending.tip)}</p>
+      ${A.asked ? `<p>Quick checks: <b>${A.right} of ${A.asked}</b> right</p>` : ''}
+      <div class="found"><b>Endings found: ${found.length} of ${all.length}${fresh && found.length > 1 ? ' · a new one!' : ''}</b>
+        ${all.map(k => found.includes(k) ? `<div>${ENDING[s.nodes[k].ending.kind].medal} ${esc(s.nodes[k].ending.title)}</div>` : '<div class="no">🔒 ??? Try a different path to find it</div>').join('')}
+      </div>
+      <div class="actions"><button class="go" id="again">${found.length < all.length ? 'Start over and find another ending' : 'Play it again'}</button><button class="ghost" id="menu">All stories</button></div>
+    </div>`;
+  if (n.ending.kind === 'oops') nope(); else yay();
+  document.getElementById('again').onclick = () => adventure(s);
+  document.getElementById('menu').onclick = home;
 }
 
 /* ---------- LOOK BACK (story sheet) ---------- */
