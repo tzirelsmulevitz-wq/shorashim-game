@@ -201,12 +201,12 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padd
    check?: { q, a, why, look }, choices: [{ text, to }] } or { paras, ending: { kind: super|good|oops, title, tip } } }. */
 const STORIES = [
   {
-    id: 'grandpas-map', type: 'adventure', title: 'The Map in Grandpa’s Garage', topic: 'Treasure hunt', emoji: '🗺️',
+    id: 'grandpas-map', type: 'adventure', title: 'The Map in Zaide’s Garage', topic: 'Treasure hunt', emoji: '🗺️',
     start: 'start',
     nodes: {
       'start': {
         paras: [
-          'Jack sneezed. Grandpa’s garage was packed with dusty boxes, rusty bikes, and things nobody had touched in fifty years.',
+          'Jack sneezed. Zaide’s garage was packed with dusty boxes, rusty bikes, and things nobody had touched in fifty years.',
           '“Hey, look at this!” Eitan pulled a rolled-up paper out of an old baseball glove.',
           'It was a map. At the top, in shaky pencil, someone had written: *TREASURE. Do not open until 2026.*',
           'Under that was a drawing of the park down the street, a big X, and a riddle: *Start at the bench with the lion’s head. Walk toward the water, not the trees.*',
@@ -218,21 +218,21 @@ const STORIES = [
           why: 'The top of the map said not to open it until 2026, and it’s 2026 now!',
           look: ['Do not open until 2026.'] },
         choices: [
-          { text: 'Show Grandpa the map first', to: 'grandpa' },
+          { text: 'Show Zaide the map first', to: 'grandpa' },
           { text: 'Grab a shovel and race to the park!', to: 'bench' }
         ]
       },
       'grandpa': {
         paras: [
-          'Grandpa put on his glasses and squinted at the map. Then he laughed so hard his belly jiggled like a bowl of jelly.',
+          'Zaide put on his glasses and squinted at the map. Then he laughed so hard his belly jiggled like a bowl of jelly.',
           '“I drew this when I was eight years old!” he said. “My friends and I buried a time capsule in that park. A time capsule is a box of special things you hide for people to find in the future.”',
           '“What’s inside?” Jack asked.',
-          'Grandpa winked. “That’s for you to find out. Here’s my only hint: read every word of the clues very carefully.”',
+          'Zaide winked. “That’s for you to find out. Here’s my only hint: read every word of the clues very carefully.”',
           'He handed Jack a small shovel. “Be home before dinner, detectives.”'
         ],
         check: { q: 'What is a time capsule?',
           a: ['A box of special things hidden for the future', 'A kind of clock', 'A very old map'],
-          why: 'Grandpa explains it right after he says it: a box of special things you hide for people to find in the future.',
+          why: 'Zaide explains it right after he says it: a box of special things you hide for people to find in the future.',
           look: ['A time capsule is a box of special things you hide for people to find in the future.'] },
         choices: [ { text: 'Run to the park', to: 'bench' } ]
       },
@@ -320,26 +320,26 @@ const STORIES = [
           why: 'All they found was an old piece of gum, as hard as a pebble.',
           look: ['All they found was an old piece of gum, as hard as a pebble.'] },
         choices: [
-          { text: 'Race to Grandpa’s garage', to: 'garage' },
+          { text: 'Race to Zaide’s garage', to: 'garage' },
           { text: 'Forget it. Bang the lock with a rock!', to: 'bang' }
         ]
       },
       'bang': {
         paras: [
           '*CLANG! CLANG! CLANG!* Jack banged the lock with a rock until his arm was sore. The lock didn’t even get a scratch.',
-          'So they lugged the heavy box all the way back to Grandpa’s house.',
-          'Grandpa took one look and chuckled. “The key is where it all began,” he said. “Where did you find the map?”',
-          'Inside the old baseball glove, tucked in the thumb, was a tiny brass key. It fit perfectly! Inside the box were old baseball cards, a silver whistle, and a photo of Grandpa at eight years old, grinning with his friends.'
+          'So they lugged the heavy box all the way back to Zaide’s house.',
+          'Zaide took one look and chuckled. “The key is where it all began,” he said. “Where did you find the map?”',
+          'Inside the old baseball glove, tucked in the thumb, was a tiny brass key. It fit perfectly! Inside the box were old baseball cards, a silver whistle, and a photo of Zaide at eight years old, grinning with his friends.'
         ],
-        ending: { kind: 'good', title: 'The Helping-Hand Ending', tip: 'You found the treasure, but Grandpa had to help with the last clue. Can you solve it all by yourselves?' }
+        ending: { kind: 'good', title: 'The Helping-Hand Ending', tip: 'You found the treasure, but Zaide had to help with the last clue. Can you solve it all by yourselves?' }
       },
       'garage': {
         paras: [
-          'The friends ran all the way back to Grandpa’s garage, the box bouncing between them.',
+          'The friends ran all the way back to Zaide’s garage, the box bouncing between them.',
           'Jack grabbed the old baseball glove, where the map had been hiding. He stuck his fingers inside. There, tucked in the thumb, was a tiny brass key!',
           '*Click.* The lock popped open.',
-          'Inside were old baseball cards, a silver whistle, and a photo of Grandpa at eight years old, grinning with his friends. At the bottom was a letter: *If you solved every clue, you are real detectives. Now bury a treasure of your own for the kids of the future.*',
-          'Grandpa stood in the doorway, smiling. “Well, detectives,” he said, “what are you going to put in yours?”',
+          'Inside were old baseball cards, a silver whistle, and a photo of Zaide at eight years old, grinning with his friends. At the bottom was a letter: *If you solved every clue, you are real detectives. Now bury a treasure of your own for the kids of the future.*',
+          'Zaide stood in the doorway, smiling. “Well, detectives,” he said, “what are you going to put in yours?”',
           'Jack, Eitan, and Ben looked at each other and grinned. They already had a plan.'
         ],
         ending: { kind: 'super', title: 'The Super Detective Ending', tip: 'You solved every clue yourselves. That’s real detective reading!' }
@@ -503,25 +503,25 @@ const STORIES = [
   {
     id: 'vanishing-coin', title: 'The Vanishing Coin', topic: 'Magic', emoji: '🎩',
     paras: [
-      'Every Sunday, Grandpa did the same magic trick for Sammy. He held up a shiny quarter in his right hand. Then he passed it into his left hand, closed his fingers, and blew on them. When he opened his hand, the quarter was gone!',
+      'Every Sunday, Zaide did the same magic trick for Sammy. He held up a shiny quarter in his right hand. Then he passed it into his left hand, closed his fingers, and blew on them. When he opened his hand, the quarter was gone!',
       '“Where did it go?” Sammy always asked.',
-      'Grandpa would just smile and pull the quarter out from behind Sammy’s ear.',
-      'One Sunday, Sammy crossed his arms. “Please teach me, Grandpa. I want to do the trick at the class talent show.”',
-      'Grandpa leaned close and lowered his voice. “Here is the secret. The coin never goes into my left hand at all. I only pretend to pass it over. It stays hidden in my right hand the whole time.”',
+      'Zaide would just smile and pull the quarter out from behind Sammy’s ear.',
+      'One Sunday, Sammy crossed his arms. “Please teach me, Zaide. I want to do the trick at the class talent show.”',
+      'Zaide leaned close and lowered his voice. “Here is the secret. The coin never goes into my left hand at all. I only pretend to pass it over. It stays hidden in my right hand the whole time.”',
       '“But I always watch your left hand,” Sammy said.',
-      '“Exactly,” said Grandpa. “I look at my left hand, so you look there too. People’s eyes follow the magician’s eyes. That’s the real magic.”',
+      '“Exactly,” said Zaide. “I look at my left hand, so you look there too. People’s eyes follow the magician’s eyes. That’s the real magic.”',
       'For two weeks, Sammy practiced in front of the bathroom mirror. At first the quarter kept slipping through his fingers and clattering into the sink. But little by little, his hands grew smoother.',
       'On the day of the talent show, Sammy’s heart thumped like a drum as he walked onto the stage. He held up the quarter. He pretended to pass it to his left hand. Then he stared at his left hand as if it held a treasure.',
       'Every eye in the room stared at it too.',
       'Sammy blew on his fingers and opened them. Empty!',
       'The audience gasped. Then Sammy walked over to his teacher in the front row, reached behind her ear, and pulled out the quarter. The room exploded with clapping.',
       'After the show, his friend Yonatan ran up to him. “How did you do that?”',
-      'Sammy grinned, just like Grandpa. “A magician never tells his secrets.”'
+      'Sammy grinned, just like Zaide. “A magician never tells his secrets.”'
     ],
     qs: [
-      { q: 'What trick did Grandpa do every Sunday?',
+      { q: 'What trick did Zaide do every Sunday?',
         a: ['He made a quarter disappear, then found it behind Sammy’s ear', 'He pulled a rabbit out of a hat', 'He made a card float in the air', 'He turned a quarter into a dollar'],
-        why: 'Grandpa made the quarter vanish from his hand, then pulled it out from behind Sammy’s ear.',
+        why: 'Zaide made the quarter vanish from his hand, then pulled it out from behind Sammy’s ear.',
         look: ['When he opened his hand, the quarter was gone!', 'pull the quarter out from behind Sammy’s ear.'] },
       { q: 'Where was the coin really hiding during the trick?',
         a: ['In the magician’s right hand the whole time', 'In the magician’s left hand', 'Up the magician’s sleeve', 'Behind Sammy’s ear the whole time'],
@@ -529,10 +529,10 @@ const STORIES = [
         look: ['The coin never goes into my left hand at all. I only pretend to pass it over. It stays hidden in my right hand the whole time.'] },
       { q: 'Why does everyone watch the magician’s left hand?',
         a: ['Because the magician is looking at it', 'Because the coin is really in it', 'Because it is waving', 'Because it is wearing a glove'],
-        why: 'People look where the magician looks. That’s Grandpa’s “real magic.”',
+        why: 'People look where the magician looks. That’s Zaide’s “real magic.”',
         look: ['I look at my left hand, so you look there too. People’s eyes follow the magician’s eyes.'] },
       { q: 'How did Sammy get good at the trick?',
-        a: ['He practiced in front of the mirror for two weeks', 'He got it right the very first time', 'Grandpa gave him a special coin', 'Yonatan showed him how'],
+        a: ['He practiced in front of the mirror for two weeks', 'He got it right the very first time', 'Zaide gave him a special coin', 'Yonatan showed him how'],
         why: 'At first the quarter kept slipping, but Sammy kept practicing until his hands got smoother.',
         look: ['For two weeks, Sammy practiced in front of the bathroom mirror.', 'little by little, his hands grew smoother.'] },
       { q: 'The story says, “Sammy’s heart thumped like a drum.” How was Sammy feeling?',
@@ -544,9 +544,9 @@ const STORIES = [
         why: 'The audience is everyone watching the show. They gasped because the coin was gone!',
         look: ['The audience gasped.'] },
       { q: 'Why did Sammy say, “A magician never tells his secrets”?',
-        a: ['He wanted to be like Grandpa and keep the trick a surprise', 'He forgot how the trick worked', 'He was angry at Yonatan', 'Yonatan already knew the secret'],
-        why: 'Sammy grinned “just like Grandpa.” He kept the secret, just like Grandpa did for so long.',
-        look: ['Sammy grinned, just like Grandpa.'] }
+        a: ['He wanted to be like Zaide and keep the trick a surprise', 'He forgot how the trick worked', 'He was angry at Yonatan', 'Yonatan already knew the secret'],
+        why: 'Sammy grinned “just like Zaide.” He kept the secret, just like Zaide did for so long.',
+        look: ['Sammy grinned, just like Zaide.'] }
     ]
   },
   {
