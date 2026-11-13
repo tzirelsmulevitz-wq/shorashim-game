@@ -178,7 +178,7 @@ function play(mode, list = null) {
   stopClock();
   const deal = makeDealer(list);
   G = { mode, deal, typed: '', right: 0, done: 0, missed: [], marks: [], list, phase: 'type', ok: false, strokes: [], ctx: null,
-        total: mode === 'quiz' ? Math.min(10, list ? list.length : 10) : Infinity, end: Date.now() + 60000, f: deal() };
+        total: mode === 'quiz' ? Math.min(10, list ? list.length : 10) : Infinity, left: 60000, end: 0, f: deal() };
   app.innerHTML = `
     <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${mode === 'clock' ? 'Beat the Clock' : list ? 'Practice Missed' : 'Star Quiz'}</h1></div>
     ${mode === 'clock' ? `<div class="status"><span class="clock" id="clk">60</span><span class="pill" id="sc">0 right</span></div><div class="timebar"><i id="tb" style="width:100%"></i></div>`
@@ -208,6 +208,7 @@ function showWrite() {
     <div class="writebox"><div class="guide" aria-hidden="true">${ans}</div><canvas id="pad" aria-label="Write the answer here"></canvas></div>
     <div class="wtools"><button class="key del" id="undo">Undo</button><button class="key del" id="clr">Erase</button><button class="key go" id="next" aria-label="Next problem">Next ›</button></div>`;
   setupPad();
+  if (G.mode === 'clock') G.end = Date.now() + G.left;   // the clock runs only while writing
   $('undo').onclick = () => { if (!G || G.phase !== 'write') return; G.strokes.pop(); redraw(); };
   $('clr').onclick = () => { if (!G || G.phase !== 'write') return; G.strokes = []; redraw(); };
   $('next').onclick = next;
@@ -247,10 +248,11 @@ function draw() {
   } else $('sc').textContent = `${G.right} right`;
 }
 function tick() {
-  const left = Math.max(0, G.end - Date.now()), s = Math.ceil(left / 1000);
+  if (!G) return stopClock();
+  const writing = G.phase === 'write', left = Math.max(0, writing ? G.end - Date.now() : G.left), s = Math.ceil(left / 1000);
   const c = $('clk'); if (!c) return stopClock();
   c.textContent = s; c.classList.toggle('low', s <= 10); $('tb').style.width = (left / 600) + '%';
-  if (left <= 0) { stopClock(); finish(); }
+  if (writing && left <= 0) { stopClock(); finish(); }
 }
 function press(k) {
   if (!G || G.phase !== 'type') return;
@@ -272,6 +274,7 @@ function check() {
 function next() {
   if (!G || G.phase !== 'write') return;
   if (G.mode === 'quiz' && G.done >= G.total) return finish();
+  if (G.mode === 'clock') { G.left = Math.max(0, G.end - Date.now()); if (G.left <= 0) return finish(); }
   $('sheet').className = 'sheet'; $('fix').textContent = '';
   G.f = G.deal();
   showType(); draw();
