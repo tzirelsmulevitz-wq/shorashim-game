@@ -10,7 +10,7 @@
 <style>
 /* Layout: one centered column (max 620px). Problem written like a worksheet line, big number pad underneath. Same palette as Jack's other games. */
 :root {
-  --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
+  --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3; --guide: #dbe5ec;
   --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff; --sun: #f2b544;
   --stripe-a: #2f9e8f; --stripe-b: #d8efe9;
   --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2; --btn: #ffffff;
@@ -21,14 +21,14 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57; --guide: #34456a;
     --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --stripe-a: #23786c; --stripe-b: #1d3a3a;
     --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
     --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57; --guide: #34456a;
   --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --stripe-a: #23786c; --stripe-b: #1d3a3a;
   --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
   --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
@@ -78,7 +78,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-o
 .ans { min-width: 2.1em; border-bottom: 6px solid var(--ink); text-align: center; color: var(--block); }
 .ans.empty::after { content: "\00a0"; }
 .fix { min-height: 30px; margin-top: 8px; font-size: 20px; font-weight: 700; color: var(--bad); }
-.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.step { text-align: center; font-weight: 800; color: var(--muted); font-size: 17px; margin: 16px 0 0; }
+.pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
 .key { height: 74px; border-radius: 18px; border: 2px solid var(--line); background: var(--btn); font-size: 34px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
 .key:active { transform: translateY(3px); box-shadow: none; }
 .key.go { background: var(--good); color: #fff; border-color: var(--good); box-shadow: 0 3px 0 rgba(0,0,0,.25); font-size: 28px; }
@@ -87,17 +88,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-o
 .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); }
 .dot.g { background: var(--good); } .dot.b { background: var(--bad); }
 
-/* writing pad */
-.inputs { display: inline-flex; border: 2px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--btn); }
-.inputs button { height: 44px; padding: 0 12px; border: 0; background: transparent; cursor: pointer; font-weight: 700; font-size: 16px; }
-.inputs button.on { background: var(--block); color: var(--block-ink); }
-.writebox { position: relative; margin-top: 16px; border: 2px solid var(--line); border-radius: 20px; background: var(--btn); overflow: hidden;
+/* writing practice */
+.writebox { position: relative; margin-top: 10px; border: 2px solid var(--line); border-radius: 20px; background: var(--btn); overflow: hidden;
   background-image: linear-gradient(transparent calc(72% - 2px), var(--line) calc(72% - 2px), var(--line) 72%, transparent 72%); }
-.writebox canvas { display: block; width: 100%; height: 240px; touch-action: none; cursor: crosshair; }
-.writebox .tip { position: absolute; left: 0; right: 0; top: 12px; text-align: center; color: var(--muted); font-weight: 600; pointer-events: none; }
+.writebox canvas { position: relative; display: block; width: 100%; height: 240px; touch-action: none; cursor: crosshair; }
+.writebox .guide { position: absolute; left: 0; right: 0; top: 0; height: 72%; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px;
+  font-size: 150px; font-weight: 800; line-height: 1; color: var(--guide); pointer-events: none; user-select: none; font-variant-numeric: tabular-nums; }
 .wtools { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 10px; margin-top: 10px; }
 .wtools .key { height: 64px; font-size: 22px; }
-.reading { font-size: 15px; color: var(--muted); margin-top: 6px; min-height: 20px; font-weight: 600; }
 
 /* results */
 .result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
@@ -116,17 +114,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-o
 <body>
 <div class="band" aria-hidden="true"></div>
 <main class="wrap" id="app" aria-live="polite"></main>
-<script src="recognizer.js"></script>
 <script>
 const $ = id => document.getElementById(id), app = $('app');
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const store = { get(k, d) { try { const v = localStorage.getItem('jackmath:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
                 set(k, v) { try { localStorage.setItem('jackmath:' + k, JSON.stringify(v)); } catch (e) {} } };
 const X = '×';
-
-let inputMode = store.get('input', 'write');
-let hwState = 'loading';
-HW.load('digits-model.json').then(() => { hwState = 'ready'; }).catch(() => { hwState = 'failed'; });
 
 let tables = new Set(store.get('tables', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
 const key = () => [...tables].sort((a, b) => a - b).join(',');
@@ -153,11 +146,11 @@ function tone(fs, d = .1) { try { actx = actx || new (window.AudioContext || win
 
 /* ---------- HOME ---------- */
 function home(msg = '') {
-  stopClock();
+  stopClock(); G = null;
   const bc = store.get('clock:' + key(), null), bq = store.get('quiz:' + key(), null);
   app.innerHTML = `
     <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
-    <div class="hero"><div class="sign">7 <span>${X}</span> 8</div><p>Write each answer with your finger or a stylus, just like on your timed test.</p></div>
+    <div class="hero"><div class="sign">7 <span>${X}</span> 8</div><p>Type the answer on the keypad, then write it on the line.</p></div>
     <div class="label">Which tables? <small>${tables.size === 11 ? 'All of them' : tables.size + ' picked'}</small></div>
     <div class="tables">
       ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(t => `<button class="tbl ${tables.has(t) ? 'on' : ''}" data-t="${t}" aria-pressed="${tables.has(t)}">${t}</button>`).join('')}
@@ -175,49 +168,49 @@ function home(msg = '') {
   $('mQuiz').onclick = () => need() && play('quiz');
 }
 
-/* ---------- PLAY (both modes) ---------- */
+/* ---------- PLAY (both modes) ----------
+   Each problem has two steps:
+   1. Type the answer on the keypad. The keypad decides right or wrong.
+   2. Write the answer on the line as handwriting practice. Writing is not scored. */
 let G = null, timer = null;
 function stopClock() { clearInterval(timer); timer = null; }
 function play(mode, list = null) {
   stopClock();
   const deal = makeDealer(list);
-  G = { mode, deal, typed: '', right: 0, done: 0, missed: [], marks: [], locked: false, list,
+  G = { mode, deal, typed: '', right: 0, done: 0, missed: [], marks: [], list, phase: 'type', ok: false, strokes: [], ctx: null,
         total: mode === 'quiz' ? Math.min(10, list ? list.length : 10) : Infinity, end: Date.now() + 60000, f: deal() };
   app.innerHTML = `
-    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${mode === 'clock' ? 'Beat the Clock' : list ? 'Practice Missed' : 'Star Quiz'}</h1>
-      <div class="inputs" role="group" aria-label="How to answer"><button id="iWrite" class="${inputMode === 'write' ? 'on' : ''}">✏️ Write</button><button id="iKeys" class="${inputMode === 'keys' ? 'on' : ''}">123 Keys</button></div></div>
+    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${mode === 'clock' ? 'Beat the Clock' : list ? 'Practice Missed' : 'Star Quiz'}</h1></div>
     ${mode === 'clock' ? `<div class="status"><span class="clock" id="clk">60</span><span class="pill" id="sc">0 right</span></div><div class="timebar"><i id="tb" style="width:100%"></i></div>`
                        : `<div class="status"><div class="dots" id="dots"></div><span class="pill" id="sc"></span></div>`}
     <div class="sheet" id="sheet"><div class="eq" id="eq"></div><div class="fix" id="fix"></div></div>
     <div id="input"></div>`;
   $('quit').onclick = () => home();
-  $('iWrite').onclick = () => setInput('write'); $('iKeys').onclick = () => setInput('keys');
-  buildInput();
+  showType();
   draw();
   if (mode === 'clock') timer = setInterval(tick, 200);
 }
-function setInput(m) {
-  if (m === 'write' && hwState === 'failed') return;
-  inputMode = m; store.set('input', m);
-  $('iWrite').classList.toggle('on', m === 'write'); $('iKeys').classList.toggle('on', m === 'keys');
-  G.typed = ''; buildInput(); draw();
-}
-function buildInput() {
-  if (inputMode === 'write' && hwState === 'failed') inputMode = 'keys';
-  G.strokes = []; G.ctx = null;
-  if (inputMode === 'keys') {
-    $('input').innerHTML = `<div class="pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="key" data-k="${n}">${n}</button>`).join('')}
+
+/* step 1: keypad */
+function showType() {
+  G.phase = 'type'; G.typed = ''; G.ok = false; G.strokes = []; G.ctx = null;
+  $('input').innerHTML = `<div class="step">Step 1 · Type your answer</div>
+    <div class="pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="key" data-k="${n}">${n}</button>`).join('')}
       <button class="key del" data-k="del" aria-label="Erase">⌫</button><button class="key" data-k="0">0</button><button class="key go" data-k="ok" aria-label="Check answer">✓</button></div>`;
-    document.querySelectorAll('#input .key').forEach(b => b.onclick = () => press(b.dataset.k));
-    return;
-  }
-  $('input').innerHTML = `<div class="writebox"><canvas id="pad" aria-label="Write your answer here"></canvas><div class="tip" id="tip">Write your answer here</div></div>
-    <div class="reading" id="reading"></div>
-    <div class="wtools"><button class="key del" id="undo">Undo</button><button class="key del" id="clr">Erase all</button><button class="key go" id="wok" aria-label="Check answer">✓</button></div>`;
+  document.querySelectorAll('#input .key').forEach(b => b.onclick = () => press(b.dataset.k));
+}
+
+/* step 2: write the answer on the line (practice only, not scored) */
+function showWrite() {
+  G.phase = 'write'; G.strokes = []; G.ctx = null;
+  const ans = G.f[0] * G.f[1];
+  $('input').innerHTML = `<div class="step">Step 2 · ${G.ok ? 'Now write it on the line' : 'Write the right answer on the line'}</div>
+    <div class="writebox"><div class="guide" aria-hidden="true">${ans}</div><canvas id="pad" aria-label="Write the answer here"></canvas></div>
+    <div class="wtools"><button class="key del" id="undo">Undo</button><button class="key del" id="clr">Erase</button><button class="key go" id="next" aria-label="Next problem">Next ›</button></div>`;
   setupPad();
-  $('undo').onclick = () => { if (G.locked) return; G.strokes.pop(); redraw(); if (!G.strokes.length) clearPad(); else reread(); };
-  $('clr').onclick = () => { if (G.locked) return; clearPad(); };
-  $('wok').onclick = () => { if (G.locked) return; clearTimeout(G.rt); readNow(); check(); };
+  $('undo').onclick = () => { if (!G || G.phase !== 'write') return; G.strokes.pop(); redraw(); };
+  $('clr').onclick = () => { if (!G || G.phase !== 'write') return; G.strokes = []; redraw(); };
+  $('next').onclick = next;
 }
 function setupPad() {
   const cv = $('pad'), dpr = window.devicePixelRatio || 1, r = cv.getBoundingClientRect();
@@ -225,9 +218,9 @@ function setupPad() {
   const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
   G.strokes = []; G.ctx = ctx; G.cv = cv; let cur = null;
   const pt = e => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
-  cv.onpointerdown = e => { if (G.locked) return; e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {} cur = [pt(e)]; G.strokes.push(cur); clearTimeout(G.rt); $('tip').hidden = true; redraw(); };
+  cv.onpointerdown = e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {} cur = [pt(e)]; G.strokes.push(cur); redraw(); };
   cv.onpointermove = e => { if (!cur) return; e.preventDefault(); const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; for (const ev of (evs.length ? evs : [e])) cur.push(pt(ev)); redraw(); };
-  const end = () => { if (!cur) return; cur = null; reread(); };
+  const end = () => { cur = null; };
   cv.onpointerup = end; cv.onpointercancel = end; cv.onlostpointercapture = end;
   redraw();
 }
@@ -242,21 +235,15 @@ function redraw() {
     ctx.beginPath(); s.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
   }
 }
-function readNow() {
-  if (hwState !== 'ready') { const rd = $('reading'); if (rd) rd.textContent = 'Getting the pencil ready…'; return; }
-  const r = HW.read(G.strokes); G.typed = r.text.slice(0, 3);
-  const rd = $('reading'); if (rd) rd.textContent = G.typed ? `I read ${G.typed}. Not right? Tap Undo or Erase all and write it again.` : '';
-  draw();
-}
-function reread() { clearTimeout(G.rt); G.rt = setTimeout(readNow, 220); }
-function clearPad() { G.strokes = []; G.typed = ''; redraw(); const t = $('tip'); if (t) t.hidden = false; const rd = $('reading'); if (rd) rd.textContent = ''; draw(); }
 
 function draw() {
+  if (!G || !$('eq')) return;
   const [a, b] = G.f;
   $('eq').innerHTML = `<span>${a}</span><span>${X}</span><span>${b}</span><span>=</span><span class="ans ${G.typed ? '' : 'empty'}">${G.typed}</span>`;
   if (G.mode === 'quiz') {
+    const now = G.phase === 'write' ? G.done : G.done + 1;
     $('dots').innerHTML = Array.from({ length: G.total }, (_, i) => `<span class="dot ${G.marks[i] === true ? 'g' : G.marks[i] === false ? 'b' : ''}"></span>`).join('');
-    $('sc').textContent = `${Math.min(G.done + 1, G.total)} of ${G.total}`;
+    $('sc').textContent = `${Math.min(now, G.total)} of ${G.total}`;
   } else $('sc').textContent = `${G.right} right`;
 }
 function tick() {
@@ -266,28 +253,28 @@ function tick() {
   if (left <= 0) { stopClock(); finish(); }
 }
 function press(k) {
-  if (G.locked) return;
+  if (!G || G.phase !== 'type') return;
   if (k === 'del') G.typed = G.typed.slice(0, -1);
   else if (k === 'ok') return check();
   else if (G.typed.length < 3) G.typed = (G.typed === '0' ? '' : G.typed) + k;
   draw();
 }
 function check() {
-  if (!G.typed) return;
+  if (!G || G.phase !== 'type' || !G.typed) return;
   const [a, b] = G.f, ok = +G.typed === a * b, sheet = $('sheet');
-  G.done++; G.marks.push(ok);
+  G.done++; G.marks.push(ok); G.ok = ok;
   if (ok) { G.right++; tone([660, 880], .08); }
   else { G.missed.push([a, b]); tone([220, 196], .14); $('fix').textContent = `${a} ${X} ${b} = ${a * b}`; }
-  sheet.className = 'sheet ' + (ok ? 'ok' : 'no'); G.locked = true;
-  setTimeout(() => {
-    if (!G || !$('sheet')) return;
-    G.locked = false; G.typed = ''; $('sheet').className = 'sheet'; $('fix').textContent = '';
-    if (inputMode === 'write') clearPad();
-    if (G.mode === 'quiz' && G.done >= G.total) return finish();
-    if (G.mode === 'clock' && Date.now() >= G.end) return;
-    G.f = G.deal(); draw();
-  }, ok ? 350 : 1300);
+  sheet.className = 'sheet ' + (ok ? 'ok' : 'no');
+  showWrite();
   draw();
+}
+function next() {
+  if (!G || G.phase !== 'write') return;
+  if (G.mode === 'quiz' && G.done >= G.total) return finish();
+  $('sheet').className = 'sheet'; $('fix').textContent = '';
+  G.f = G.deal();
+  showType(); draw();
 }
 function finish() {
   stopClock();
@@ -305,6 +292,7 @@ function finish() {
   }
   if (G.right > 0 && (G.mode === 'clock' || G.right === G.total)) tone([523, 659, 784], .12);
   const again = G.mode, list = G.list;
+  G = null;
   app.innerHTML = `<div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${again === 'clock' ? 'Beat the Clock' : 'Star Quiz'}</h1></div>
     <div class="result">${head}
       ${uniq.length ? `<div class="missed"><h3>Facts to practice</h3><div class="facts">${uniq.map(([a, b]) => `<div class="fact">${a} ${X} ${b} = ${a * b}</div>`).join('')}</div></div>` : ''}
@@ -318,14 +306,15 @@ function finish() {
     const drill = []; for (let r = 0; r < Math.ceil(10 / uniq.length); r++) drill.push(...uniq);   // repeat missed facts to fill 10
     play('quiz', drill.slice(0, Math.max(10, uniq.length)));
   };
-  G = null;
 }
 /* physical keyboard too */
 document.addEventListener('keydown', e => {
-  if (!G) return;
-  if (/^[0-9]$/.test(e.key)) press(e.key);
-  else if (e.key === 'Backspace') press('del');
-  else if (e.key === 'Enter') press('ok');
+  if (!G || !$('eq')) return;
+  if (G.phase === 'type') {
+    if (/^[0-9]$/.test(e.key)) { e.preventDefault(); press(e.key); }
+    else if (e.key === 'Backspace') { e.preventDefault(); press('del'); }
+    else if (e.key === 'Enter') { e.preventDefault(); press('ok'); }
+  } else if (e.key === 'Enter') { e.preventDefault(); next(); }
 });
 home();
 </script>
