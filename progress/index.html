@@ -68,6 +68,16 @@ h2 { font-size: 20px; margin: 26px 0 10px; }
   <h2>Doing well</h2>
   <div class="card" id="strong"></div>
 
+  <h2>Send to Claude</h2>
+  <div class="card">
+    <p class="sub" style="margin-bottom:10px">Paste the access token once. It is saved only on this iPad. Then tap <b>Send results</b> and Claude can read them.</p>
+    <input id="tok" type="password" autocomplete="off" autocapitalize="off" placeholder="Access token" style="width:100%;min-height:48px;padding:0 12px;border-radius:12px;border:2px solid var(--line);background:var(--btn);color:var(--ink);font:inherit">
+    <div class="actions" style="margin-top:12px">
+      <button class="btnbig" id="send">Send results</button>
+      <button class="ghost" id="forget">Forget token</button>
+    </div>
+  </div>
+
   <div class="actions">
     <button class="btnbig" id="copy">Copy report</button>
     <button class="ghost" id="clear">Clear log</button>
@@ -138,6 +148,27 @@ document.getElementById('clear').onclick = () => {
   try { localStorage.removeItem('jacklog'); } catch (e) {}
   render(); say('Log cleared.');
 };
+const REPO = 'tzirelsmulevitz-wq/jack-progress', FILE = 'results.json', API = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
+function savedToken() { try { return localStorage.getItem('jackgh') || ''; } catch (e) { return ''; } }
+function b64(text) { const bytes = new TextEncoder().encode(text); let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); }
+document.getElementById('tok').placeholder = savedToken() ? 'Token saved on this iPad' : 'Paste the access token';
+document.getElementById('send').onclick = async () => {
+  const typed = document.getElementById('tok').value.trim(), t = typed || savedToken();
+  if (!t) return say('Paste the access token first.');
+  if (typed) { try { localStorage.setItem('jackgh', typed); } catch (e) {} document.getElementById('tok').value = ''; document.getElementById('tok').placeholder = 'Token saved on this iPad'; }
+  const h = { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  try {
+    let sha = null;
+    const g = await fetch(API, { headers: h, cache: 'no-store' });
+    if (g.status === 200) sha = (await g.json()).sha;
+    else if (g.status !== 404) return say(g.status === 401 || g.status === 403 ? 'The token was not accepted. Paste a new one.' : 'GitHub said ' + g.status + '. Try again.');
+    const now = new Date().toISOString();
+    const body = { message: 'Results ' + now, content: b64(JSON.stringify({ updated: now, entries: load() }, null, 1)), ...(sha ? { sha } : {}) };
+    const p = await fetch(API, { method: 'PUT', headers: { ...h, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    say(p.ok ? 'Sent. Claude can now read Jack\'s results.' : 'Not sent (' + p.status + '). Try again.');
+  } catch (e) { say('No internet connection. Try again when you are online.'); }
+};
+document.getElementById('forget').onclick = () => { try { localStorage.removeItem('jackgh'); } catch (e) {} document.getElementById('tok').placeholder = 'Paste the access token'; say('Token removed from this iPad.'); };
 render();
 </script>
 <!-- auto-update -->
