@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Vocabulary">
+<title>Jack's Vocabulary</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one centered column (max 620px). Same palette and feel as the Times Tables page. */
+:root {
+  --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3; --guide: #dbe5ec;
+  --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff; --sun: #f2b544;
+  --vocab-a: #7a4fc2; --vocab-b: #ebe0f7;
+  --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2; --btn: #ffffff;
+  --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
+  --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57; --guide: #34456a;
+    --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --vocab-a: #9a72dc; --vocab-b: #2b2440;
+    --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+    --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57; --guide: #34456a;
+  --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --vocab-a: #9a72dc; --vocab-b: #2b2440;
+  --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+  --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--sky); color: var(--ink); }
+body { margin: 0; font-family: var(--f-ui); font-size: 18px; line-height: 1.4; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+[hidden] { display: none !important; }
+button, a { font: inherit; color: inherit; touch-action: manipulation; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+.band { height: 14px; background: repeating-linear-gradient(90deg, var(--vocab-a) 0 28px, var(--vocab-b) 28px 56px); }
+.wrap { max-width: 620px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 14px; }
+.topbar h1 { font-size: 22px; font-weight: 600; margin: 0; flex: 1; }
+.iconbtn { min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none; }
+.pill { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); white-space: nowrap; }
+
+/* home */
+.hero { text-align: center; padding: 6px 0 4px; }
+.hero .word { font-size: 56px; font-weight: 800; line-height: 1; color: var(--vocab-a); }
+.hero p { color: var(--muted); margin: 8px 0 0; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.mode { background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 6px; justify-items: center; }
+.mode .ico { font-size: 38px; line-height: 1; }
+.mode b { font-size: 22px; }
+.mode span { color: var(--muted); font-size: 15px; }
+.mode .best { color: var(--block); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* study list */
+.card { background: var(--sand); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 16px 18px; margin-bottom: 12px; }
+.card .w { font-size: 30px; font-weight: 800; color: var(--vocab-a); }
+.card .m { font-size: 18px; margin-top: 4px; }
+.card .n { font-size: 16px; color: var(--muted); margin-top: 8px; font-weight: 600; }
+
+/* quiz */
+.dots { display: flex; gap: 6px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); }
+.dot.g { background: var(--good); } .dot.b { background: var(--bad); }
+.sheet { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 24px 16px 22px; text-align: center; transition: background .15s, border-color .15s; }
+.sheet.ok { background: var(--good-bg); border-color: var(--good); }
+.sheet.no { background: var(--bad-bg); border-color: var(--bad); }
+.sheet .word { font-size: clamp(48px, 13vw, 80px); font-weight: 800; line-height: 1.1; color: var(--vocab-a); }
+.sheet .meaning { font-size: clamp(22px, 5.5vw, 28px); font-weight: 700; line-height: 1.3; margin: 6px 0 0; }
+.sheet .ask { font-size: 18px; color: var(--muted); font-weight: 700; }
+.fix { min-height: 30px; margin-top: 10px; font-size: 18px; font-weight: 700; color: var(--bad); }
+.gloss { margin-top: 6px; font-size: 18px; font-weight: 600; line-height: 1.35; min-height: 24px; }
+.opts { display: grid; gap: 10px; margin-top: 16px; }
+.opt { min-height: 60px; padding: 12px 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 19px; font-weight: 700; text-align: left; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.opt:active { transform: translateY(3px); box-shadow: none; }
+.opt.right { background: var(--good); color: #fff; border-color: var(--good); box-shadow: none; }
+.opt.wrong { background: var(--bad); color: #fff; border-color: var(--bad); box-shadow: none; }
+.opt:disabled { cursor: default; }
+.opt:disabled:not(.right):not(.wrong) { opacity: .5; }
+.step { text-align: center; font-weight: 800; color: var(--muted); font-size: 17px; margin: 16px 0 0; }
+.writebox { position: relative; margin-top: 10px; border: 2px solid var(--line); border-radius: 20px; background: var(--btn); overflow: hidden;
+  background-image: linear-gradient(transparent calc(72% - 2px), var(--line) calc(72% - 2px), var(--line) 72%, transparent 72%); }
+.writebox canvas { position: relative; display: block; width: 100%; height: 240px; touch-action: none; cursor: crosshair; }
+.writebox .guide { position: absolute; left: 0; right: 0; top: 0; height: 72%; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px;
+  font-weight: 800; line-height: 1; color: var(--guide); pointer-events: none; user-select: none; white-space: nowrap; }
+.wtools { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 10px; margin-top: 10px; }
+.key { height: 64px; border-radius: 18px; border: 2px solid var(--line); background: var(--btn); font-size: 22px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.key:active { transform: translateY(3px); box-shadow: none; }
+.key.go { background: var(--good); color: #fff; border-color: var(--good); box-shadow: 0 3px 0 rgba(0,0,0,.25); }
+
+/* results */
+.result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
+.big { font-size: 64px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.05; }
+.stars { font-size: 54px; letter-spacing: 6px; line-height: 1; }
+.stars .on { color: var(--sun); } .stars .off { color: var(--line); }
+.missed { margin-top: 18px; }
+.missed h3 { font-size: 18px; color: var(--muted); margin: 0 0 10px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.fact { padding: 10px; border-radius: 12px; background: var(--bad-bg); font-weight: 800; font-size: 20px; }
+.actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.btnbig { min-height: 56px; padding: 0 24px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
+.ghost { min-height: 56px; padding: 0 22px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="band" aria-hidden="true"></div>
+<main class="wrap" id="app" aria-live="polite"></main>
+<script>
+const $ = id => document.getElementById(id), app = $('app');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const store = { get(k, d) { try { const v = localStorage.getItem('jackvocab:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem('jackvocab:' + k, JSON.stringify(v)); } catch (e) {} } };
+
+/* The words from Jack's Friday vocabulary sheet (Quiz Friday, #4). */
+const WORDS = [
+  { w: 'depth', m: 'a distance below a surface; a deep place' },
+  { w: 'mystery', m: 'something that is not known, or difficult to understand', note: 'Mystery = something you don’t understand yet' },
+  { w: 'wonder', m: 'something that is very surprising, beautiful, or amazing', note: 'Wonder = feel curious or amazed' },
+  { w: 'explore', m: 'to travel over through a place to learn more about it or to find something', note: 'Explore = investigate to learn more' },
+  { w: 'fluency', m: 'the ability to read with accuracy, phrasing, and expression at an appropriate rate' },
+  { w: 'marsh', m: 'an area of soft, wet land that has many grasses and other plants' },
+  { w: 'refrain', m: 'to stop yourself from doing something' },
+  { w: 'luminous', m: 'giving off light; brightly lit' },
+  { w: 'inspire', m: 'to make a person want to do something; to give a person an idea about what to create' },
+  { w: 'perform', m: 'to do or present something to entertain an audience' }
+];
+
+/* ---------- HOME ---------- */
+let Q = null;
+function home() {
+  Q = null;
+  const bq = store.get('quiz', null);
+  app.innerHTML = `
+    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
+    <div class="hero"><div class="word">explore</div><p>Learn the words, then take the quiz.</p></div>
+    <div class="modes">
+      <button class="mode" id="mStudy"><div class="ico">📚</div><b>Study the Words</b><span>All 10 words and what they mean</span></button>
+      <button class="mode" id="mQuiz"><div class="ico">⭐</div><b>Word Quiz</b><span>10 questions, earn 3 stars</span><span class="best">${bq != null ? 'Best: ' + bq + ' / 10' : ''}</span></button>
+    </div>`;
+  $('mStudy').onclick = study;
+  $('mQuiz').onclick = startQuiz;
+}
+
+/* ---------- STUDY ---------- */
+function study() {
+  app.innerHTML = `
+    <div class="topbar"><button class="iconbtn" id="back">‹ Back</button><h1>Study the Words</h1></div>
+    ${WORDS.map(x => `<div class="card"><div class="w">${x.w}</div><div class="m">${x.m}</div>${x.note ? `<div class="n">${x.note}</div>` : ''}</div>`).join('')}
+    <div class="actions"><button class="btnbig" id="toQuiz">Word Quiz</button></div>`;
+  $('back').onclick = home;
+  $('toQuiz').onclick = startQuiz;
+}
+
+/* ---------- QUIZ ----------
+   Each question is either "word → meaning" or "meaning → word". Jack picks the answer,
+   then writes the word on the line as handwriting practice (not scored). */
+function startQuiz() {
+  const qs = shuffle(WORDS).map(x => {
+    const dir = Math.random() < .5 ? 'wm' : 'mw';
+    const others = shuffle(WORDS.filter(o => o.w !== x.w)).slice(0, 3);
+    return { word: x, dir, opts: shuffle([x, ...others]) };
+  });
+  Q = { qs, i: 0, right: 0, missed: [], phase: 'ask', ok: false, strokes: [], ctx: null };
+  showQ();
+}
+function showQ() {
+  const q = Q.qs[Q.i];
+  const top = q.dir === 'wm'
+    ? `<div class="word">${q.word.w}</div><div class="ask">What does it mean?</div>`
+    : `<div class="ask">Which word means:</div><div class="meaning">${q.word.m}</div>`;
+  const opts = q.opts.map((o, k) => `<button class="opt" data-k="${k}">${q.dir === 'wm' ? o.m : o.w}</button>`).join('');
+  app.innerHTML = `
+    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>Word Quiz</h1><span class="pill">${Q.i + 1} of ${Q.qs.length}</span></div>
+    <div class="dots" id="dots">${Q.qs.map((_, n) => `<span class="dot ${Q.marks && Q.marks[n] === true ? 'g' : Q.marks && Q.marks[n] === false ? 'b' : ''}"></span>`).join('')}</div>
+    <div class="sheet" id="sheet" style="margin-top:14px">${top}<div class="fix" id="fix"></div><div class="gloss" id="gloss"></div></div>
+    <div id="input"><div class="opts" id="opts">${opts}</div></div>`;
+  $('quit').onclick = home;
+  document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => pick(+b.dataset.k));
+}
+function pick(k) {
+  if (!Q || Q.phase !== 'ask') return;
+  const q = Q.qs[Q.i], ok = q.opts[k] === q.word;
+  Q.phase = 'write'; Q.ok = ok;
+  Q.marks = Q.marks || []; Q.marks[Q.i] = ok;
+  if (ok) Q.right++; else Q.missed.push(q.word);
+  $('sheet').className = 'sheet ' + (ok ? 'ok' : 'no');
+  if (!ok) $('fix').textContent = 'The answer is the word below';
+  $('gloss').textContent = `${q.word.w} = ${q.word.m}`;
+  document.querySelectorAll('#opts .opt').forEach((b, n) => {
+    b.disabled = true;
+    if (q.opts[n] === q.word) b.classList.add('right');
+    else if (n === k) b.classList.add('wrong');
+  });
+  const dots = document.querySelectorAll('#dots .dot')[Q.i];
+  if (dots) dots.className = 'dot ' + (ok ? 'g' : 'b');
+  setTimeout(showWrite, ok ? 500 : 900);
+}
+
+/* step 2: write the word on the line */
+function showWrite() {
+  if (!Q || Q.phase !== 'write') return;
+  const word = Q.qs[Q.i].word.w, size = Math.min(110, Math.floor(520 / (word.length * 0.6)));
+  Q.strokes = []; Q.ctx = null;
+  $('input').innerHTML = `<div class="step">Now write the word on the line</div>
+    <div class="writebox"><div class="guide" aria-hidden="true" style="font-size:${size}px">${word}</div><canvas id="pad" aria-label="Write the word here"></canvas></div>
+    <div class="wtools"><button class="key" id="undo">Undo</button><button class="key" id="clr">Erase</button><button class="key go" id="next" aria-label="Next question">Next ›</button></div>`;
+  setupPad();
+  $('undo').onclick = () => { if (!Q || Q.phase !== 'write') return; Q.strokes.pop(); redraw(); };
+  $('clr').onclick = () => { if (!Q || Q.phase !== 'write') return; Q.strokes = []; redraw(); };
+  $('next').onclick = next;
+}
+function next() {
+  if (!Q || Q.phase !== 'write') return;
+  Q.phase = 'ask'; Q.i++;
+  if (Q.i >= Q.qs.length) return finish();
+  showQ();
+}
+function setupPad() {
+  const cv = $('pad'), dpr = window.devicePixelRatio || 1, r = cv.getBoundingClientRect();
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
+  Q.strokes = []; Q.ctx = ctx; Q.cv = cv; let cur = null;
+  const pt = e => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  cv.onpointerdown = e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {} cur = [pt(e)]; Q.strokes.push(cur); redraw(); };
+  cv.onpointermove = e => { if (!cur) return; e.preventDefault(); const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; for (const ev of (evs.length ? evs : [e])) cur.push(pt(ev)); redraw(); };
+  const end = () => { cur = null; };
+  cv.onpointerup = end; cv.onpointercancel = end; cv.onlostpointercapture = end;
+  redraw();
+}
+function redraw() {
+  if (!Q || !Q.ctx) return;
+  const { ctx, cv } = Q;
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.lineWidth = 7; ctx.lineCap = ctx.lineJoin = 'round';
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#1d2b45';
+  ctx.fillStyle = ctx.strokeStyle;
+  for (const s of Q.strokes) {
+    if (s.length === 1) { ctx.beginPath(); ctx.arc(s[0][0], s[0][1], 3.5, 0, 7); ctx.fill(); continue; }
+    ctx.beginPath(); s.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+  }
+}
+
+function finish() {
+  const stars = Q.right >= 10 ? 3 : Q.right >= 8 ? 2 : Q.right >= 5 ? 1 : 0, total = Q.qs.length;
+  const best = store.get('quiz', null), isBest = best == null || Q.right > best;
+  if (isBest) store.set('quiz', Q.right);
+  const uniq = [...new Set(Q.missed)];
+  app.innerHTML = `<div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>Word Quiz</h1></div>
+    <div class="result">
+      <div class="stars">${[0, 1, 2].map(i => `<span class="${i < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
+      <div class="big">${Q.right} / ${total}</div>
+      <div>${Q.right === total ? 'Perfect!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}${isBest && best != null ? ' · new best!' : ''}</div>
+      ${uniq.length ? `<div class="missed"><h3>Words to practice</h3><div class="facts">${uniq.map(x => `<div class="fact">${x.w}<br><span style="font-size:15px;font-weight:600">${x.m}</span></div>`).join('')}</div></div>` : ''}
+      <div class="actions">
+        <button class="btnbig" id="again">Play again</button>
+        <button class="ghost" id="study">Study the words</button>
+        <button class="ghost" id="menu">Menu</button></div></div>`;
+  $('quit').onclick = home; $('menu').onclick = home; $('study').onclick = study;
+  $('again').onclick = startQuiz;
+  Q = null;
+}
+
+/* keyboard: 1–4 pick an answer, Enter goes to the next question */
+document.addEventListener('keydown', e => {
+  if (!Q || !$('sheet')) return;
+  if (Q.phase === 'ask' && /^[1-4]$/.test(e.key)) { e.preventDefault(); pick(+e.key - 1); }
+  else if (Q.phase === 'write' && e.key === 'Enter') { e.preventDefault(); next(); }
+});
+home();
+</script>
+<!-- auto-update -->
+<script>
+/* Auto-update. Safari can keep showing an old copy of a page for up to 10 minutes after it changes.
+   On load: compare this copy with the live one and switch to the new version if they differ.
+   If a newer version appears while the page is open, show a tap-to-update button instead,
+   so a game in progress isn't lost. The ?v= check means it can never reload in a loop. */
+(function () {
+  if (!window.fetch || !window.Promise) return;
+  var path = location.pathname, busy = false;
+  function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function text(url, mode) { return fetch(url, { cache: mode }).then(function (r) { return r.ok ? r.text() : null; }); }
+  function go(v) { location.replace(path + '?v=' + v + location.hash); }
+  function offer(v) {
+    if (document.getElementById('autoUpd')) return;
+    var b = document.createElement('button');
+    b.id = 'autoUpd'; b.type = 'button'; b.textContent = '✨ New update! Tap to get it';
+    b.style.cssText = 'position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);z-index:99;border:none;border-radius:999px;padding:14px 26px;font:600 19px system-ui,sans-serif;background:#2f63c9;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap';
+    b.onclick = function () { go(v); };
+    document.body.appendChild(b);
+  }
+  function check(onLoad) {
+    if (busy) return; busy = true;
+    Promise.all([text(location.href, 'force-cache'), text(path + '?t=' + Date.now(), 'no-store')]).then(function (r) {
+      var mine = r[0], live = r[1];
+      if (!mine || !live || mine === live) return;
+      var v = hash(live);
+      if (new URLSearchParams(location.search).get('v') === v) return;
+      if (onLoad) go(v); else offer(v);
+    }).catch(function () {}).then(function () { busy = false; });
+  }
+  check(true);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') check(false); });
+})();
+</script>
+</body>
+</html>
