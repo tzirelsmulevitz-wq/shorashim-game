@@ -173,15 +173,15 @@ function home(msg = '') {
   const bc = store.get('clock:' + key(), null), bq = store.get('quiz:' + key(), null);
   app.innerHTML = `
     <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
-    <div class="hero"><div class="sign">7 <span>${X}</span> 8</div><p>Type the answer on the keypad, then write it on the line.</p></div>
+    <div class="hero"><div class="sign">7 <span>${X}</span> 8</div><p>Type each answer on the keypad.</p></div>
     <div class="label">Which tables? <small>${tables.size === 11 ? 'All of them' : tables.size + ' picked'}</small></div>
     <div class="tables">
       ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(t => `<button class="tbl ${tables.has(t) ? 'on' : ''}" data-t="${t}" aria-pressed="${tables.has(t)}">${t}</button>`).join('')}
       <button class="tbl all" id="allBtn">${tables.size === 11 ? 'Clear' : 'All'}</button>
     </div>
     <div class="modes">
-      <button class="mode" id="mClock"><div class="ico">⏱️</div><b>Beat the Clock</b><span>How many in 60 seconds?</span><span class="best">${bc != null ? 'Best: ' + bc : ''}</span></button>
-      <button class="mode" id="mQuiz"><div class="ico">⭐</div><b>Star Quiz</b><span>10 problems, earn 3 stars</span><span class="best">${bq != null ? 'Best: ' + bq + ' / 10' : ''}</span></button>
+      <button class="mode" id="mClock"><div class="ico">⏱️</div><b>Beat the Clock</b><span>As many as you can in 1:30</span><span class="best">${bc != null ? 'Best: ' + bc : ''}</span></button>
+      <button class="mode" id="mQuiz"><div class="ico">⭐</div><b>Star Quiz</b><span>20 problems, earn 3 stars</span><span class="best">${bq != null ? 'Best: ' + bq + ' / 20' : ''}</span></button>
     </div>
     <div class="warn" id="warn">${msg}</div>`;
   document.querySelectorAll('.tbl[data-t]').forEach(b => b.onclick = () => { const t = +b.dataset.t; tables.has(t) ? tables.delete(t) : tables.add(t); saveTables(); home(); });
@@ -192,72 +192,36 @@ function home(msg = '') {
 }
 
 /* ---------- PLAY (both modes) ----------
-   Each problem has two steps:
-   1. Type the answer on the keypad. The keypad decides right or wrong.
-   2. Write the answer on the line as handwriting practice. Writing is not scored. */
+   Jack types each answer on the keypad. Right or wrong shows for a moment, then the next question.
+   Star Quiz: 20 questions. Beat the Clock: as many as he can in 1:30, up to 20. */
+const ROUND = 20, CLOCK_MS = 90000;
 let G = null, timer = null;
 function stopClock() { clearInterval(timer); timer = null; }
 function play(mode, list = null) {
   stopClock();
   const deal = makeDealer(list);
-  G = { mode, deal, typed: '', right: 0, done: 0, missed: [], marks: [], list, phase: 'type', ok: false, strokes: [], ctx: null,
-        total: mode === 'quiz' ? Math.min(10, list ? list.length : 10) : Infinity, left: 60000, end: 0, f: deal() };
+  G = { mode, deal, typed: '', right: 0, done: 0, missed: [], marks: [], list, locked: false, ok: false,
+        total: ROUND, left: CLOCK_MS, end: 0, f: deal() };
+  const title = mode === 'clock' ? 'Beat the Clock' : list ? 'Practice Missed' : 'Star Quiz';
   app.innerHTML = `
-    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${mode === 'clock' ? 'Beat the Clock' : list ? 'Practice Missed' : 'Star Quiz'}</h1></div>
-    ${mode === 'clock' ? `<div class="status"><span class="clock" id="clk">60</span><span class="pill" id="sc">0 right</span></div><div class="timebar"><i id="tb" style="width:100%"></i></div>`
+    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${title}</h1></div>
+    ${mode === 'clock' ? `<div class="status"><span class="clock" id="clk">1:30</span><span class="pill" id="sc">0 right</span></div><div class="timebar"><i id="tb" style="width:100%"></i></div>`
                        : `<div class="status"><div class="dots" id="dots"></div><span class="pill" id="sc"></span></div>`}
     <div class="sheet" id="sheet"><div class="eq" id="eq"></div><div class="fix" id="fix"></div></div>
     <div id="input"></div>`;
   $('quit').onclick = () => home();
   showType();
   draw();
-  if (mode === 'clock') timer = setInterval(tick, 200);
+  if (mode === 'clock') { G.end = Date.now() + CLOCK_MS; timer = setInterval(tick, 200); }
 }
 
-/* step 1: keypad */
+/* the keypad */
 function showType() {
-  G.phase = 'type'; G.typed = ''; G.ok = false; G.strokes = []; G.ctx = null;
-  $('input').innerHTML = `<div class="step">Step 1 · Type your answer</div>
+  G.typed = ''; G.ok = false; G.locked = false;
+  $('input').innerHTML = `<div class="step">Type your answer</div>
     <div class="pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="key" data-k="${n}">${n}</button>`).join('')}
       <button class="key del" data-k="del" aria-label="Erase">⌫</button><button class="key" data-k="0">0</button><button class="key go" data-k="ok" aria-label="Check answer">✓</button></div>`;
   document.querySelectorAll('#input .key').forEach(b => b.onclick = () => press(b.dataset.k));
-}
-
-/* step 2: write the answer on the line (practice only, not scored) */
-function showWrite() {
-  G.phase = 'write'; G.strokes = []; G.ctx = null;
-  const ans = G.f[0] * G.f[1];
-  $('input').innerHTML = `<div class="step">Step 2 · ${G.ok ? 'Now write it on the line' : 'Write the right answer on the line'}</div>
-    <div class="writebox"><div class="guide" aria-hidden="true">${ans}</div><canvas id="pad" aria-label="Write the answer here"></canvas></div>
-    <div class="wtools"><button class="key del" id="undo">Undo</button><button class="key del" id="clr">Erase</button><button class="key go" id="next" aria-label="Next problem">Next ›</button></div>`;
-  setupPad();
-  if (G.mode === 'clock') G.end = Date.now() + G.left;   // the clock runs only while writing
-  $('undo').onclick = () => { if (!G || G.phase !== 'write') return; G.strokes.pop(); redraw(); };
-  $('clr').onclick = () => { if (!G || G.phase !== 'write') return; G.strokes = []; redraw(); };
-  $('next').onclick = next;
-}
-function setupPad() {
-  const cv = $('pad'), dpr = window.devicePixelRatio || 1, r = cv.getBoundingClientRect();
-  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
-  const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
-  G.strokes = []; G.ctx = ctx; G.cv = cv; let cur = null;
-  const pt = e => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
-  cv.onpointerdown = e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {} cur = [pt(e)]; G.strokes.push(cur); redraw(); };
-  cv.onpointermove = e => { if (!cur) return; e.preventDefault(); const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; for (const ev of (evs.length ? evs : [e])) cur.push(pt(ev)); redraw(); };
-  const end = () => { cur = null; };
-  cv.onpointerup = end; cv.onpointercancel = end; cv.onlostpointercapture = end;
-  redraw();
-}
-function redraw() {
-  const { ctx, cv } = G; if (!ctx) return;
-  ctx.clearRect(0, 0, cv.width, cv.height);
-  ctx.lineWidth = 7; ctx.lineCap = ctx.lineJoin = 'round';
-  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#1d2b45';
-  ctx.fillStyle = ctx.strokeStyle;
-  for (const s of G.strokes) {
-    if (s.length === 1) { ctx.beginPath(); ctx.arc(s[0][0], s[0][1], 3.5, 0, 7); ctx.fill(); continue; }
-    ctx.beginPath(); s.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
-  }
 }
 
 function draw() {
@@ -265,44 +229,49 @@ function draw() {
   const [a, b] = G.f;
   $('eq').innerHTML = `<span>${a}</span><span>${X}</span><span>${b}</span><span>=</span><span class="ans ${G.typed ? '' : 'empty'}">${G.typed}</span>`;
   if (G.mode === 'quiz') {
-    const now = G.phase === 'write' ? G.done : G.done + 1;
     $('dots').innerHTML = Array.from({ length: G.total }, (_, i) => `<span class="dot ${G.marks[i] === true ? 'g' : G.marks[i] === false ? 'b' : ''}"></span>`).join('');
-    $('sc').textContent = `${Math.min(now, G.total)} of ${G.total}`;
+    $('sc').textContent = `${Math.min(G.done + 1, G.total)} of ${G.total}`;
   } else $('sc').textContent = `${G.right} right`;
 }
+
 function tick() {
   if (!G) return stopClock();
-  const writing = G.phase === 'write', left = Math.max(0, writing ? G.end - Date.now() : G.left), s = Math.ceil(left / 1000);
   const c = $('clk'); if (!c) return stopClock();
-  c.textContent = s; c.classList.toggle('low', s <= 10); $('tb').style.width = (left / 600) + '%';
-  if (writing && left <= 0) { stopClock(); finish(); }
+  const left = Math.max(0, G.end - Date.now()), s = Math.ceil(left / 1000);
+  c.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  c.classList.toggle('low', s <= 10);
+  $('tb').style.width = (left / CLOCK_MS * 100) + '%';
+  if (left <= 0 && !G.locked) { stopClock(); finish(); }
 }
+
 function press(k) {
-  if (!G || G.phase !== 'type') return;
+  if (!G || G.locked) return;
   if (k === 'del') G.typed = G.typed.slice(0, -1);
   else if (k === 'ok') return check();
   else if (G.typed.length < 3) G.typed = (G.typed === '0' ? '' : G.typed) + k;
   draw();
 }
+
 function check() {
-  if (!G || G.phase !== 'type' || !G.typed) return;
+  if (!G || G.locked || !G.typed) return;
   const [a, b] = G.f, ok = +G.typed === a * b, sheet = $('sheet');
   logAnswer({ game: 'times', mode: G.mode, item: `${a} × ${b}`, ok, typed: G.typed });
-  G.done++; G.marks.push(ok); G.ok = ok;
+  G.locked = true; G.done++; G.marks.push(ok); G.ok = ok;
   if (ok) { G.right++; tone([660, 880], .08); }
   else { G.missed.push([a, b]); tone([220, 196], .14); $('fix').textContent = `${a} ${X} ${b} = ${a * b}`; }
   sheet.className = 'sheet ' + (ok ? 'ok' : 'no');
-  showWrite();
   draw();
+  setTimeout(next, ok ? 600 : 1500);
 }
+
 function next() {
-  if (!G || G.phase !== 'write') return;
-  if (G.mode === 'quiz' && G.done >= G.total) return finish();
-  if (G.mode === 'clock') { G.left = Math.max(0, G.end - Date.now()); if (G.left <= 0) return finish(); }
+  if (!G) return;
+  if (G.done >= G.total || (G.mode === 'clock' && Date.now() >= G.end)) return finish();
   $('sheet').className = 'sheet'; $('fix').textContent = '';
   G.f = G.deal();
   showType(); draw();
 }
+
 function finish() {
   sendLog();
   stopClock();
@@ -310,7 +279,7 @@ function finish() {
   let head, isBest = false;
   if (G.mode === 'clock') {
     const k = 'clock:' + key(), best = store.get(k, null); isBest = best == null || G.right > best; if (isBest) store.set(k, G.right);
-    head = `<div style="font-weight:700;color:var(--muted)">In 60 seconds you got</div><div class="big">${G.right} right</div>
+    head = `<div style="font-weight:700;color:var(--muted)">In 1:30 you got</div><div class="big">${G.right} right</div>
       <div>${G.done} answered${isBest && best != null ? ' · new best!' : best != null ? ' · best is ' + best : ''}</div>`;
   } else {
     const stars = G.right >= G.total ? 3 : G.right >= G.total - 2 ? 2 : G.right >= G.total / 2 ? 1 : 0;
@@ -331,18 +300,16 @@ function finish() {
   $('quit').onclick = () => home(); $('menu').onclick = () => home();
   $('again').onclick = () => play(again, list);
   if (uniq.length) $('prac').onclick = () => {
-    const drill = []; for (let r = 0; r < Math.ceil(10 / uniq.length); r++) drill.push(...uniq);   // repeat missed facts to fill 10
-    play('quiz', drill.slice(0, Math.max(10, uniq.length)));
+    const drill = []; while (drill.length < ROUND) drill.push(...uniq);   // repeat missed facts to fill a round
+    play('quiz', drill.slice(0, ROUND));
   };
 }
-/* physical keyboard too */
+/* physical keyboard too: digits, Backspace, Enter */
 document.addEventListener('keydown', e => {
   if (!G || !$('eq')) return;
-  if (G.phase === 'type') {
-    if (/^[0-9]$/.test(e.key)) { e.preventDefault(); press(e.key); }
-    else if (e.key === 'Backspace') { e.preventDefault(); press('del'); }
-    else if (e.key === 'Enter') { e.preventDefault(); press('ok'); }
-  } else if (e.key === 'Enter') { e.preventDefault(); next(); }
+  if (/^[0-9]$/.test(e.key)) { e.preventDefault(); press(e.key); }
+  else if (e.key === 'Backspace') { e.preventDefault(); press('del'); }
+  else if (e.key === 'Enter') { e.preventDefault(); press('ok'); }
 });
 home();
 </script>
