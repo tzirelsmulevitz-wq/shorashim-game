@@ -109,6 +109,11 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-o
 .actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
 .btnbig { min-height: 56px; padding: 0 24px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
 .ghost { min-height: 56px; padding: 0 22px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; cursor: pointer; }
+.rank { margin-top: 18px; text-align: left; }
+.rank h3 { font-size: 18px; color: var(--muted, #5d6b82); margin: 0 0 8px; text-align: center; }
+.hsrow { display: grid; grid-template-columns: 48px 1fr auto; gap: 8px; padding: 8px 10px; border-radius: 12px; font-variant-numeric: tabular-nums; }
+.hsrow:nth-child(odd) { background: rgba(127,127,127,.08); }
+.hsrow.me { background: var(--good-bg, #dff3e8); font-weight: 800; }
 </style>
 </head>
 <body>
@@ -165,6 +170,20 @@ async function sendLog() {
     const p = await fetch(API, { method: 'PUT', headers: { ...h, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     if (p.ok) { try { localStorage.setItem('jacklastsent', now); } catch (e) {} }
   } catch (e) {}
+}
+
+/* High scores: each finished round is logged once in the shared log and ranked against the others of its kind. */
+function logRound(rec) {
+  const t = Date.now();
+  try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t, round: true }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {}
+  return t;
+}
+function rankHTML(game, mode, low, t) {
+  let a = []; try { a = JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) {}
+  const rows = a.filter(e => e.round && e.game === game && e.mode === mode)
+    .sort((x, y) => (low ? x.score - y.score : y.score - x.score) || x.t - y.t);
+  const pos = rows.findIndex(r => r.t === t) + 1;
+  return `<div class="rank"><h3>High scores${pos ? ' · your rank #' + pos : ''}</h3>${rows.slice(0, 10).map((r, i) => `<div class="hsrow${r.t === t ? ' me' : ''}"><span>#${i + 1}</span><span>${r.label}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')}</div>`;
 }
 
 /* ---------- HOME ---------- */
@@ -288,10 +307,12 @@ function finish() {
       <div class="big">${G.right} / ${G.total}</div><div>${G.right === G.total ? 'Perfect!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}</div>`;
   }
   if (G.right > 0 && (G.mode === 'clock' || G.right === G.total)) tone([523, 659, 784], .12);
+  const rt = G.list ? null : logRound({ game: 'times', mode: G.mode, score: G.right, total: G.mode === 'clock' ? G.done : G.total,
+    label: G.mode === 'clock' ? `${G.right} right in 1:30` : `${G.right} / ${G.total}` });
   const again = G.mode, list = G.list;
   G = null;
   app.innerHTML = `<div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>${again === 'clock' ? 'Beat the Clock' : 'Star Quiz'}</h1></div>
-    <div class="result">${head}
+    <div class="result">${head}${rt ? rankHTML('times', again, false, rt) : ''}
       ${uniq.length ? `<div class="missed"><h3>Facts to practice</h3><div class="facts">${uniq.map(([a, b]) => `<div class="fact">${a} ${X} ${b} = ${a * b}</div>`).join('')}</div></div>` : ''}
       <div class="actions">
         ${uniq.length ? `<button class="btnbig" id="prac">Practice these</button>` : ''}

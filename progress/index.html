@@ -92,6 +92,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 function summarize(entries) {
   const byGame = {}, byItem = {};
   for (const e of entries) {
+    if (e.round) continue;
     const g = byGame[e.game] = byGame[e.game] || { n: 0, right: 0 };
     g.n++; if (e.ok) g.right++;
     const key = e.game + '|' + e.item;
@@ -126,7 +127,7 @@ function report() {
   lines.push('', 'By item (game | item | right of tries):');
   items.slice().sort((a, b) => a.pct - b.pct || b.n - a.n).forEach(i => lines.push(`- ${NAMES[i.game] || i.game} | ${i.item} | ${i.right} of ${i.n}`));
   lines.push('', 'Last 150 answers, oldest first:');
-  entries.slice(-150).forEach(e => {
+  entries.filter(e => !e.round).slice(-150).forEach(e => {
     const d = new Date(e.t).toLocaleString();
     lines.push(`${d} | ${NAMES[e.game] || e.game}${e.mode ? ' ' + e.mode : ''}${e.kind ? ' (' + e.kind + ')' : ''} | ${e.item} | ${e.ok ? 'right' : 'wrong'}${e.typed ? ' typed ' + e.typed : ''}`);
   });

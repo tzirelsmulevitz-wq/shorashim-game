@@ -187,6 +187,11 @@ button:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .flip { transition: none; } .opt.wrong, .tile.oops, .popin { animation: none; }
 }
+.rank { margin-top: 18px; text-align: left; }
+.rank h3 { font-size: 18px; color: var(--muted, #5d6b82); margin: 0 0 8px; text-align: center; }
+.hsrow { display: grid; grid-template-columns: 48px 1fr auto; gap: 8px; padding: 8px 10px; border-radius: 12px; font-variant-numeric: tabular-nums; }
+.hsrow:nth-child(odd) { background: rgba(127,127,127,.08); }
+.hsrow.me { background: var(--good-bg, #dff3e8); font-weight: 800; }
 </style>
 </head>
 <body>
@@ -238,6 +243,20 @@ function wireTop() {
   const h = document.getElementById('homeBtn'); if (h) h.onclick = home;
   const s = document.getElementById('sndBtn');
   if (s) s.onclick = () => { soundOn = !soundOn; store.set('sound', soundOn); s.textContent = soundOn ? '🔊' : '🔈'; };
+}
+
+/* High scores: each finished round is logged once in the shared log and ranked against the others of its kind. */
+function logRound(rec) {
+  const t = Date.now();
+  try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t, round: true }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {}
+  return t;
+}
+function rankHTML(game, mode, low, t) {
+  let a = []; try { a = JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) {}
+  const rows = a.filter(e => e.round && e.game === game && e.mode === mode)
+    .sort((x, y) => (low ? x.score - y.score : y.score - x.score) || x.t - y.t);
+  const pos = rows.findIndex(r => r.t === t) + 1;
+  return `<div class="rank"><h3>High scores${pos ? ' · your rank #' + pos : ''}</h3>${rows.slice(0, 10).map((r, i) => `<div class="hsrow${r.t === t ? ' me' : ''}"><span>#${i + 1}</span><span>${r.label}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')}</div>`;
 }
 
 /* ---------- HOME ---------- */
@@ -366,11 +385,12 @@ function quizDone() {
   const s = Q.score, stars = s >= 9 ? 3 : s >= 7 ? 2 : s >= 5 ? 1 : 0;
   const best = store.get('bestQuiz', null), isBest = best == null || s > best;
   if (isBest) store.set('bestQuiz', s);
+  const rt = logRound({ game: 'shorashim', mode: 'quiz', score: s, total: 10, label: `${s} / 10` });
   const uniq = [...new Map(Q.missed.map(c => [c.n, c])).values()];
   $app.innerHTML = topbar('Quiz') + `
     <div class="result popin">
       <div class="stars">${[0, 1, 2].map(k => `<span class="${k < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
-      <div class="big">${s} / 10</div>
+      <div class="big">${s} / 10</div>${rankHTML('shorashim', 'quiz', false, rt)}
       <div>${s === 10 ? 'Perfect! Every one right.' : stars >= 2 ? 'Great work!' : 'Good try. Practice and play again!'}${isBest && best != null ? ' New best score!' : ''}</div>
       ${uniq.length ? `<div class="review"><h3>Practice these</h3>${uniq.map(c => `<div class="rrow">${blocks(c.root, 'sm')}<span>${esc(c.eng)}</span></div>`).join('')}</div>` : ''}
       <div class="actions"><button class="go" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
@@ -422,11 +442,12 @@ function matchDone() {
   sendLog();
   const m = M.mistakes, best = store.get('bestMatch', null), isBest = best == null || m < best;
   if (isBest) store.set('bestMatch', m);
+  const rt = logRound({ game: 'shorashim', mode: 'match', score: m, total: M.set.length, label: `${m} mistake${m === 1 ? '' : 's'}` });
   const stars = m === 0 ? 3 : m <= 2 ? 2 : 1;
   $app.innerHTML = topbar('Match') + `
     <div class="result popin">
       <div class="stars">${[0, 1, 2].map(k => `<span class="${k < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
-      <div class="big">All matched!</div>
+      <div class="big">All matched!</div>${rankHTML('shorashim', 'match', true, rt)}
       <div>${m === 0 ? 'No mistakes at all!' : `${m} ${m === 1 ? 'mistake' : 'mistakes'}.`}${isBest && best != null ? ' New best!' : ''}</div>
       <div class="review">${M.set.map(c => `<div class="rrow">${blocks(c.root, 'sm')}<span>${esc(c.eng)}</span></div>`).join('')}</div>
       <div class="actions"><button class="go" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
