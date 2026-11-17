@@ -119,6 +119,27 @@ const store = { get(k, d) { try { const v = localStorage.getItem('jackvocab:' + 
 /* Results log: one list shared by all the games on this site (same browser). Never throws. */
 function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now() }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
 
+/* After a round ends, send the results log to the jack-progress repo if a token is saved on this iPad.
+   Silent on failure, so a round never gets interrupted. */
+async function sendLog() {
+  let t = ''; try { t = localStorage.getItem('jackgh') || ''; } catch (e) {}
+  if (!t) return;
+  const API = 'https://api.github.com/repos/tzirelsmulevitz-wq/jack-progress/contents/results.json';
+  const h = { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  try {
+    let sha = null;
+    const g = await fetch(API, { headers: h, cache: 'no-store' });
+    if (g.status === 200) sha = (await g.json()).sha; else if (g.status !== 404) return;
+    const now = new Date().toISOString();
+    let entries = []; try { entries = JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) {}
+    const bytes = new TextEncoder().encode(JSON.stringify({ updated: now, entries }, null, 1));
+    let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+    const body = { message: 'Results ' + now, content: btoa(bin), ...(sha ? { sha } : {}) };
+    const p = await fetch(API, { method: 'PUT', headers: { ...h, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (p.ok) { try { localStorage.setItem('jacklastsent', now); } catch (e) {} }
+  } catch (e) {}
+}
+
 /* The words from Jack's Friday vocabulary sheet (Quiz Friday, #4). */
 const WORDS = [
   { w: 'depth', m: 'a distance below a surface; a deep place' },
@@ -250,6 +271,7 @@ function redraw() {
 }
 
 function finish() {
+  sendLog();
   const stars = Q.right >= 10 ? 3 : Q.right >= 8 ? 2 : Q.right >= 5 ? 1 : 0, total = Q.qs.length;
   const best = store.get('quiz', null), isBest = best == null || Q.right > best;
   if (isBest) store.set('quiz', Q.right);
