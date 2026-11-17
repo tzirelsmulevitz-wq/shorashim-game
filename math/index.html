@@ -120,6 +120,8 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 const store = { get(k, d) { try { const v = localStorage.getItem('jackmath:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
                 set(k, v) { try { localStorage.setItem('jackmath:' + k, JSON.stringify(v)); } catch (e) {} } };
 const X = '×';
+/* Results log: one list shared by all the games on this site (same browser). Never throws. */
+function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now() }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
 
 let tables = new Set(store.get('tables', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
 const key = () => [...tables].sort((a, b) => a - b).join(',');
@@ -264,6 +266,7 @@ function press(k) {
 function check() {
   if (!G || G.phase !== 'type' || !G.typed) return;
   const [a, b] = G.f, ok = +G.typed === a * b, sheet = $('sheet');
+  logAnswer({ game: 'times', mode: G.mode, item: `${a} × ${b}`, ok, typed: G.typed });
   G.done++; G.marks.push(ok); G.ok = ok;
   if (ok) { G.right++; tone([660, 880], .08); }
   else { G.missed.push([a, b]); tone([220, 196], .14); $('fix').textContent = `${a} ${X} ${b} = ${a * b}`; }

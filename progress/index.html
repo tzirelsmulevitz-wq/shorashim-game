@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Progress">
+<title>Jack's Progress</title>
+<style>
+:root {
+  --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
+  --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff; --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2; --btn: #ffffff;
+  --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
+  --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+    --block: #4d7fe0; --block-edge: #2c58b0; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+    --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+  --block: #4d7fe0; --block-edge: #2c58b0; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+  --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--sky); color: var(--ink); }
+body { margin: 0; font-family: var(--f-ui); font-size: 18px; line-height: 1.4; }
+button, a { font: inherit; color: inherit; }
+.wrap { max-width: 620px; margin: 0 auto; padding: 18px 16px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 8px; }
+.topbar h1 { font-size: 24px; margin: 0; flex: 1; }
+.iconbtn { min-height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; }
+.sub { color: var(--muted); margin: 0 0 16px; }
+h2 { font-size: 20px; margin: 26px 0 10px; }
+.card { background: var(--sand); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 14px 16px; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.row:last-child { border-bottom: 0; }
+.row .name { font-weight: 700; }
+.row .gm { color: var(--muted); font-size: 15px; }
+.pct { font-weight: 800; font-variant-numeric: tabular-nums; font-size: 20px; }
+.pct.bad { color: var(--bad); } .pct.good { color: var(--good); }
+.empty { color: var(--muted); padding: 6px 0; }
+.games { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.g { text-align: center; padding: 12px 6px; border-radius: 16px; background: var(--btn); border: 2px solid var(--line); }
+.g b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; }
+.g span { color: var(--muted); font-size: 14px; }
+.actions { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+.btnbig { min-height: 56px; padding: 0 22px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-weight: 700; font-size: 18px; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
+.ghost { min-height: 56px; padding: 0 20px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-weight: 700; font-size: 18px; cursor: pointer; }
+#status { min-height: 24px; color: var(--good); font-weight: 700; margin-top: 12px; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a><h1>Jack's Progress</h1></div>
+  <p class="sub">Every answer from the games on this iPad. Tap <b>Copy report</b> and paste it into a message to Claude.</p>
+
+  <div class="card"><div class="games" id="totals"></div></div>
+
+  <h2>Needs more practice</h2>
+  <div class="card" id="weak"></div>
+
+  <h2>Doing well</h2>
+  <div class="card" id="strong"></div>
+
+  <div class="actions">
+    <button class="btnbig" id="copy">Copy report</button>
+    <button class="ghost" id="clear">Clear log</button>
+  </div>
+  <div id="status" role="status"></div>
+</main>
+<script>
+const NAMES = { times: 'Times Tables', shorashim: 'Shorashim', vocab: 'Vocabulary' };
+function load() { try { return JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) { return []; } }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function summarize(entries) {
+  const byGame = {}, byItem = {};
+  for (const e of entries) {
+    const g = byGame[e.game] = byGame[e.game] || { n: 0, right: 0 };
+    g.n++; if (e.ok) g.right++;
+    const key = e.game + '|' + e.item;
+    const it = byItem[key] = byItem[key] || { game: e.game, item: e.item, n: 0, right: 0 };
+    it.n++; if (e.ok) it.right++;
+  }
+  const items = Object.values(byItem).map(i => ({ ...i, pct: Math.round(100 * i.right / i.n) }));
+  return { byGame, items };
+}
+
+function render() {
+  const entries = load(), { byGame, items } = summarize(entries);
+  const totals = Object.keys(NAMES).map(k => {
+    const g = byGame[k];
+    return `<div class="g"><b>${g ? Math.round(100 * g.right / g.n) + '%' : '–'}</b><span>${NAMES[k]}<br>${g ? g.n + ' answers' : 'no answers yet'}</span></div>`;
+  }).join('');
+  document.getElementById('totals').innerHTML = totals;
+
+  const row = i => `<div class="row"><div><div class="name">${esc(i.item)}</div><div class="gm">${NAMES[i.game] || i.game} · ${i.right} of ${i.n} right</div></div><div class="pct ${i.pct < 75 ? 'bad' : i.pct >= 90 ? 'good' : ''}">${i.pct}%</div></div>`;
+  const weak = items.filter(i => i.n >= 2 && i.pct < 75).sort((a, b) => a.pct - b.pct || b.n - a.n).slice(0, 25);
+  const strong = items.filter(i => i.n >= 3 && i.pct >= 90).sort((a, b) => b.pct - a.pct || b.n - a.n).slice(0, 25);
+  document.getElementById('weak').innerHTML = weak.length ? weak.map(row).join('') : '<div class="empty">Nothing yet. Items show up here after at least 2 tries with under 75% right.</div>';
+  document.getElementById('strong').innerHTML = strong.length ? strong.map(row).join('') : '<div class="empty">Nothing yet. Items show up here after at least 3 tries with 90% or more right.</div>';
+}
+
+function report() {
+  const entries = load(), { byGame, items } = summarize(entries);
+  const lines = ['Jack\'s game results (from the Progress page, ' + new Date().toLocaleString() + ')', ''];
+  if (!entries.length) return lines.concat('No answers logged yet.').join('\n');
+  lines.push('Totals:');
+  for (const k of Object.keys(byGame)) lines.push(`- ${NAMES[k] || k}: ${byGame[k].right} of ${byGame[k].n} right (${Math.round(100 * byGame[k].right / byGame[k].n)}%)`);
+  lines.push('', 'By item (game | item | right of tries):');
+  items.slice().sort((a, b) => a.pct - b.pct || b.n - a.n).forEach(i => lines.push(`- ${NAMES[i.game] || i.game} | ${i.item} | ${i.right} of ${i.n}`));
+  lines.push('', 'Last 150 answers, oldest first:');
+  entries.slice(-150).forEach(e => {
+    const d = new Date(e.t).toLocaleString();
+    lines.push(`${d} | ${NAMES[e.game] || e.game}${e.mode ? ' ' + e.mode : ''}${e.kind ? ' (' + e.kind + ')' : ''} | ${e.item} | ${e.ok ? 'right' : 'wrong'}${e.typed ? ' typed ' + e.typed : ''}`);
+  });
+  return lines.join('\n');
+}
+
+function say(msg) { document.getElementById('status').textContent = msg; setTimeout(() => { document.getElementById('status').textContent = ''; }, 3000); }
+document.getElementById('copy').onclick = async () => {
+  const text = report();
+  try { await navigator.clipboard.writeText(text); say('Copied. Paste it into a message to Claude.'); }
+  catch (e) {
+    const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); say('Copied. Paste it into a message to Claude.'); } catch (x) { say('Could not copy. Try again.'); }
+    t.remove();
+  }
+};
+document.getElementById('clear').onclick = () => {
+  if (!confirm('Erase all the logged answers on this iPad? Copy the report first if you want to keep it.')) return;
+  try { localStorage.removeItem('jacklog'); } catch (e) {}
+  render(); say('Log cleared.');
+};
+render();
+</script>
+<!-- auto-update -->
+<script>
+/* Auto-update. Safari can keep showing an old copy of a page for up to 10 minutes after it changes.
+   On load: compare this copy with the live one and switch to the new version if they differ.
+   If a newer version appears while the page is open, show a tap-to-update button instead,
+   so a game in progress isn't lost. The ?v= check means it can never reload in a loop. */
+(function () {
+  if (!window.fetch || !window.Promise) return;
+  var path = location.pathname, busy = false;
+  function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function text(url, mode) { return fetch(url, { cache: mode }).then(function (r) { return r.ok ? r.text() : null; }); }
+  function go(v) { location.replace(path + '?v=' + v + location.hash); }
+  function offer(v) {
+    if (document.getElementById('autoUpd')) return;
+    var b = document.createElement('button');
+    b.id = 'autoUpd'; b.type = 'button'; b.textContent = '✨ New update! Tap to get it';
+    b.style.cssText = 'position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);z-index:99;border:none;border-radius:999px;padding:14px 26px;font:600 19px system-ui,sans-serif;background:#2f63c9;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap';
+    b.onclick = function () { go(v); };
+    document.body.appendChild(b);
+  }
+  function check(onLoad) {
+    if (busy) return; busy = true;
+    Promise.all([text(location.href, 'force-cache'), text(path + '?t=' + Date.now(), 'no-store')]).then(function (r) {
+      var mine = r[0], live = r[1];
+      if (!mine || !live || mine === live) return;
+      var v = hash(live);
+      if (new URLSearchParams(location.search).get('v') === v) return;
+      if (onLoad) go(v); else offer(v);
+    }).catch(function () {}).then(function () { busy = false; });
+  }
+  check(true);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') check(false); });
+})();
+</script>
+</body>
+</html>

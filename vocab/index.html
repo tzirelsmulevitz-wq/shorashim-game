@@ -116,6 +116,9 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 const store = { get(k, d) { try { const v = localStorage.getItem('jackvocab:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
                 set(k, v) { try { localStorage.setItem('jackvocab:' + k, JSON.stringify(v)); } catch (e) {} } };
 
+/* Results log: one list shared by all the games on this site (same browser). Never throws. */
+function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now() }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
+
 /* The words from Jack's Friday vocabulary sheet (Quiz Friday, #4). */
 const WORDS = [
   { w: 'depth', m: 'a distance below a surface; a deep place' },
@@ -185,6 +188,7 @@ function showQ() {
 function pick(k) {
   if (!Q || Q.phase !== 'ask') return;
   const q = Q.qs[Q.i], ok = q.opts[k] === q.word;
+  logAnswer({ game: 'vocab', mode: 'quiz', item: q.word.w, kind: q.dir === 'wm' ? 'word to meaning' : 'meaning to word', ok });
   Q.phase = 'write'; Q.ok = ok;
   Q.marks = Q.marks || []; Q.marks[Q.i] = ok;
   if (ok) Q.right++; else Q.missed.push(q.word);

@@ -291,6 +291,8 @@ function learn(i, shuffled = false) {
 
 /* ---------- QUIZ ---------- */
 let Q = null;
+/* Results log: one list shared by all the games on this site (same browser). Never throws. */
+function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now() }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
 function quiz() {
   const types = ['verse', 'meaning', 'reverse'];
   const picks = shuffle(CARDS).slice(0, 10);
@@ -324,6 +326,7 @@ function quizQ() {
 }
 function answer(btn) {
   const q = Q.qs[Q.i], ok = btn.dataset.n === String(q.c.n);
+  logAnswer({ game: 'shorashim', mode: 'quiz', kind: q.type, item: `${q.c.root} ${q.c.eng}`, ok });
   document.querySelectorAll('.opt').forEach(b => { b.disabled = true; if (b.dataset.n === String(q.c.n)) b.classList.add('right'); });
   const fb = document.getElementById('fb');
   Q.results[Q.i] = ok;
@@ -382,6 +385,8 @@ function pick(b) {
     b.classList.add('sel'); M.sel = { side, n, el: b }; return;
   }
   const a = M.sel; M.sel = null;
+  const label = k => { const c = CARDS.find(x => x.n === k); return c ? `${c.root} ${c.eng}` : String(k); };
+  logAnswer({ game: 'shorashim', mode: 'match', item: label(a.side === 'L' ? a.n : n), ok: a.n === n });
   if (a.n === n) {
     M.done.add(n); yay();
     [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.disabled = true; });
