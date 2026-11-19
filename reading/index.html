@@ -201,6 +201,156 @@ mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padd
    check?: { q, a, why, look }, choices: [{ text, to }] } or { paras, ending: { kind: super|good|oops, title, tip } } }. */
 const STORIES = [
   {
+    id: 'space-station-zero', type: 'adventure', title: 'Escape from Space Station Zero', topic: 'Escape room', emoji: '🚀',
+    start: 'start',
+    nodes: {
+      'start': {
+        paras: [
+          '*BOOM!* The metal door slammed shut, and the lights turned red.',
+          '“Welcome aboard Space Station Zero,” said a robot voice. “The power is failing. You have thirty minutes to reach the escape pod.”',
+          'It was Sunday, Yonatan’s birthday, and the boys were trapped in the coolest escape room in town. Dina, the game guide, had locked them in. A giant clock on the wall blinked *30:00… 29:59…*',
+          'Jack, Eitan, Barry, and Yonatan looked around. Wires hung from the ceiling like spaghetti. A control panel flashed with a hundred buttons. In the corner stood a tall silver locker with a sticker: *Captain Nova.*',
+          '“Where do we start?” whispered Yonatan.'
+        ],
+        check: { q: 'Why were the boys at the escape room?',
+          a: ['It was Yonatan’s birthday', 'It was a school trip', 'They had to fix a real spaceship'],
+          why: 'It was Sunday, and they were celebrating Yonatan’s birthday in the coolest escape room in town.',
+          look: ['It was Sunday, Yonatan’s birthday'] },
+        choices: [
+          { text: 'Open Captain Nova’s locker', to: 'locker' },
+          { text: 'Push buttons on the control panel!', to: 'panel' }
+        ]
+      },
+      'panel': {
+        paras: [
+          'Barry cracked his knuckles. “I’ve got this.” He pushed a green button, a blue one, and a big yellow star.',
+          '*HONK! HONK!* “Malfunction!” boomed the robot voice. “Silly humans! Five minutes off your clock!”',
+          'Eitan gulped. A malfunction is when a machine stops working the right way, and this one was LOUD.',
+          '“Oops,” said Barry, turning as red as the lights. “Let’s try the locker.”'
+        ],
+        check: { q: 'What does “malfunction” mean?',
+          a: ['When a machine stops working the right way', 'A super fast rocket', 'A secret code'],
+          why: 'The story tells you right away: a malfunction is when a machine stops working the right way.',
+          look: ['A malfunction is when a machine stops working the right way'] },
+        choices: [ { text: 'Try the locker', to: 'locker' } ]
+      },
+      'locker': {
+        paras: [
+          'Jack pulled the locker handle. *Creeeak.* Inside were a puffy space suit, a flashlight, and a page torn from a diary.',
+          'Eitan read it out loud. “*Day 100. My space cat, Comet, stole my bed AGAIN. Fine. Comet can have the top bunk, and I will sleep on the bottom bunk. My secret code is hidden where I sleep.*”',
+          'Yonatan clicked on the flashlight. It glowed a spooky purple.',
+          '“That’s a black light,” said Jack. “It shows invisible ink! I bet the code is written in it.”',
+          'Across the room was a round door marked *SLEEPING ROOM.*'
+        ],
+        check: { q: 'What can the black light show?',
+          a: ['Invisible ink', 'Secret doors in the wall', 'Space cats in the dark'],
+          why: 'Jack says the black light shows invisible ink, and he thinks the code is written in it.',
+          look: ['It shows invisible ink!'] },
+        choices: [ { text: 'Go into the sleeping room', to: 'bunks' } ]
+      },
+      'bunks': {
+        paras: [
+          'The sleeping room was tiny, with one bunk bed against the wall. The clock was ticking.',
+          'The top bunk had a fancy blanket covered with glow-in-the-dark stars. A fluffy toy cat with a bright orange collar was curled up on the pillow.',
+          'The bottom bunk had a plain gray blanket and a flat, lumpy pillow.',
+          '“Look at all those stars!” said Eitan. “That HAS to be the captain’s bed. Captains always get the best one.”',
+          'Barry was already climbing the ladder.'
+        ],
+        check: { q: 'What was on the bottom bunk?',
+          a: ['A plain gray blanket and a lumpy pillow', 'A blanket full of stars', 'A big pile of space suits'],
+          why: 'The bottom bunk was plain: just a gray blanket and a flat, lumpy pillow.',
+          look: ['The bottom bunk had a plain gray blanket and a flat, lumpy pillow.'] },
+        choices: [
+          { text: 'Search the starry top bunk', to: 'topbunk' },
+          { text: 'Search the plain bottom bunk', to: 'bottombunk' }
+        ]
+      },
+      'topbunk': {
+        paras: [
+          'Barry shined the black light on the starry blanket.',
+          '*MEOOOOW!* The toy cat let out a recorded yowl so loud that Barry nearly fell off the ladder.',
+          'Purple letters glowed on the pillow: *NICE TRY! THIS IS COMET’S BED.*',
+          'Yonatan smacked his forehead. “The diary said it! Comet gets the top bunk.”',
+          '“Sorry, Comet!” Barry slid down the ladder like a firefighter.'
+        ],
+        check: { q: 'What made Barry almost fall off the ladder?',
+          a: ['The toy cat’s loud recorded meow', 'A real cat jumped on him', 'The lights went out'],
+          why: 'The toy cat let out a recorded yowl, and it was so loud that Barry nearly fell!',
+          look: ['The toy cat let out a recorded yowl so loud that Barry nearly fell off the ladder.'] },
+        choices: [ { text: 'Check the bottom bunk', to: 'bottombunk' } ]
+      },
+      'bottombunk': {
+        paras: [
+          'Jack lifted the lumpy pillow and shined the black light on the gray blanket.',
+          'Purple numbers glowed out of nowhere: *LAUNCH CODE 3-1-5-9.*',
+          'Under them was one more line: *The escape pod needs power. Plug in the cable that is the same color as Comet’s collar.*',
+          '“We did it!” Yonatan shouted.',
+          '“Not yet,” said Jack. “Come on!”',
+          'They raced to a small round door. *ESCAPE POD.* The clock read *02:00.*'
+        ],
+        check: { q: 'What was the launch code?',
+          a: ['3-1-5-9', '9-5-1-3', '1-2-3-4'],
+          why: 'The black light made the numbers glow: LAUNCH CODE 3-1-5-9.',
+          look: ['LAUNCH CODE 3-1-5-9.'] },
+        choices: [ { text: 'Run into the escape pod', to: 'pod' } ]
+      },
+      'pod': {
+        paras: [
+          'Inside the pod, Eitan punched in the code. *Beep. Beep. Beep. Beep.* A screen lit up: *CODE ACCEPTED. CONNECT POWER.*',
+          'Three thick cables hung from the wall: one red, one orange, and one blue. Below them was an empty plug.',
+          '“Red!” said Barry. “Red means rockets! Red means GO!”',
+          '“Wait,” said Yonatan. “Which one did the clue say?”',
+          'The clock blinked *00:59.* Jack’s heart pounded like a drum.'
+        ],
+        check: { q: 'Who typed in the launch code?',
+          a: ['Eitan', 'Barry', 'Captain Nova'],
+          why: 'Eitan punched in the code, and the screen said CODE ACCEPTED.',
+          look: ['Eitan punched in the code.'] },
+        choices: [
+          { text: 'Plug in the red cable', to: 'oops' },
+          { text: 'Plug in the orange cable', to: 'super' },
+          { text: 'Press the HELP button for a hint', to: 'hint' }
+        ]
+      },
+      'super': {
+        paras: [
+          'Jack grabbed the orange cable. “Comet’s collar was orange!” *Click.*',
+          'The lights flashed from red to bright white. “Launch in three… two… one…”',
+          '*WHOOSH!* Cool air blew their hair straight up.',
+          'The pod door slid open, and there stood Yonatan’s whole family in space helmets, yelling, “HAPPY BIRTHDAY!”',
+          'Dina pointed at the clock. *00:07.* “No team has ever escaped without a single hint,” she said. “You’re going on the Hall of Fame!”',
+          'Then Yonatan’s mom carried out a rocket-shaped cake. On top, curled up next to the candles, sat a fluffy toy cat with an orange collar.',
+          '“COMET!” the boys shouted.'
+        ],
+        ending: { kind: 'super', title: 'The Hall of Fame Ending', tip: 'You remembered every clue all by yourselves. That’s super-sharp reading, Captain!' }
+      },
+      'hint': {
+        paras: [
+          'Jack slapped the big HELP button. *BZZZT.*',
+          '“Hint time!” said Dina’s voice over the speaker. “Think about the space cat. What was Comet wearing?”',
+          '“A collar!” yelled Jack. “An orange collar!”',
+          'Yonatan jammed the orange cable into the plug. *Click.* The lights turned white. *WHOOSH!* The pod door slid open with three seconds left.',
+          'Outside stood Yonatan’s whole family in space helmets, cheering, “HAPPY BIRTHDAY!”',
+          '“You escaped with one little hint,” Dina said. “Next time, try it all by yourselves.”',
+          'Barry grinned. “Next time, I’m not touching ANY buttons.”'
+        ],
+        ending: { kind: 'good', title: 'The Three-Seconds-Left Ending', tip: 'You made it with a hint! Next time, look back at the bunk bed for the color clue.' }
+      },
+      'oops': {
+        paras: [
+          'Barry yanked the red cable and jammed it into the plug.',
+          '*HONK! HONK! HONK!* “Wrong power!” said the robot voice. “Activating… the Super Silly Fog!”',
+          '*PSSSSHHH!* Thick white fog poured out of the ceiling. In two seconds, the boys couldn’t even see their own sneakers.',
+          '“Jack? Is that your hand?” asked Eitan.',
+          '“No,” said Jack. “That’s Barry’s elbow.”',
+          'The door swung open. Dina waved away the fog, laughing. “Mission failed, space cadets. But you were SO close!”',
+          'Barry sighed. “Red means rockets,” he mumbled. “Just not *these* rockets.”'
+        ],
+        ending: { kind: 'oops', title: 'The Super Silly Fog Ending', tip: 'Red isn’t always right! Remember what the glowing clue said about the cable.' }
+      }
+    }
+  },
+  {
     id: 'chain-reaction-disaster', title: 'The Chain Reaction Disaster', topic: 'Invention', emoji: '🔔',
     paras: [
       '*CRASH!* Forty dominoes fell at once, and the test run hadn’t even started.',
