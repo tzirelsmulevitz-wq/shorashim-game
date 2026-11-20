@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="he" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Chumash">
+<title>Jack's Chumash</title>
+<style>
+:root {
+  --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
+  --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff; --sun: #f2b544;
+  --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2; --btn: #ffffff;
+  --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
+  --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+    --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+    --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
+  --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+  --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--sky); color: var(--ink); }
+body { margin: 0; font-family: var(--f-ui); font-size: 18px; line-height: 1.4; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+[hidden] { display: none !important; }
+button, a { font: inherit; color: inherit; touch-action: manipulation; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+.band { height: 14px; background: repeating-linear-gradient(90deg, #2f9e8f 0 28px, #d8efe9 28px 56px); }
+.wrap { max-width: 620px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 14px; }
+.topbar h1 { font-size: 22px; font-weight: 600; margin: 0; flex: 1; }
+.iconbtn { min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none; }
+.pill { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.hero { text-align: center; padding: 6px 0 4px; }
+.hero .w { font-size: 56px; font-weight: 800; line-height: 1.2; }
+.hero p { color: var(--muted); margin: 8px 0 0; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.mode { background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 6px; justify-items: center; }
+.mode .ico { font-size: 38px; line-height: 1; }
+.mode b { font-size: 22px; }
+.mode span { color: var(--muted); font-size: 15px; }
+.mode .best { color: var(--block); font-weight: 700; font-variant-numeric: tabular-nums; }
+.card { background: var(--sand); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 16px 18px; margin-bottom: 12px; }
+.card .w { font-size: 34px; font-weight: 800; }
+.card .root { color: var(--muted); font-weight: 700; margin-top: 2px; }
+.card .m { font-size: 19px; margin-top: 6px; }
+.sheet { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 24px 16px 22px; text-align: center; transition: background .15s, border-color .15s; }
+.sheet.ok { background: var(--good-bg); border-color: var(--good); }
+.sheet.no { background: var(--bad-bg); border-color: var(--bad); }
+.sheet .w { font-size: clamp(44px, 12vw, 72px); font-weight: 800; line-height: 1.3; }
+.sheet .ask { font-size: 18px; color: var(--muted); font-weight: 700; }
+.sheet .meaning { font-size: clamp(22px, 5.5vw, 28px); font-weight: 700; line-height: 1.3; }
+.gloss { margin-top: 10px; font-size: 18px; font-weight: 600; min-height: 24px; }
+.dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+.dot.g { background: var(--good); } .dot.b { background: var(--bad); }
+.opts { display: grid; gap: 10px; margin-top: 16px; }
+.opt { min-height: 58px; padding: 12px 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 19px; font-weight: 700; text-align: start; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.opt:disabled { cursor: default; }
+.opt.right { background: var(--good); color: #fff; border-color: var(--good); box-shadow: none; }
+.opt.wrong { background: var(--bad); color: #fff; border-color: var(--bad); box-shadow: none; }
+.result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
+.big { font-size: 64px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.05; }
+.stars { font-size: 54px; letter-spacing: 6px; line-height: 1; }
+.stars .on { color: var(--sun); } .stars .off { color: var(--line); }
+.actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.btnbig { min-height: 56px; padding: 0 24px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
+.ghost { min-height: 56px; padding: 0 22px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; cursor: pointer; }
+.rank { margin-top: 18px; text-align: left; }
+.rank h3 { font-size: 18px; color: var(--muted); margin: 0 0 8px; text-align: center; }
+.hsrow { display: grid; grid-template-columns: 48px 1fr auto; gap: 8px; padding: 8px 10px; border-radius: 12px; font-variant-numeric: tabular-nums; }
+.hsrow:nth-child(odd) { background: rgba(127,127,127,.08); }
+.hsrow.me { background: var(--good-bg); font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="band" aria-hidden="true"></div>
+<main class="wrap" id="app" aria-live="polite"></main>
+<script>
+const $ = id => document.getElementById(id), app = $('app');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* The six verb forms from Jack's Chumash worksheet ("What is the root and translation?"). */
+const WORDS = [
+  { w: 'אֵרְדָה', root: 'י.ר.ד', m: 'I will go down' },
+  { w: 'אֶרְאֶה', root: 'ר.א.ה', m: 'I will see' },
+  { w: 'אֵדָעָה', root: 'י.ד.ע', m: 'I will know' },
+  { w: 'אֵלֵד', root: 'י.ל.ד', m: 'I will give birth' },
+  { w: 'וְיֵלְכוּ', root: 'ה.ל.כ', m: 'and they went' },
+  { w: 'עָמַד', root: 'ע.מ.ד', m: 'he stood' }
+];
+const ROUND = 12;
+
+/* Results log, shared by the games on this site (same browser). Never throws. */
+function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now() }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
+function logRound(rec) {
+  const t = Date.now();
+  try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t, round: true }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {}
+  return t;
+}
+function rankHTML(game, mode, t) {
+  let a = []; try { a = JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) {}
+  const rows = a.filter(e => e.round && e.game === game && e.mode === mode).sort((x, y) => y.score - x.score || x.t - y.t);
+  const pos = rows.findIndex(r => r.t === t) + 1;
+  return `<div class="rank"><h3>High scores${pos ? ' · your rank #' + pos : ''}</h3>${rows.slice(0, 10).map((r, i) => `<div class="hsrow${r.t === t ? ' me' : ''}"><span>#${i + 1}</span><span>${esc(r.label)}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')}</div>`;
+}
+/* After a round, send the log to the jack-progress repo if a token is saved on this iPad. Silent on failure. */
+async function sendLog() {
+  let t = ''; try { t = localStorage.getItem('jackgh') || ''; } catch (e) {}
+  if (!t) return;
+  const API = 'https://api.github.com/repos/tzirelsmulevitz-wq/jack-progress/contents/results.json';
+  const h = { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  try {
+    let sha = null;
+    const g = await fetch(API, { headers: h, cache: 'no-store' });
+    if (g.status === 200) sha = (await g.json()).sha; else if (g.status !== 404) return;
+    const now = new Date().toISOString();
+    let entries = []; try { entries = JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) {}
+    const bytes = new TextEncoder().encode(JSON.stringify({ updated: now, entries }, null, 1));
+    let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+    const body = { message: 'Results ' + now, content: btoa(bin), ...(sha ? { sha } : {}) };
+    const p = await fetch(API, { method: 'PUT', headers: { ...h, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (p.ok) { try { localStorage.setItem('jacklastsent', now); } catch (e) {} }
+  } catch (e) {}
+}
+
+/* ---------- HOME ---------- */
+let Q = null;
+function home() {
+  Q = null;
+  let best = null; try { best = JSON.parse(localStorage.getItem('jackchumash') || 'null'); } catch (e) {}
+  app.innerHTML = `
+    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
+    <div class="hero"><div class="w">עָמַד</div><p>Learn the words and their roots, then take the quiz.</p></div>
+    <div class="modes">
+      <button class="mode" id="mStudy"><div class="ico">📚</div><b>Study the Words</b><span>The 6 words, roots and meanings</span></button>
+      <button class="mode" id="mQuiz"><div class="ico">⭐</div><b>Quiz</b><span>12 questions, earn 3 stars</span><span class="best">${best != null ? 'Best: ' + best + ' / ' + ROUND : ''}</span></button>
+    </div>`;
+  $('mStudy').onclick = study;
+  $('mQuiz').onclick = startQuiz;
+}
+
+/* ---------- STUDY ---------- */
+function study() {
+  app.innerHTML = `
+    <div class="topbar"><button class="iconbtn" id="back">‹ Back</button><h1>Study the Words</h1></div>
+    ${WORDS.map(x => `<div class="card"><div class="w">${x.w}</div><div class="root">Root: ${x.root}</div><div class="m">${x.m}</div></div>`).join('')}
+    <div class="actions"><button class="btnbig" id="toQuiz">Quiz</button></div>`;
+  $('back').onclick = home;
+  $('toQuiz').onclick = startQuiz;
+}
+
+/* ---------- QUIZ ----------
+   Each question shows a word and asks its meaning, or shows a meaning and asks its word. */
+function startQuiz() {
+  const qs = [];
+  while (qs.length < ROUND) for (const x of shuffle(WORDS)) { if (qs.length < ROUND) {
+    const others = shuffle(WORDS.filter(o => o !== x)).slice(0, 3);
+    qs.push({ word: x, dir: Math.random() < .5 ? 'wm' : 'mw', opts: shuffle([x, ...others]) }); } }
+  Q = { qs, i: 0, right: 0, marks: [], answered: false };
+  showQ();
+}
+function showQ() {
+  const q = Q.qs[Q.i];
+  const top = q.dir === 'wm'
+    ? `<div class="w">${q.word.w}</div><div class="ask">What does it mean?</div>`
+    : `<div class="ask">Which word means:</div><div class="meaning">${q.word.m}</div>`;
+  const opts = q.opts.map((o, k) => `<button class="opt" data-k="${k}">${q.dir === 'wm' ? esc(o.m) : `<span style="font-size:24px">${o.w}</span>`}</button>`).join('');
+  app.innerHTML = `
+    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>Quiz</h1><span class="pill">${Q.i + 1} of ${ROUND}</span></div>
+    <div class="dots" id="dots">${Array.from({ length: ROUND }, (_, n) => `<span class="dot ${Q.marks[n] === true ? 'g' : Q.marks[n] === false ? 'b' : ''}"></span>`).join('')}</div>
+    <div class="sheet" id="sheet" style="margin-top:14px">${top}<div class="gloss" id="gloss"></div></div>
+    <div class="opts" id="opts">${opts}</div>`;
+  $('quit').onclick = home;
+  Q.answered = false;
+  document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => pick(+b.dataset.k));
+}
+function pick(k) {
+  if (!Q || Q.answered) return;
+  Q.answered = true;
+  const q = Q.qs[Q.i], ok = q.opts[k] === q.word;
+  logAnswer({ game: 'chumash', mode: 'quiz', item: `${q.word.w} (${q.word.root})`, kind: q.dir === 'wm' ? 'word to meaning' : 'meaning to word', ok });
+  Q.marks[Q.i] = ok; if (ok) Q.right++;
+  $('sheet').className = 'sheet ' + (ok ? 'ok' : 'no');
+  $('gloss').textContent = `${q.word.w} · root ${q.word.root} · ${q.word.m}`;
+  document.querySelectorAll('#opts .opt').forEach((b, n) => {
+    b.disabled = true;
+    if (q.opts[n] === q.word) b.classList.add('right'); else if (n === k) b.classList.add('wrong');
+  });
+  const dot = document.querySelectorAll('#dots .dot')[Q.i]; if (dot) dot.className = 'dot ' + (ok ? 'g' : 'b');
+  setTimeout(next, ok ? 900 : 2000);
+}
+function next() {
+  if (!Q) return;
+  Q.i++;
+  if (Q.i >= ROUND) return finish();
+  showQ();
+}
+function finish() {
+  sendLog();
+  const right = Q.right, stars = right >= ROUND ? 3 : right >= ROUND - 2 ? 2 : right >= ROUND / 2 ? 1 : 0;
+  let best = null; try { best = JSON.parse(localStorage.getItem('jackchumash') || 'null'); } catch (e) {}
+  const isBest = best == null || right > best;
+  if (isBest) { try { localStorage.setItem('jackchumash', JSON.stringify(right)); } catch (e) {} }
+  const rt = logRound({ game: 'chumash', mode: 'quiz', score: right, total: ROUND, label: `${right} / ${ROUND}` });
+  Q = null;
+  app.innerHTML = `
+    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>Quiz</h1></div>
+    <div class="result">
+      <div class="stars">${[0, 1, 2].map(i => `<span class="${i < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
+      <div class="big">${right} / ${ROUND}</div>
+      <div>${right === ROUND ? 'Perfect!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}${isBest && best != null ? ' · new best!' : ''}</div>
+      ${rankHTML('chumash', 'quiz', rt)}
+      <div class="actions">
+        <button class="btnbig" id="again">Play again</button>
+        <button class="ghost" id="study">Study the words</button>
+        <button class="ghost" id="menu">Menu</button>
+      </div>
+    </div>`;
+  $('quit').onclick = home; $('menu').onclick = home; $('study').onclick = study; $('again').onclick = startQuiz;
+}
+home();
+</script>
+</body>
+</html>
