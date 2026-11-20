@@ -10,7 +10,13 @@ Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/shorashim/
 
 ## Chumash
 
-Review for Parshas Vayera, perek 18, made from the teacher's answer key (דַּפֵּי חֲזָרָה). The teacher crosses out the question word (מִי, לָמָּה, אֵיזוֹ, מַדּוּעַ) and writes the answer back in the question's own words, so the games practice exactly that:
+Review for Parshas Vayera, perek 18, made from the teacher's answer key (דַּפֵּי חֲזָרָה). It goes in three steps, so Jack understands the story before the Hebrew:
+
+1. **The Story**: the whole story of the pesukim (with the Rashis the test uses) in English, in four short chapters with comprehension questions after each one and "Show me in the story". Finishing it once opens steps 2 and 3 on that iPad.
+2. **Learn the Words**: flip cards and Word Match for the key Hebrew words, starting with the question words (מִי, לָמָּה, מַדּוּעַ, אֵיזוֹ, מָה).
+3. **The Worksheet**: the teacher crosses out the question word and writes the answer back in the question's own words, so these games practice exactly that.
+
+Help everywhere: tap any Hebrew word to see what it means, and the **EN** button (on at first) shows English under the questions, answers, choices and pieces.
 
 - **Answer Key**: each question; tap to cross out the question word and see the answer.
 - **Cross It Out**: tap the question word to cross it out, then fill in the blanks of the answer. Question 5 is each malach's job. Score = steps right on the first try.
@@ -18,7 +24,7 @@ Review for Parshas Vayera, perek 18, made from the teacher's answer key (דַּ�
 - **Malach Match**: match Refael, Gavriel and Michael to their jobs, then a bonus question.
 - **The six words**: study and quiz for the six verb forms (roots and meanings) from the earlier worksheet.
 
-The questions and answers are in `SHEET` and `MALACHIM` at the top of the script in `chumash/index.html`. In each answer, `tiles` must read the same as the answer (`a`) when joined with spaces.
+Everything is at the top of the script in `chumash/index.html`: `STORY` (chapters, questions with the right answer first, and `look` sentences copied exactly from the chapter), `VOCAB`, `SHEET` and `MALACHIM` (in each answer, `tiles` must read the same as the answer `a` when joined with spaces), and `GLOSS` / `PHRASES` (the English for every Hebrew word and piece).
 
 Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/chumash/
 

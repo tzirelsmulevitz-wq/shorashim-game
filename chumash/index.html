@@ -11,9 +11,10 @@
   --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
   --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff; --sun: #f2b544;
   --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2; --btn: #ffffff;
-  --pen: #1f4fb8; --xpen: #d8342a;
+  --pen: #1f4fb8; --xpen: #d8342a; --teal: #2f9e8f; --teal-bg: #d8efe9; --mark: #ffe08a; --mark-ink: #1d2b45;
   --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
   --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  --f-read: "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --f-heb: "Times New Roman", "Arial Hebrew", "Noto Serif Hebrew", "David", serif;
   color-scheme: light;
   padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -22,14 +23,14 @@
   :root:not([data-theme="light"]) {
     --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
     --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
-    --pen: #8fb3ff; --xpen: #ff6b5f;
+    --pen: #8fb3ff; --xpen: #ff6b5f; --teal: #4cc4b3; --teal-bg: #173a36; --mark: #6b5414; --mark-ink: #fff6dc;
     --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
   --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
-  --pen: #8fb3ff; --xpen: #ff6b5f;
+  --pen: #8fb3ff; --xpen: #ff6b5f; --teal: #4cc4b3; --teal-bg: #173a36; --mark: #6b5414; --mark-ink: #fff6dc;
   --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -40,28 +41,98 @@ button, a { font: inherit; color: inherit; touch-action: manipulation; }
 button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 .band { height: 14px; background: repeating-linear-gradient(90deg, #2f9e8f 0 28px, #d8efe9 28px 56px); }
 .wrap { max-width: 720px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-.topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 14px; }
-.topbar h1 { font-size: 22px; font-weight: 700; margin: 0; flex: 1; }
-.iconbtn { min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.topbar { display: flex; align-items: center; gap: 10px; min-height: 48px; margin-bottom: 14px; }
+.topbar h1 { font-size: 22px; font-weight: 700; margin: 0; flex: 1; line-height: 1.15; }
+.iconbtn { min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; white-space: nowrap; }
+.enbtn[aria-pressed="true"] { background: var(--good-bg); border-color: var(--good); color: var(--good); }
 .pill { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); white-space: nowrap; }
 .he { font-family: var(--f-heb); direction: rtl; }
+
+/* ---------- English help and tap-a-word ---------- */
+.en { display: block; font-family: var(--f-ui); direction: ltr; text-align: left; color: var(--muted); font-size: 17px; font-weight: 600; line-height: 1.35; margin-top: 4px; }
+.en b { color: var(--xpen); }
+body:not(.helper) .en { display: none !important; }
+.opt.he .en { text-align: right; font-size: 15px; margin-top: 0; }
+.tw .en, .tile .en { text-align: center; font-size: 14px; margin-top: 0; }
+.hw { cursor: pointer; border-radius: 6px; }
+.hw.on, button.qw.on { background: rgba(242,181,68,.5); }
+.bubble { position: fixed; z-index: 50; max-width: min(360px, 92vw); background: var(--ink); color: var(--sky); border-radius: 14px; padding: 8px 14px; font-size: 19px; font-weight: 700; line-height: 1.5; box-shadow: 0 8px 24px rgba(0,0,0,.25); pointer-events: none; animation: pop .18s ease-out; }
+.bubble bdi { font-family: var(--f-heb); font-size: 1.3em; }
 
 /* ---------- home ---------- */
 .hero { text-align: center; padding: 4px 0 2px; }
 .hero .t { font-family: var(--f-heb); font-size: clamp(44px, 10vw, 60px); font-weight: 800; line-height: 1.25; }
 .hero .s { font-family: var(--f-heb); font-size: 26px; font-weight: 700; color: var(--muted); }
-.hero p { color: var(--muted); margin: 10px auto 0; max-width: 34ch; }
-.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+.hero p { color: var(--muted); margin: 10px auto 0; max-width: 36ch; }
+.step { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 18px 18px; margin-top: 16px; }
+.step .sh { display: flex; align-items: center; gap: 14px; }
+.step .num { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--block); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 21px; }
+.step.done .num { background: var(--good); }
+.step.locked .num { background: var(--line); color: var(--muted); }
+.step h2 { margin: 0; font-size: 23px; line-height: 1.2; }
+.step p { margin: 3px 0 0; color: var(--muted); font-size: 16px; }
+.step .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+.step .best { color: var(--block); font-weight: 700; font-variant-numeric: tabular-nums; }
+.lockmsg { margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: var(--sky); color: var(--muted); font-weight: 700; text-align: center; }
+.lockmsg.shake { animation: shake .35s; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 @media (max-width: 480px) { .modes { grid-template-columns: 1fr; } }
-.mode { background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 6px; justify-items: center; align-content: start; }
-.mode:active { transform: translateY(2px); }
-.mode .ico { font-size: 38px; line-height: 1; height: 46px; display: grid; place-items: center; }
-.mode b { font-size: 22px; }
+.mode { background: var(--btn); border: 2px solid var(--line); border-radius: 20px; padding: 14px 12px; text-align: center; cursor: pointer; box-shadow: 0 3px 0 var(--line); display: grid; gap: 4px; justify-items: center; align-content: start; }
+.mode:active { transform: translateY(2px); box-shadow: none; }
+.mode .ico { font-size: 34px; line-height: 1; height: 40px; display: grid; place-items: center; }
+.mode b { font-size: 20px; }
 .mode span { color: var(--muted); font-size: 15px; }
 .mode .best { color: var(--block); font-weight: 700; font-variant-numeric: tabular-nums; }
 .sec { margin-top: 30px; }
-.sec h2 { font-size: 18px; color: var(--muted); margin: 0 0 10px; text-align: center; }
+.sec h2 { font-size: 17px; color: var(--muted); margin: 0 0 10px; text-align: center; }
 .sec .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.foot { text-align: center; color: var(--muted); font-size: 15px; margin-top: 22px; }
+
+/* ---------- story ---------- */
+.story { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 22px clamp(18px, 5vw, 40px) 26px; }
+.tag { display: inline-block; font-size: 15px; font-weight: 700; color: var(--teal); background: var(--teal-bg); border-radius: 999px; padding: 4px 12px; }
+.story h2 { font-size: clamp(28px, 5.5vw, 38px); margin: 10px 0 12px; line-height: 1.15; }
+.story .ch { font-size: 16px; font-weight: 700; color: var(--muted); margin-top: 8px; }
+.prose { font-family: var(--f-read); font-size: clamp(20px, 2.7vw, 24px); line-height: 1.65; -webkit-user-select: text; user-select: text; }
+.prose p { margin: 0 0 .8em; }
+.prose p:last-child { margin-bottom: 0; }
+mark { background: var(--mark); color: var(--mark-ink); border-radius: 5px; padding: .05em .15em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.check { margin-top: 18px; background: var(--sand); border: 3px dashed var(--sun); border-radius: 22px; padding: 18px 18px 16px; }
+.check .label { font-size: 14px; font-weight: 800; color: var(--teal); letter-spacing: .06em; text-transform: uppercase; }
+.check .cq { font-size: clamp(21px, 3vw, 25px); font-weight: 700; line-height: 1.3; margin: 6px 0 12px; }
+.sopts { display: grid; gap: 10px; }
+.sopt { min-height: 62px; width: 100%; text-align: start; padding: 10px 16px; border-radius: 16px; border: 3px solid var(--line); background: var(--btn); cursor: pointer; font-size: 20px; font-weight: 600; line-height: 1.3; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 0 var(--line); }
+.sopt .let { flex: none; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--sky); color: var(--muted); font-size: 17px; font-weight: 700; }
+.sopt:active { transform: translateY(2px); box-shadow: none; }
+.sopt.right { border-color: var(--good); background: var(--good-bg); }
+.sopt.right .let { background: var(--good); color: #fff; }
+.sopt.wrong { border-color: var(--bad); background: var(--bad-bg); animation: shake .35s; }
+.sopt.wrong .let { background: var(--bad); color: #fff; }
+.sopt[disabled] { cursor: default; }
+.sopt[disabled]:not(.right):not(.wrong) { opacity: .55; }
+.fb { margin-top: 14px; border-radius: 18px; padding: 14px 16px; border: 2px solid; }
+.fb.yes { background: var(--good-bg); border-color: var(--good); }
+.fb.no { background: var(--bad-bg); border-color: var(--bad); }
+.fb h3 { margin: 0 0 4px; font-size: 23px; }
+.fb.yes h3 { color: var(--good); } .fb.no h3 { color: var(--bad); }
+.fb p { margin: 0; font-size: 19px; }
+.srow { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap; margin-top: 14px; }
+.wide { width: 100%; margin-top: 20px; }
+.rv { background: var(--sky); border-radius: 16px; padding: 12px 16px; text-align: left; }
+.rv b { display: block; font-size: 18px; }
+.rv span { color: var(--good); font-weight: 700; }
+.reviewlist { margin-top: 18px; display: grid; gap: 10px; }
+.reviewlist h3 { margin: 0; font-size: 18px; color: var(--muted); text-align: center; }
+
+/* ---------- learn the words ---------- */
+.fcard { min-height: 320px; width: 100%; background: var(--sand); border: 2px solid var(--line); border-radius: 26px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px; cursor: pointer; text-align: center; }
+.fcard .hb { font-family: var(--f-heb); font-size: clamp(54px, 13vw, 84px); font-weight: 800; line-height: 1.3; direction: rtl; }
+.fcard .eng { font-size: clamp(30px, 6.5vw, 44px); font-weight: 800; line-height: 1.15; }
+.fcard .emo { font-size: 58px; line-height: 1.1; }
+.fcard .note { color: var(--muted); font-size: 18px; }
+.fcard .hint { color: var(--muted); font-size: 15px; }
+.fnav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; }
+.fnav .iconbtn { min-width: 110px; }
 
 /* ---------- worksheet look ---------- */
 .panel { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 20px 18px; margin-bottom: 14px; transition: background .2s, border-color .2s; }
@@ -71,7 +142,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-o
 .qw { position: relative; display: inline-block; line-height: 1.35; padding: 0 .12em; border-radius: 10px; }
 button.qw { font: inherit; color: inherit; background: var(--btn); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--line); cursor: pointer; padding: 0 .22em; margin: .1em 0; }
 button.qw:active { transform: translateY(2px); box-shadow: none; }
-.q.locked button.qw { background: transparent; border-color: transparent; box-shadow: none; cursor: default; }
+.q.locked button.qw { background: transparent; border-color: transparent; box-shadow: none; }
+.q.locked button.qw.on { background: rgba(242,181,68,.5); }
 .qw.bad { background: var(--bad-bg); border-color: var(--bad); animation: shake .35s; }
 .qw svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
 .qw svg path { fill: none; stroke: var(--xpen); stroke-width: 5; stroke-linecap: round; }
@@ -83,12 +155,11 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 .blank.cur { border-bottom-color: var(--sun); background: rgba(242,181,68,.18); border-radius: 6px 6px 0 0; animation: pulse 1.3s ease-in-out infinite; }
 .fill.new { animation: hl 1.2s ease-out; border-radius: 6px; }
 .slot { display: inline-block; width: 2.6em; height: 1.15em; vertical-align: middle; border: 3px dashed var(--sun); border-radius: 10px; }
-.mline { white-space: normal; }
 .say { font-size: 19px; font-weight: 700; color: var(--muted); margin: 14px 0 12px; text-align: center; min-height: 27px; }
 .say.yes { color: var(--good); } .say.no { color: var(--bad); }
-.say bdi.he { font-size: 1.25em; }
+.say bdi { font-family: var(--f-heb); font-size: 1.25em; }
 .opts { display: grid; gap: 10px; }
-.opt { min-height: 60px; padding: 10px 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; text-align: start; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.opt { min-height: 60px; padding: 8px 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; text-align: start; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
 .opt.he { font-size: clamp(22px, 4.6vw, 27px); line-height: 1.5; }
 .opt:active { transform: translateY(2px); box-shadow: none; }
 .opt:disabled { cursor: default; }
@@ -100,8 +171,11 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 .tw.oops { background: var(--bad-bg); border-color: var(--bad); animation: shake .35s; }
 .tw.hint { border-color: var(--sun); box-shadow: 0 0 0 4px rgba(242,181,68,.45); }
 .mcols { display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px; }
+.mcols.even { grid-template-columns: 1fr 1fr; }
 .mcol { display: grid; gap: 10px; align-content: start; }
 .tile { min-height: 76px; border-radius: 16px; border: 3px solid var(--line); background: var(--btn); cursor: pointer; display: grid; place-items: center; padding: 8px 12px; font-size: clamp(21px, 4.4vw, 26px); font-weight: 700; line-height: 1.4; text-align: center; transition: opacity .3s, transform .15s; }
+.tile.heb { font-family: var(--f-heb); }
+.tile.eng { font-family: var(--f-ui); font-size: 20px; }
 .tile small { display: block; font-size: .62em; color: var(--muted); }
 .tile.sel { border-color: var(--sun); transform: scale(1.03); }
 .tile.done { border-color: var(--good); background: var(--good-bg); opacity: .55; cursor: default; }
@@ -128,10 +202,11 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
 .dot.g { background: var(--good); } .dot.b { background: var(--bad); }
 .result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
-.big { font-size: 60px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.big { font-size: 56px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .stars { font-size: 54px; letter-spacing: 6px; line-height: 1; }
 .stars .on { color: var(--sun); } .stars .off { color: var(--line); }
 .review { margin-top: 16px; text-align: right; color: var(--pen); font-size: 22px; font-weight: 700; line-height: 1.7; }
+.unlocked { margin-top: 16px; padding: 14px; border-radius: 16px; background: var(--good-bg); color: var(--good); font-weight: 800; font-size: 20px; }
 .actions { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
 .btnbig { min-height: 56px; padding: 0 24px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
 .btnbig:active, .ghost:active { transform: translateY(2px); }
@@ -149,7 +224,7 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 @keyframes hl { from { background: rgba(242,181,68,.55); } to { background: transparent; } }
 .popin { animation: pop .35s ease-out; }
 @media (prefers-reduced-motion: reduce) {
-  .popin, .opt.wrong, .tw.oops, .tile.oops, .qw.bad, .blank.cur, .fill.new { animation: none; }
+  .popin, .opt.wrong, .sopt.wrong, .tw.oops, .tile.oops, .qw.bad, .blank.cur, .fill.new, .bubble, .lockmsg.shake { animation: none; }
   .qw svg.draw path { animation-duration: .01s; }
 }
 </style>
@@ -167,38 +242,191 @@ const store = {
 };
 
 /* ============================================================
-   The review sheet: דַּפֵּי חֲזָרָה, פָּרָשַׁת וַיֵּרָא, פֶּרֶק יח (teacher's answer key).
+   STEP 1: THE STORY (Bereishis 18:1-16, with the Rashis the test uses), in English.
+   Each chapter has quick-check questions: the first answer is the right one (shuffled on screen),
+   and "look" holds sentences copied exactly from that chapter, highlighted by "Show me in the story".
+   ============================================================ */
+const STORY = {
+  title: 'Three Guests at Avraham’s Tent',
+  chapters: [
+    { title: 'A Hot Day at the Tent', emoji: '☀️',
+      paras: [
+        'It was a very, very hot day. Avraham was sitting at the opening of his tent in a place called Elonei Mamre.',
+        'Avraham was not feeling well. Three days before, he had his bris milah, and he was still in pain.',
+        'Suddenly, Hashem appeared to Avraham. Why did Hashem come? Rashi tells us that Hashem came to visit Avraham because he was sick. Visiting someone who is sick is a mitzvah called bikur cholim. Hashem Himself did the mitzvah of bikur cholim!',
+        'So why was Avraham sitting outside on such a hot day, when he should have been resting? He was looking for guests! Avraham loved the mitzvah of hachnasat orchim, welcoming guests. He sat at the opening of the tent so he could see anyone walking by and invite them in.',
+        'But nobody came. Rashi says Hashem made the sun extra hot, so no travelers would bother Avraham while he was healing. Avraham was sad. He had no guests!'
+      ],
+      qs: [
+        { q: 'Who came to visit Avraham?', a: ['Hashem', 'Sarah', 'Three kings', 'Lot'],
+          why: 'Hashem appeared to Avraham to visit him.', look: ['Suddenly, Hashem appeared to Avraham.'] },
+        { q: 'Why did Hashem come to Avraham?', a: ['To visit him because he was sick (bikur cholim)', 'To bring him food', 'To tell him to move away', 'To give him a present'],
+          why: 'Avraham was still in pain from his bris milah, so Hashem came to visit him. That mitzvah is called bikur cholim.', look: ['Rashi tells us that Hashem came to visit Avraham because he was sick.'] },
+        { q: 'Why was Avraham sitting at the opening of his tent?', a: ['To look for guests to invite in (hachnasat orchim)', 'To cool off in the breeze', 'To wait for Sarah to come home', 'To hide from the sun'],
+          why: 'Avraham loved the mitzvah of hachnasat orchim. He sat where he could see anyone walking by, so he could invite them in.', look: ['He was looking for guests!', 'Avraham loved the mitzvah of hachnasat orchim, welcoming guests.'] },
+        { q: 'Why was Avraham sad?', a: ['He had no guests', 'He was hungry', 'It was too hot to go outside', 'Sarah went away'],
+          why: 'It was so hot that nobody was traveling, so Avraham had no guests.', look: ['Avraham was sad. He had no guests!'] }
+      ] },
+    { title: 'Three Surprise Guests', emoji: '👀',
+      paras: [
+        'Avraham looked up, and there were three men standing near him! He didn’t know it yet, but they were not really men. They were malachim (angels) who looked like people. Hashem sent them because Avraham was sad that he had no guests.',
+        'Why did Hashem send three malachim? Couldn’t one malach do everything? No! Each malach had his own job, and one malach can’t do three jobs. So Hashem sent three.',
+        'Refael’s job was to heal Avraham, so he would feel better after his bris milah.',
+        'Gavriel’s job was to turn over the city of Sedom, because the people there were very wicked.',
+        'Michael’s job was to tell Avraham that Sarah would have a baby boy in a year.'
+      ],
+      qs: [
+        { q: 'Who were the three men really?', a: ['Malachim (angels) who looked like people', 'Avraham’s brothers', 'Travelers from Sedom', 'Shepherds looking for water'],
+          why: 'They looked like men, but they were really malachim that Hashem sent.', look: ['They were malachim (angels) who looked like people.'] },
+        { q: 'Why did Hashem send three malachim and not just one?', a: ['One malach can’t do three jobs', 'Three malachim could eat more food', 'Avraham asked for three guests', 'One malach would get lost'],
+          why: 'Each malach had his own job, and one malach can’t do three jobs.', look: ['Each malach had his own job, and one malach can’t do three jobs.'] },
+        { q: 'Which malach came to heal Avraham?', a: ['Refael', 'Gavriel', 'Michael'],
+          why: 'Refael’s job was to heal Avraham.', look: ['Refael’s job was to heal Avraham, so he would feel better after his bris milah.'] },
+        { q: 'What was Gavriel’s job?', a: ['To turn over the city of Sedom', 'To heal Avraham', 'To tell Avraham about the baby', 'To cook the food'],
+          why: 'Gavriel’s job was to turn over Sedom.', look: ['Gavriel’s job was to turn over the city of Sedom, because the people there were very wicked.'] },
+        { q: 'What was Michael’s job?', a: ['To tell Avraham that Sarah would have a baby boy', 'To heal Avraham', 'To turn over Sedom', 'To bring water'],
+          why: 'Michael’s job was to bring the good news about the baby.', look: ['Michael’s job was to tell Avraham that Sarah would have a baby boy in a year.'] }
+      ] },
+    { title: 'Avraham Runs!', emoji: '🏃',
+      paras: [
+        'Even though he was in pain, Avraham jumped up and ran to greet the guests. He bowed down and said, “Please don’t pass me by! Stay and rest.”',
+        '“Let me bring some water so you can wash your feet. Rest here under the tree, and I’ll bring you some bread.”',
+        'Avraham hurried into the tent. “Sarah, quick! Take the best flour and bake some cakes!”',
+        'Then Avraham ran to his cattle and picked a calf that was soft and good. He gave it to a young man to cook quickly. Rashi says the young man was Yishmael, Avraham’s son. Avraham wanted to teach him to do mitzvos too.',
+        'Avraham served his guests butter, milk and the meat. He stood near them under the tree while they ate. Here is a funny thing: malachim don’t really eat! Rashi says they only looked like they were eating.'
+      ],
+      qs: [
+        { q: 'What did Avraham do when he saw the guests?', a: ['He ran to greet them', 'He stayed sitting in the shade', 'He went inside to rest', 'He asked them to come back later'],
+          why: 'Even though he was in pain, Avraham ran to greet them. That’s how much he loved hachnasat orchim!', look: ['Even though he was in pain, Avraham jumped up and ran to greet the guests.'] },
+        { q: 'What did Avraham ask Sarah to do?', a: ['Bake cakes', 'Milk the cows', 'Get water from the well', 'Set up beds'],
+          why: 'Avraham asked Sarah to take the best flour and bake cakes.', look: ['“Sarah, quick! Take the best flour and bake some cakes!”'] },
+        { q: 'Who cooked the calf?', a: ['Yishmael', 'Sarah', 'Michael', 'Lot'],
+          why: 'Rashi says the young man was Yishmael. Avraham wanted to teach him to do mitzvos.', look: ['Rashi says the young man was Yishmael, Avraham’s son.'] },
+        { q: 'Did the malachim really eat the food?', a: ['No, they only looked like they were eating', 'Yes, they ate everything', 'No, they gave it to the animals', 'Yes, but only the bread'],
+          why: 'Malachim don’t eat. Rashi says they only looked like they were eating.', look: ['Rashi says they only looked like they were eating.'] }
+      ] },
+    { title: 'Big News!', emoji: '👶',
+      paras: [
+        'The guests asked, “Where is Sarah, your wife?” Avraham answered, “She is in the tent.”',
+        'Then Michael gave the big news: “I will come back at this time next year, and Sarah will have a son!”',
+        'Sarah was listening at the opening of the tent. Avraham and Sarah were very old, much too old to have a baby. So Sarah laughed to herself. “How could I have a baby now?” she thought.',
+        'Hashem said to Avraham, “Why did Sarah laugh? Is anything too hard for Hashem? At this time next year, Sarah will have a son.”',
+        'Sarah was scared, so she said, “I didn’t laugh.” But Hashem said, “No, you did laugh.”',
+        'Then the guests got up and looked toward Sedom. Avraham walked with them to say goodbye, because walking with your guests when they leave is part of hachnasat orchim too.'
+      ],
+      qs: [
+        { q: 'What was the big news?', a: ['Sarah would have a son in a year', 'Avraham would become a king', 'They had to move to a new place', 'It was going to rain'],
+          why: 'Michael told Avraham that Sarah would have a son at this time next year.', look: ['“I will come back at this time next year, and Sarah will have a son!”'] },
+        { q: 'What did Sarah do when she heard the news?', a: ['She laughed to herself', 'She cried', 'She ran out of the tent', 'She baked more cakes'],
+          why: 'Sarah was very old, so she laughed and thought, “How could I have a baby now?”', look: ['So Sarah laughed to herself.'] },
+        { q: 'What did Hashem ask Avraham?', a: ['“Is anything too hard for Hashem?”', '“Where are your guests?”', '“Why is it so hot?”', '“Who cooked the calf?”'],
+          why: 'Hashem can do anything, even give Sarah a baby when she is very old.', look: ['Is anything too hard for Hashem?'] },
+        { q: 'What did Avraham do when the guests left?', a: ['He walked with them to say goodbye', 'He went back to sleep', 'He closed the tent', 'He ate the leftover cakes'],
+          why: 'Avraham walked with his guests to say goodbye. That’s part of hachnasat orchim too!', look: ['Avraham walked with them to say goodbye, because walking with your guests when they leave is part of hachnasat orchim too.'] }
+      ] }
+  ]
+};
+const storyTotal = () => STORY.chapters.reduce((s, c) => s + c.qs.length, 0);
+
+/* ============================================================
+   STEP 2: LEARN THE WORDS. q: true = a question word (the ones the teacher crosses out).
+   ============================================================ */
+const VOCAB = [
+  { h: 'מִי', en: 'who', emo: '🧑', q: true },
+  { h: 'לָמָּה', en: 'why', emo: '🤔', q: true },
+  { h: 'מַדּוּעַ', en: 'why', emo: '🤔', q: true, note: 'Another way to say לָמָּה' },
+  { h: 'אֵיזוֹ', en: 'which', emo: '👉', q: true },
+  { h: 'מָה', en: 'what', emo: '❓', q: true },
+  { h: 'נִרְאָה', en: 'appeared', emo: '✨' },
+  { h: 'יָשַׁב', en: 'sat', emo: '🪑' },
+  { h: 'פֶּתַח הָאֹהֶל', en: 'the opening of the tent', emo: '⛺' },
+  { h: 'בִּקּוּר חוֹלִים', en: 'visiting the sick', emo: '🤒' },
+  { h: 'הַכְנָסַת אוֹרְחִים', en: 'welcoming guests', emo: '🍞' },
+  { h: 'מִצְוָה', en: 'mitzvah', emo: '⭐' },
+  { h: 'אָהַב', en: 'loved', emo: '❤️' },
+  { h: 'שָׁלַח', en: 'sent', emo: '📨' },
+  { h: 'שְׁלֹשָׁה', en: 'three', emo: '3️⃣' },
+  { h: 'אֶחָד', en: 'one', emo: '1️⃣' },
+  { h: 'מַלְאָךְ', en: 'malach (angel)', emo: '✨' },
+  { h: 'מַלְאָכִים', en: 'malachim (angels)', emo: '✨✨✨' },
+  { h: 'תַּפְקִיד', en: 'job', emo: '🛠️' },
+  { h: 'לְרַפְּאוֹת', en: 'to heal', emo: '🩹' },
+  { h: 'לַהֲפוֹךְ', en: 'to turn over', emo: '🔄' },
+  { h: 'בֵּן', en: 'a son', emo: '👶' },
+  { h: 'כִּי', en: 'because', emo: '💡' },
+  { h: 'לַעֲשׂוֹת', en: 'to do', emo: '✅' }
+];
+
+/* ============================================================
+   STEP 3: THE WORKSHEET (דַּפֵּי חֲזָרָה, פָּרָשַׁת וַיֵּרָא, פֶּרֶק יח, teacher's answer key).
    q: the question, word by word. x: true = a question word the teacher crosses out.
-   a: the answer. A string is written for him; { f, alt, lab } is a blank Jack fills in
-      (f = the right words, alt = wrong choices, lab = name on the Progress page).
-   tiles: the same answer cut into pieces for Build the Answer (in order).
+   a: the answer. A string is written for him; { f, alt, lab } is a blank Jack fills in.
+   tiles: the same answer cut into pieces for Build the Answer (must read the same as a).
+   en / aen: the question and answer in English (shown when English help is on).
    ============================================================ */
 const SHEET = [
   { q: [{ w: 'מִי', x: true }, { w: 'נִרְאָה' }, { w: 'אֶל' }, { w: 'אַבְרָהָם' }, { w: 'וְלָמָּה', x: true }],
+    en: '<b>Who</b> appeared to Avraham, <b>and why</b>?', aen: 'Hashem appeared to Avraham to do the mitzvah of visiting the sick (bikur cholim).',
     a: [{ f: 'ה׳', alt: ['מִיכָאֵל', 'שָׂרָה'], lab: 'Q1: who appeared to Avraham' }, 'נִרְאָה אֶל אַבְרָהָם',
         { f: 'לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים', alt: ['לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים', 'לַהֲפוֹךְ אֶת סְדוֹם'], lab: 'Q1: why Hashem came' }],
     tiles: ['ה׳', 'נִרְאָה', 'אֶל אַבְרָהָם', 'לַעֲשׂוֹת', 'מִצְוַת', 'בִּקּוּר חוֹלִים'] },
   { q: [{ w: 'לָמָּה', x: true }, { w: 'יָשַׁב' }, { w: 'אַבְרָהָם' }, { w: 'בְּפֶתַח' }, { w: 'הָאֹהֶל' }],
+    en: '<b>Why</b> did Avraham sit at the opening of the tent?', aen: 'Avraham sat at the opening of the tent to welcome guests (hachnasat orchim).',
     a: ['אַבְרָהָם יָשַׁב בְּפֶתַח הָאֹהֶל',
         { f: 'לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים', alt: ['לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים', 'לָנוּחַ בַּצֵּל'], lab: 'Q2: why Avraham sat at the tent' }],
     tiles: ['אַבְרָהָם', 'יָשַׁב', 'בְּפֶתַח הָאֹהֶל', 'לַעֲשׂוֹת', 'הַכְנָסַת אוֹרְחִים'] },
   { q: [{ w: 'אֵיזוֹ', x: true }, { w: 'מִצְוָה' }, { w: 'אָהַב' }, { w: 'אַבְרָהָם' }, { w: 'לְקַיֵּם' }],
+    en: '<b>Which</b> mitzvah did Avraham love to do?', aen: 'Avraham loved to do the mitzvah of welcoming guests (hachnasat orchim).',
     a: ['אַבְרָהָם אָהַב לְקַיֵּם מִצְוַת',
         { f: 'הַכְנָסַת אוֹרְחִים', alt: ['בִּקּוּר חוֹלִים', 'כִּבּוּד אָב וָאֵם'], lab: 'Q3: which mitzvah Avraham loved' }],
     tiles: ['אַבְרָהָם', 'אָהַב', 'לְקַיֵּם', 'מִצְוַת', 'הַכְנָסַת אוֹרְחִים'] },
   { q: [{ w: 'מַדּוּעַ', x: true }, { w: 'ה׳' }, { w: 'שָׁלַח' }, { w: 'שְׁלֹשָׁה' }, { w: 'מַלְאָכִים' }, { w: 'וְלֹא' }, { w: 'מַלְאָךְ' }, { w: 'אֶחָד' }],
+    en: '<b>Why</b> did Hashem send three malachim and not one malach?', aen: 'Hashem sent three malachim and not one malach because one malach can’t do three jobs.',
     a: ['ה׳ שָׁלַח שְׁלֹשָׁה מַלְאָכִים וְלֹא מַלְאָךְ אֶחָד',
         { f: 'כִּי מַלְאָךְ אֶחָד לֹא יָכוֹל לַעֲשׂוֹת שָׁלוֹשׁ תַּפְקִידִים', alt: ['כִּי אַבְרָהָם אָהַב הַרְבֵּה אוֹרְחִים', 'כִּי הָיָה חַם מְאֹד'], lab: 'Q4: why 3 malachim' }],
     tiles: ['ה׳ שָׁלַח', 'שְׁלֹשָׁה מַלְאָכִים', 'וְלֹא מַלְאָךְ אֶחָד', 'כִּי', 'מַלְאָךְ אֶחָד', 'לֹא יָכוֹל', 'לַעֲשׂוֹת', 'שָׁלוֹשׁ תַּפְקִידִים'] }
 ];
-const MQ = 'מָה הָיָה הַתַּפְקִיד שֶׁל כָּל מַלְאָךְ?';
+const MQ = 'מָה הָיָה הַתַּפְקִיד שֶׁל כָּל מַלְאָךְ?', MQ_EN = '<b>What</b> was each malach’s job?';
 const MALACHIM = [
-  { k: 'א', name: 'רְפָאֵל', eng: 'Refael', job: 'לְרַפְּאוֹת אֶת אַבְרָהָם' },
-  { k: 'ב', name: 'גַּבְרִיאֵל', eng: 'Gavriel', job: 'לַהֲפוֹךְ אֶת סְדוֹם' },
-  { k: 'ג', name: 'מִיכָאֵל', eng: 'Michael', job: 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה' }
+  { k: 'א', name: 'רְפָאֵל', eng: 'Refael', job: 'לְרַפְּאוֹת אֶת אַבְרָהָם', jen: 'to heal Avraham' },
+  { k: 'ב', name: 'גַּבְרִיאֵל', eng: 'Gavriel', job: 'לַהֲפוֹךְ אֶת סְדוֹם', jen: 'to turn over Sedom' },
+  { k: 'ג', name: 'מִיכָאֵל', eng: 'Michael', job: 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה', jen: 'to tell Avraham that Sarah will have a son in a year' }
 ];
 const fullAnswer = it => it.tiles.join(' ') + '.';
 const mLine = m => `מַלְאָךְ ${m.k} – ${m.name} – ${m.job}.`;
+
+/* What each Hebrew word means, for tap-a-word. */
+const GLOSS = {
+  'מִי': 'who', 'נִרְאָה': 'appeared', 'אֶל': 'to', 'אַבְרָהָם': 'Avraham', 'וְלָמָּה': 'and why', 'לָמָּה': 'why',
+  'יָשַׁב': 'sat', 'בְּפֶתַח': 'at the opening of', 'הָאֹהֶל': 'the tent', 'אֵיזוֹ': 'which', 'מִצְוָה': 'mitzvah',
+  'אָהַב': 'loved', 'לְקַיֵּם': 'to do (a mitzvah)', 'מַדּוּעַ': 'why', 'ה׳': 'Hashem', 'שָׁלַח': 'sent', 'שְׁלֹשָׁה': 'three',
+  'מַלְאָכִים': 'malachim (angels)', 'וְלֹא': 'and not', 'מַלְאָךְ': 'malach (angel)', 'אֶחָד': 'one', 'לַעֲשׂוֹת': 'to do',
+  'מִצְוַת': 'the mitzvah of', 'בִּקּוּר': 'visiting', 'חוֹלִים': 'sick people', 'הַכְנָסַת': 'bringing in', 'אוֹרְחִים': 'guests',
+  'כִּי': 'because', 'לֹא': 'not', 'יָכוֹל': 'can', 'שָׁלוֹשׁ': 'three', 'תַּפְקִידִים': 'jobs', 'מָה': 'what', 'הָיָה': 'was',
+  'הַתַּפְקִיד': 'the job', 'שֶׁל': 'of', 'כָּל': 'each', 'רְפָאֵל': 'Refael', 'גַּבְרִיאֵל': 'Gavriel', 'מִיכָאֵל': 'Michael',
+  'לְרַפְּאוֹת': 'to heal', 'אֶת': '(a pointing word, no English word)', 'לַהֲפוֹךְ': 'to turn over', 'סְדוֹם': 'Sedom',
+  'לֵאמֹר': 'to tell', 'לְאַבְרָהָם': 'to Avraham', 'שֶׁשָּׂרָה': 'that Sarah', 'תֵּלֵד': 'will have (a baby)', 'בֵּן': 'a son',
+  'בְּשָׁנָה': 'in a year', 'שָׂרָה': 'Sarah', 'לָנוּחַ': 'to rest', 'בַּצֵּל': 'in the shade', 'כִּבּוּד': 'honoring',
+  'אָב': 'father', 'וָאֵם': 'and mother', 'הַרְבֵּה': 'lots of', 'חַם': 'hot', 'מְאֹד': 'very',
+  'א': 'aleph (the 1st)', 'ב': 'bet (the 2nd)', 'ג': 'gimmel (the 3rd)'
+};
+/* Nicer English for whole pieces (answer choices and tiles). */
+const PHRASES = {
+  'ה׳': 'Hashem', 'אֶל אַבְרָהָם': 'to Avraham', 'מִצְוַת': 'the mitzvah of', 'בִּקּוּר חוֹלִים': 'visiting the sick',
+  'בְּפֶתַח הָאֹהֶל': 'at the opening of the tent', 'הַכְנָסַת אוֹרְחִים': 'welcoming guests', 'ה׳ שָׁלַח': 'Hashem sent',
+  'שְׁלֹשָׁה מַלְאָכִים': 'three malachim', 'וְלֹא מַלְאָךְ אֶחָד': 'and not one malach', 'מַלְאָךְ אֶחָד': 'one malach',
+  'לֹא יָכוֹל': 'can’t', 'שָׁלוֹשׁ תַּפְקִידִים': 'three jobs', 'לְקַיֵּם': 'to do',
+  'לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים': 'to do the mitzvah of visiting the sick', 'לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים': 'to welcome guests',
+  'לַהֲפוֹךְ אֶת סְדוֹם': 'to turn over Sedom', 'לָנוּחַ בַּצֵּל': 'to rest in the shade', 'כִּבּוּד אָב וָאֵם': 'honoring father and mother',
+  'כִּי מַלְאָךְ אֶחָד לֹא יָכוֹל לַעֲשׂוֹת שָׁלוֹשׁ תַּפְקִידִים': 'because one malach can’t do three jobs',
+  'כִּי אַבְרָהָם אָהַב הַרְבֵּה אוֹרְחִים': 'because Avraham loved lots of guests', 'כִּי הָיָה חַם מְאֹד': 'because it was very hot',
+  'לְרַפְּאוֹת אֶת אַבְרָהָם': 'to heal Avraham', 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה': 'to tell Avraham that Sarah will have a son in a year'
+};
+const bare = t => t.replace(/[?.,!]/g, '').trim();
+const glossOf = t => GLOSS[bare(t)];
+const enOf = h => PHRASES[h] || h.split(' ').map(t => glossOf(t) || '').join(' ');
+const HEB = /[א-ת]/;
+const hw = s => s.split(' ').map(t => HEB.test(t) ? `<span class="hw">${t}</span>` : t).join(' ');
 
 /* The six verb forms from the earlier worksheet ("What is the root and translation?"). */
 const WORDS = [
@@ -263,27 +491,70 @@ const yay = () => tone([523, 659, 784]);
 const tick = () => tone([660], .08);
 const nope = () => tone([220, 196], .16);
 
+/* ---------- English help switch (on by default) ---------- */
+let helper = store.get('helper', true);
+const applyHelper = () => document.body.classList.toggle('helper', helper);
+applyHelper();
+const enBtnHTML = () => `<button class="iconbtn enbtn" id="enBtn" aria-pressed="${helper}" aria-label="English help on or off">EN</button>`;
+function wireEn() {
+  const b = $('enBtn'); if (!b) return;
+  b.onclick = () => { helper = !helper; store.set('helper', helper); applyHelper(); b.setAttribute('aria-pressed', helper); tick(); };
+}
+
 function topbar(title, right = '') {
   return `<div class="topbar">
     <button class="iconbtn" id="homeBtn" aria-label="Back to the Chumash menu">‹ Menu</button>
-    <h1>${title}</h1>${right}
+    <h1>${title}</h1>${right}${enBtnHTML()}
     <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button>
   </div>`;
 }
 function wireTop() {
+  hideGloss();
   const h = $('homeBtn'); if (h) h.onclick = home;
   const s = $('sndBtn');
   if (s) s.onclick = () => { soundOn = !soundOn; store.set('sound', soundOn); s.textContent = soundOn ? '🔊' : '🔈'; };
+  wireEn();
 }
 const starsHTML = n => `<div class="stars">${[0, 1, 2].map(i => `<span class="${i < n ? 'on' : 'off'}">★</span>`).join('')}</div>`;
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const top0 = () => window.scrollTo(0, 0);
+
+/* ---------- tap a Hebrew word to see what it means ---------- */
+let bubbleT = null;
+function hideGloss() {
+  clearTimeout(bubbleT);
+  const b = $('bubble'); if (b) b.remove();
+  document.querySelectorAll('.hw.on, .qw.on').forEach(x => x.classList.remove('on'));
+}
+function showGloss(el) {
+  hideGloss();
+  const word = bare(el.textContent), g = glossOf(word);
+  if (!g) return;
+  el.classList.add('on');
+  const b = document.createElement('div');
+  b.className = 'bubble'; b.id = 'bubble';
+  b.innerHTML = `<bdi lang="he">${word}</bdi> = ${esc(g)}`;
+  document.body.appendChild(b);
+  const r = el.getBoundingClientRect(), bw = b.offsetWidth, bh = b.offsetHeight;
+  const x = Math.max(8, Math.min(r.left + r.width / 2 - bw / 2, innerWidth - bw - 8));
+  let y = r.top - bh - 10; if (y < 8) y = r.bottom + 10;
+  b.style.left = x + 'px'; b.style.top = y + 'px';
+  tick();
+  bubbleT = setTimeout(hideGloss, 4000);
+}
+document.addEventListener('click', e => {
+  const w = e.target.closest('.hw');
+  if (w && !w.closest('button')) showGloss(w);
+  else hideGloss();
+}, true);
+window.addEventListener('scroll', hideGloss, { passive: true });
 
 /* ---------- the question line, and the teacher's red X ---------- */
 function qHTML(it, tap) {
   const words = it.q.map((t, i) => tap
     ? `<button class="qw${t.x ? ' xw' : ''}" data-i="${i}">${t.w}</button>`
-    : `<span class="qw${t.x ? ' xw' : ''}">${t.w}</span>`);
-  return `<div class="q he" lang="he">${words.join(' ')}?</div>`;
+    : `<span class="qw hw${t.x ? ' xw' : ''}">${t.w}</span>`);
+  return `<div class="q he" lang="he">${words.join(' ')}?</div><div class="en">${it.en}</div>`;
 }
 function crossOut(el, animate) {
   el.classList.add('crossed');
@@ -296,70 +567,259 @@ const crossAll = (root, animate) => (root || document).querySelectorAll('.xw').f
 window.addEventListener('resize', () => document.querySelectorAll('.qw.crossed').forEach(el => crossOut(el, false)));
 
 /* ============================================================ HOME */
-let C = null, B = null, M = null, Q = null;
+let C = null, B = null, M = null, Q = null, S = null, F = null, W = null;
+const unlocked = () => store.get('storyDone', false);
 function home() {
-  C = B = M = Q = null;
-  const bc = store.get('bestCross', null), bb = store.get('bestBuild', null), bm = store.get('bestMatch', null);
+  C = B = M = Q = S = F = W = null;
+  hideGloss();
+  const open = unlocked(), bs = store.get('bestStory', null);
+  const bc = store.get('bestCross', null), bb = store.get('bestBuild', null), bm = store.get('bestMatch', null), bv = store.get('bestWords', null);
   let bw = null; try { bw = JSON.parse(localStorage.getItem('jackchumash') || 'null'); } catch (e) {}
+  const lock = `<button class="lockmsg" style="width:100%;border:none;cursor:pointer" data-lock="1">🔒 Read the story first (Step 1) to open this</button>`;
   app.innerHTML = `
-    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a><h1></h1>
+    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a><h1></h1>${enBtnHTML()}
       <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button></div>
     <div class="hero">
       <div class="t he" lang="he">פָּרָשַׁת וַיֵּרָא</div>
       <div class="s he" lang="he">פֶּרֶק יח · דַּפֵּי חֲזָרָה</div>
-      <p>Answer like the teacher: cross out the question word, then write the answer.</p>
+      <p>First read the story. Then learn the words. Then practice the worksheet!</p>
     </div>
-    <div class="modes">
-      <button class="mode" id="mKey"><div class="ico">📝</div><b>Answer Key</b><span>Read each question, say the answer, then check</span></button>
-      <button class="mode" id="mCross"><div class="ico">❌</div><b>Cross It Out</b><span>Cross out the question word, then finish the answer</span><span class="best">${bc != null ? `Best: ${bc} / ${crossTotal()}` : ''}</span></button>
-      <button class="mode" id="mBuild"><div class="ico">🧩</div><b>Build the Answer</b><span>Put the answer together, piece by piece</span><span class="best">${bb != null ? `Best: ${plural(bb, 'mistake')}` : ''}</span></button>
-      <button class="mode" id="mMatch"><div class="ico">✨</div><b>Malach Match</b><span>Match each malach to his job</span><span class="best">${bm != null ? `Best: ${plural(bm, 'mistake')}` : ''}</span></button>
-    </div>
+    <section class="step${bs != null ? ' done' : ''}" id="step1">
+      <div class="sh"><span class="num">${bs != null ? '✓' : '1'}</span><div><h2>📖 The Story</h2><p>What happened at Avraham’s tent, in English, with questions as you read.</p></div></div>
+      <div class="row"><button class="btnbig" id="sStory">${bs != null ? 'Read it again' : 'Start here ›'}</button>${bs != null ? `<span class="best">Best: ${bs} / ${storyTotal()}</span>` : ''}</div>
+    </section>
+    <section class="step${open ? '' : ' locked'}">
+      <div class="sh"><span class="num">2</span><div><h2>🔤 Learn the Words</h2><p>The Hebrew words from the sheet and what they mean.</p></div></div>
+      ${open ? `<div class="row"><button class="btnbig" id="vFlip">🃏 Flip cards</button><button class="ghost" id="vMatch">🧩 Word Match</button>${bv != null ? `<span class="best">Best: ${plural(bv, 'mistake')}</span>` : ''}</div>` : lock}
+    </section>
+    <section class="step${open ? '' : ' locked'}">
+      <div class="sh"><span class="num">3</span><div><h2>📝 The Worksheet</h2><p>Answer the questions just like the teacher’s answer key.</p></div></div>
+      ${open ? `<div class="modes">
+        <button class="mode" id="mKey"><div class="ico">📝</div><b>Answer Key</b><span>Read each question, say the answer, then check</span></button>
+        <button class="mode" id="mCross"><div class="ico">❌</div><b>Cross It Out</b><span>Cross out the question word, then finish the answer</span><span class="best">${bc != null ? `Best: ${bc} / ${crossTotal()}` : ''}</span></button>
+        <button class="mode" id="mBuild"><div class="ico">🧩</div><b>Build the Answer</b><span>Put the answer together, piece by piece</span><span class="best">${bb != null ? `Best: ${plural(bb, 'mistake')}` : ''}</span></button>
+        <button class="mode" id="mMatch"><div class="ico">✨</div><b>Malach Match</b><span>Match each malach to his job</span><span class="best">${bm != null ? `Best: ${plural(bm, 'mistake')}` : ''}</span></button>
+      </div>` : lock}
+    </section>
     <div class="sec">
       <h2>The six words (roots and meanings)</h2>
       <div class="row">
         <button class="ghost" id="wStudy">📚 Study the words</button>
         <button class="ghost" id="wQuiz">⭐ Word quiz${bw != null ? ` · best ${bw} / ${ROUND}` : ''}</button>
       </div>
-    </div>`;
+    </div>
+    <p class="foot">Tip: tap any Hebrew word to see what it means. The <b>EN</b> button turns English help on and off.</p>`;
   wireTop();
-  $('mKey').onclick = answerKey;
-  $('mCross').onclick = startCross;
-  $('mBuild').onclick = startBuild;
-  $('mMatch').onclick = startMatch;
+  $('sStory').onclick = () => startStory();
+  document.querySelectorAll('[data-lock]').forEach(b => b.onclick = () => {
+    nope(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+    $('step1').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  if (open) {
+    $('vFlip').onclick = () => startFlip();
+    $('vMatch').onclick = startWordMatch;
+    $('mKey').onclick = answerKey;
+    $('mCross').onclick = startCross;
+    $('mBuild').onclick = startBuild;
+    $('mMatch').onclick = startMatch;
+  }
   $('wStudy').onclick = study;
   $('wQuiz').onclick = startQuiz;
-  window.scrollTo(0, 0);
+  top0();
 }
 
-/* ============================================================ ANSWER KEY */
+/* ============================================================ STEP 1: THE STORY */
+function prose(paras, marks = []) {
+  return paras.map(p => {
+    let h = esc(p);
+    marks.forEach(m => { const e = esc(m); h = h.split(e).join('<mark>' + e + '</mark>'); });
+    return '<p>' + h + '</p>';
+  }).join('');
+}
+function startStory() { S = { c: 0, qi: 0, score: 0, missed: [], marks: [] }; storyPage(); }
+function storyPage() {
+  const ch = STORY.chapters[S.c], n = STORY.chapters.length;
+  S.qi = 0; S.marks = [];
+  app.innerHTML = topbar('The Story', `<span class="pill">⭐ ${S.score}</span>`) + `
+    <article class="story">
+      <span class="tag">📖 Parshas Vayera · Perek 18</span>
+      ${S.c === 0 ? `<h2>${esc(STORY.title)}</h2>` : ''}
+      <div class="ch">Chapter ${S.c + 1} of ${n}: ${ch.emoji} ${esc(ch.title)}</div>
+      <div class="prose" id="pgText" style="margin-top:10px">${prose(ch.paras)}</div>
+    </article>
+    <div id="qbox"><button class="btnbig wide" id="readIt">I read it! Answer the questions ›</button></div>`;
+  wireTop();
+  $('readIt').onclick = () => { tick(); storyQ(); };
+  top0();
+}
+function storyQ() {
+  const ch = STORY.chapters[S.c], q = ch.qs[S.qi];
+  const opts = shuffle(q.a.map((t, k) => ({ t, ok: k === 0 })));
+  $('pgText').innerHTML = prose(ch.paras);
+  $('qbox').innerHTML = `<div class="check popin">
+      <div class="label">Question ${S.qi + 1} of ${ch.qs.length}</div>
+      <div class="cq">${esc(q.q)}</div>
+      <div class="sopts">${opts.map((o, k) => `<button class="sopt" data-ok="${o.ok ? 1 : 0}"><span class="let">${'ABCD'[k]}</span><span>${esc(o.t)}</span></button>`).join('')}</div>
+      <div id="sfb"></div>
+    </div>`;
+  document.querySelectorAll('.sopt').forEach(b => b.onclick = () => storyAnswer(b, q));
+  setTimeout(() => $('qbox').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+function storyAnswer(btn, q) {
+  if (btn.disabled) return;
+  const ch = STORY.chapters[S.c], ok = btn.dataset.ok === '1';
+  document.querySelectorAll('.sopt').forEach(b => { b.disabled = true; if (b.dataset.ok === '1') b.classList.add('right'); });
+  logAnswer({ mode: 'story', item: q.q, ok });
+  if (ok) { S.score++; yay(); document.querySelector('.pill').textContent = '⭐ ' + S.score; }
+  else { btn.classList.add('wrong'); nope(); S.missed.push(q); }
+  $('pgText').innerHTML = prose(ch.paras, q.look);
+  const lastQ = S.qi === ch.qs.length - 1, lastCh = S.c === STORY.chapters.length - 1;
+  $('sfb').innerHTML = `<div class="fb ${ok ? 'yes' : 'no'} popin">
+      <h3>${ok ? shuffle(['Yes!', 'Great job!', 'Correct!', 'You got it!'])[0] : 'Not quite.'}</h3>
+      <p>${ok ? '' : `The answer is: <b>${esc(q.a[0])}</b>. `}${esc(q.why)}</p></div>
+    <div class="srow"><button class="ghost" id="showUp">📖 Show me in the story ↑</button>
+      <button class="btnbig" id="nextQ">${!lastQ ? 'Next question ›' : !lastCh ? 'Next chapter ›' : 'See my score ›'}</button></div>`;
+  $('showUp').onclick = () => { const m = document.querySelector('#pgText mark'); if (m) m.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  $('nextQ').onclick = () => {
+    if (!lastQ) { S.qi++; storyQ(); }
+    else if (!lastCh) { S.c++; storyPage(); }
+    else storyDone();
+  };
+  setTimeout(() => $('nextQ').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+}
+function storyDone() {
+  sendLog();
+  const n = storyTotal(), s = S.score, stars = s === n ? 3 : s >= n - 2 ? 2 : s >= n - 5 ? 1 : 0;
+  const wasOpen = unlocked();
+  store.set('storyDone', true);
+  const best = store.get('bestStory', null), isBest = best == null || s > best;
+  if (isBest) store.set('bestStory', s);
+  const rt = logRound({ mode: 'story', score: s, total: n, label: `${s} / ${n}` });
+  const missed = S.missed; S = null;
+  app.innerHTML = topbar('The Story') + `
+    <div class="result popin">
+      ${starsHTML(stars)}
+      <div class="big">${s} / ${n}</div>
+      <div>${s === n ? 'Perfect! You know the whole story.' : stars >= 2 ? 'Great reading!' : 'Good try! Read it again to get more stars.'}${isBest && best != null ? ' New best!' : ''}</div>
+      ${wasOpen ? '' : '<div class="unlocked">🔓 You opened Step 2 and Step 3!</div>'}
+      ${missed.length ? `<div class="reviewlist"><h3>Let’s look at these again</h3>${missed.map(q => `<div class="rv"><b>${esc(q.q)}</b><span>${esc(q.a[0])}</span></div>`).join('')}</div>` : ''}
+      ${rankHTML('story', false, rt)}
+      <div class="actions"><button class="btnbig" id="toWords">Step 2: Learn the Words ›</button><button class="ghost" id="again">Read it again</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  if (stars === 3) yay();
+  $('toWords').onclick = () => startFlip(); $('again').onclick = () => startStory(); $('menu').onclick = home;
+  top0();
+}
+
+/* ============================================================ STEP 2: LEARN THE WORDS */
+function startFlip(i = 0) { F = { i, back: false }; flipDraw(); }
+function flipDraw() {
+  const v = VOCAB[F.i];
+  app.innerHTML = topbar('Flip Cards', `<span class="pill">${F.i + 1} of ${VOCAB.length}</span>`) + `
+    <button class="fcard popin" id="fc" aria-label="Flip the card">
+      ${v.q ? '<span class="tag">❓ Question word</span>' : ''}
+      ${F.back
+        ? `<div class="emo">${v.emo}</div><div class="eng">${esc(v.en)}</div><div class="hb" lang="he" style="font-size:40px">${v.h}</div>${v.note ? `<div class="note">${v.note.replace(/[א-תְ-ׇ]+/g, w => `<bdi class="he" lang="he">${w}</bdi>`)}</div>` : ''}`
+        : `<div class="hb" lang="he">${v.h}</div><div class="hint">Say what it means, then tap to flip</div>`}
+    </button>
+    <div class="fnav">
+      <button class="iconbtn" id="prev" ${F.i === 0 ? 'disabled style="opacity:.4"' : ''}>‹ Back</button>
+      <button class="iconbtn" id="next">${F.i === VOCAB.length - 1 ? 'Word Match ›' : 'Next ›'}</button>
+    </div>`;
+  wireTop();
+  $('fc').onclick = () => { F.back = !F.back; tick(); flipDraw(); };
+  $('prev').onclick = () => { if (F.i > 0) { F.i--; F.back = false; flipDraw(); } };
+  $('next').onclick = () => { if (F.i < VOCAB.length - 1) { F.i++; F.back = false; flipDraw(); } else startWordMatch(); };
+}
+function startWordMatch() {
+  const set = [];
+  for (const v of shuffle(VOCAB)) { if (!set.some(o => o.en === v.en)) set.push(v); if (set.length === 6) break; }
+  W = { set, left: shuffle(set), right: shuffle(set), sel: null, done: new Set(), mistakes: 0 };
+  wordMatchDraw();
+}
+function wordMatchDraw() {
+  const t = (v, side) => `<button class="tile ${side === 'H' ? 'heb' : 'eng'}" ${side === 'H' ? 'lang="he"' : ''} data-side="${side}" data-h="${esc(v.h)}">${side === 'H' ? v.h : `${v.emo} ${esc(v.en)}`}</button>`;
+  app.innerHTML = topbar('Word Match', `<span class="pill" id="mist">Mistakes: ${W.mistakes}</span>`) + `
+    <div class="say" style="margin-top:0" id="say">Tap a Hebrew word, then tap what it means.</div>
+    <div class="mcols even"><div class="mcol">${W.left.map(v => t(v, 'H')).join('')}</div><div class="mcol">${W.right.map(v => t(v, 'E')).join('')}</div></div>`;
+  wireTop();
+  document.querySelectorAll('.tile').forEach(b => b.onclick = () => wordPick(b));
+  top0();
+}
+function wordPick(b) {
+  if (!W || b.disabled) return;
+  const side = b.dataset.side, h = b.dataset.h;
+  if (!W.sel || W.sel.side === side) {
+    document.querySelectorAll('.tile.sel').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); W.sel = { side, h, el: b }; tick(); return;
+  }
+  const a = W.sel; W.sel = null;
+  const v = VOCAB.find(x => x.h === (side === 'H' ? h : a.h));
+  logAnswer({ mode: 'words', item: `${v.h} = ${v.en}`, ok: a.h === h });
+  if (a.h === h) {
+    W.done.add(h); yay();
+    [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.disabled = true; });
+    $('say').className = 'say yes'; $('say').innerHTML = `Yes! <bdi lang="he">${v.h}</bdi> means “${esc(v.en)}.”`;
+    if (W.done.size === W.set.length) setTimeout(wordMatchDone, 900);
+  } else {
+    W.mistakes++; nope();
+    $('mist').textContent = `Mistakes: ${W.mistakes}`;
+    $('say').className = 'say no'; $('say').textContent = 'Not a match. Try again!';
+    [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('oops'); setTimeout(() => x.classList.remove('oops'), 450); });
+  }
+}
+function wordMatchDone() {
+  if (!W) return;
+  sendLog();
+  const m = W.mistakes, stars = m === 0 ? 3 : m <= 2 ? 2 : 1;
+  const best = store.get('bestWords', null), isBest = best == null || m < best;
+  if (isBest) store.set('bestWords', m);
+  const rt = logRound({ mode: 'words', score: m, total: W.set.length, label: plural(m, 'mistake') });
+  const set = W.set; W = null;
+  app.innerHTML = topbar('Word Match') + `
+    <div class="result popin">
+      ${starsHTML(stars)}
+      <div class="big">All matched!</div>
+      <div>${m === 0 ? 'No mistakes at all!' : plural(m, 'mistake') + '.'}${isBest && best != null ? ' New best!' : ''}</div>
+      <div class="reviewlist">${set.map(v => `<div class="rv"><b class="he" lang="he" style="font-size:26px;text-align:right">${v.h}</b><span>${v.emo} ${esc(v.en)}</span></div>`).join('')}</div>
+      ${rankHTML('words', true, rt)}
+      <div class="actions"><button class="btnbig" id="again">Match more words</button><button class="ghost" id="toSheet">Step 3: The Worksheet ›</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  $('again').onclick = startWordMatch; $('toSheet').onclick = home; $('menu').onclick = home;
+}
+
+/* ============================================================ STEP 3a: ANSWER KEY */
 function answerKey() {
-  const card = (i, qHtml, ansHtml) => `
+  const card = (i, qHtml, ansHtml, enHtml) => `
     <div class="panel" data-k="${i}">
       <div class="qnum">Question ${i + 1}</div>${qHtml}
-      <div class="ans he" lang="he" hidden>${ansHtml}</div>
+      <div class="ans he" lang="he" hidden>${ansHtml}</div><div class="en ansen" hidden>${enHtml}</div>
       <button class="ghost reveal">Show the answer</button>
     </div>`;
   app.innerHTML = topbar('Answer Key') + `
     <div class="say" style="margin-top:0">Read the question. Say the whole answer out loud. Then tap to check.</div>
     <div class="actions" style="margin:0 0 14px"><button class="ghost" id="all">Show all answers</button></div>
-    ${SHEET.map((it, i) => card(i, qHTML(it, false), fullAnswer(it))).join('')}
-    ${card(SHEET.length, `<div class="q he" lang="he">${MQ}</div>`, MALACHIM.map(m => `<div class="mline">${mLine(m)}</div>`).join(''))}
+    ${SHEET.map((it, i) => card(i, qHTML(it, false), hw(fullAnswer(it)), esc(it.aen))).join('')}
+    ${card(SHEET.length, `<div class="q he" lang="he">${hw(MQ)}</div><div class="en">${MQ_EN}</div>`,
+      MALACHIM.map(m => `<div>${hw(mLine(m))}</div>`).join(''),
+      MALACHIM.map(m => `Malach ${['Aleph', 'Bet', 'Gimmel'][MALACHIM.indexOf(m)]}: ${m.eng}, ${esc(m.jen)}.`).join('<br>'))}
     <div class="actions"><button class="btnbig" id="toCross">Play Cross It Out</button><button class="ghost" id="menu">Menu</button></div>`;
   wireTop();
   const show = (panel, animate) => {
     const a = panel.querySelector('.ans'); if (!a.hidden) return;
-    a.hidden = false; panel.querySelector('.reveal').hidden = true;
+    a.hidden = false; panel.querySelector('.ansen').hidden = false; panel.querySelector('.reveal').hidden = true;
     crossAll(panel, animate);
   };
   document.querySelectorAll('.panel').forEach(p => { p.querySelector('.reveal').onclick = () => { tick(); show(p, true); }; });
   $('all').onclick = () => document.querySelectorAll('.panel').forEach(p => show(p, true));
   $('toCross').onclick = startCross;
   $('menu').onclick = home;
-  window.scrollTo(0, 0);
+  top0();
 }
 
-/* ============================================================ CROSS IT OUT
+/* ============================================================ STEP 3b: CROSS IT OUT
    Questions 1-4: cross out the question word(s), then fill in the blanks of the answer.
    Question 5: pick each malach's job. Score = steps done right on the first try. */
 const crossTotal = () => SHEET.reduce((s, it) => s + it.q.filter(t => t.x).length + it.a.filter(a => typeof a !== 'string').length, 0) + MALACHIM.length;
@@ -379,28 +839,30 @@ function crossQ() {
   const it = SHEET[C.i], nx = it.q.filter(t => t.x).length;
   Object.assign(C, { phase: 'cross', miss: false, left: nx, fills: it.a.map((a, k) => typeof a === 'string' ? -1 : k).filter(k => k >= 0), fi: 0, newK: -1 });
   app.innerHTML = topbar('Cross It Out', `<span class="pill">${C.i + 1} of ${SHEET.length + 1}</span>`) + crossDots() + `
-    <div class="panel" id="panel"><div class="qnum">Question ${C.i + 1}</div>${qHTML(it, true)}<div class="ans he" lang="he" id="ans" hidden></div></div>
+    <div class="panel" id="panel"><div class="qnum">Question ${C.i + 1}</div>${qHTML(it, true)}<div class="ans he" lang="he" id="ans" hidden></div><div class="en" id="ansen" hidden></div></div>
     <div class="say" id="say">${nx > 1 ? `Cross out the ${nx} question words.` : 'Cross out the question word.'}</div>
     <div class="opts" id="opts"></div>`;
   wireTop();
   document.querySelectorAll('button.qw').forEach(b => b.onclick = () => tapWord(b));
-  window.scrollTo(0, 0);
+  top0();
 }
 function tapWord(b) {
-  if (!C || C.phase !== 'cross' || b.classList.contains('crossed')) return;
+  if (!C) return;
+  if (C.phase !== 'cross') { showGloss(b); return; }
+  if (b.classList.contains('crossed')) return;
   const it = SHEET[C.i], t = it.q[+b.dataset.i];
   if (t.x) {
     crossOut(b, true); tick();
     crossStep(!C.miss, `Q${C.i + 1}: cross out ${t.w}`);
     C.left--;
     const say = $('say'); say.className = 'say yes';
-    say.textContent = C.left ? 'Yes! Find the other question word.' : 'Yes! Now finish the answer.';
-    if (!C.left) { C.phase = 'wait'; document.querySelector('.q').classList.add('locked'); setTimeout(crossFill, 750); }
+    say.innerHTML = `Yes! <bdi lang="he">${t.w}</bdi> means “${esc(GLOSS[t.w])}.” ${C.left ? 'Find the other question word.' : 'Now finish the answer.'}`;
+    if (!C.left) { C.phase = 'wait'; document.querySelector('.q').classList.add('locked'); setTimeout(crossFill, 1100); }
   } else {
     nope(); C.miss = true;
     b.classList.remove('bad'); void b.offsetWidth; b.classList.add('bad'); setTimeout(() => b.classList.remove('bad'), 450);
     const say = $('say'); say.className = 'say no';
-    say.innerHTML = 'That word stays in the answer. Find the question word, like <bdi class="he" lang="he">מִי</bdi> or <bdi class="he" lang="he">לָמָּה</bdi>.';
+    say.innerHTML = `<bdi lang="he">${t.w}</bdi> means “${esc(GLOSS[t.w] || '')},” so it stays. Find the question word!`;
   }
 }
 function crossFill() {
@@ -409,12 +871,13 @@ function crossFill() {
   const it = SHEET[C.i], ans = $('ans');
   ans.hidden = false;
   const done = C.fi >= C.fills.length, cur = C.fills[C.fi];
-  ans.innerHTML = it.a.map((a, k) => typeof a === 'string' ? `<span>${a}</span>`
-    : C.fills.indexOf(k) < C.fi ? `<span class="fill${k === C.newK ? ' new' : ''}">${a.f}</span>`
+  ans.innerHTML = it.a.map((a, k) => typeof a === 'string' ? `<span>${hw(a)}</span>`
+    : C.fills.indexOf(k) < C.fi ? `<span class="fill${k === C.newK ? ' new' : ''}">${hw(a.f)}</span>`
     : `<span class="blank${k === cur ? ' cur' : ''}">?</span>`).join(' ') + (done ? '.' : '');
   const say = $('say'), opts = $('opts');
   if (done) {
     $('panel').classList.add('ok');
+    $('ansen').hidden = false; $('ansen').textContent = it.aen;
     say.className = 'say yes'; say.textContent = 'That’s the whole answer!';
     opts.innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">${C.i + 1 < SHEET.length ? 'Next question ›' : 'Last question ›'}</button></div>`;
     $('next').onclick = () => { C.i++; crossQ(); };
@@ -423,7 +886,7 @@ function crossFill() {
   const a = it.a[cur];
   say.className = 'say'; say.textContent = 'Fill in the blank. Which words go here?';
   const choices = shuffle([a.f, ...a.alt]);
-  opts.innerHTML = choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}</button>`).join('');
+  opts.innerHTML = choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}<span class="en">${esc(enOf(c))}</span></button>`).join('');
   opts.querySelectorAll('.opt').forEach(b => b.onclick = () => {
     if (C.phase !== 'fill' || b.disabled) return;
     if (choices[+b.dataset.n] === a.f) {
@@ -438,16 +901,16 @@ function crossFill() {
 function crossMalachim() {
   Object.assign(C, { phase: 'fill', miss: false, mi: 0 });
   app.innerHTML = topbar('Cross It Out', `<span class="pill">${SHEET.length + 1} of ${SHEET.length + 1}</span>`) + crossDots() + `
-    <div class="panel" id="panel"><div class="qnum">Question ${SHEET.length + 1}</div><div class="q he" lang="he">${MQ}</div><div class="ans he" lang="he" id="ans"></div></div>
+    <div class="panel" id="panel"><div class="qnum">Question ${SHEET.length + 1}</div><div class="q he" lang="he">${hw(MQ)}</div><div class="en">${MQ_EN}</div><div class="ans he" lang="he" id="ans"></div></div>
     <div class="say" id="say">No question word to cross out here! What was each malach’s job?</div>
     <div class="opts" id="opts"></div>`;
   wireTop();
-  window.scrollTo(0, 0);
+  top0();
   drawMalachim();
 }
 function drawMalachim() {
   const ans = $('ans'), opts = $('opts');
-  ans.innerHTML = MALACHIM.map((m, n) => `<div class="mline">מַלְאָךְ ${m.k} – ${m.name} – ${n < C.mi ? `<span class="fill${n === C.mi - 1 ? ' new' : ''}">${m.job}.</span>` : `<span class="blank${n === C.mi ? ' cur' : ''}">?</span>`}</div>`).join('');
+  ans.innerHTML = MALACHIM.map((m, n) => `<div>${hw(`מַלְאָךְ ${m.k} – ${m.name} –`)} ${n < C.mi ? `<span class="fill${n === C.mi - 1 ? ' new' : ''}">${hw(m.job)}.</span>` : `<span class="blank${n === C.mi ? ' cur' : ''}">?</span>`}</div>`).join('');
   if (C.mi >= MALACHIM.length) {
     $('panel').classList.add('ok');
     $('say').className = 'say yes'; $('say').textContent = 'You finished the whole sheet!';
@@ -456,7 +919,7 @@ function drawMalachim() {
     return;
   }
   const m = MALACHIM[C.mi], choices = shuffle(MALACHIM.map(x => x.job));
-  opts.innerHTML = choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}</button>`).join('');
+  opts.innerHTML = choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}<span class="en">${esc(enOf(c))}</span></button>`).join('');
   opts.querySelectorAll('.opt').forEach(b => b.onclick = () => {
     if (b.disabled || !C) return;
     if (choices[+b.dataset.n] === m.job) {
@@ -465,7 +928,7 @@ function drawMalachim() {
       drawMalachim();
     } else {
       nope(); C.miss = true; b.disabled = true; b.classList.add('wrong');
-      $('say').className = 'say no'; $('say').innerHTML = `That’s not the job of <bdi class="he" lang="he">${m.name}</bdi>. Try again!`;
+      $('say').className = 'say no'; $('say').innerHTML = `That’s not the job of <bdi lang="he">${m.name}</bdi> (${m.eng}). Try again!`;
     }
   });
 }
@@ -488,7 +951,7 @@ function finishCross() {
   $('again').onclick = startCross; $('key').onclick = answerKey; $('menu').onclick = home;
 }
 
-/* ============================================================ BUILD THE ANSWER
+/* ============================================================ STEP 3c: BUILD THE ANSWER
    The question shows with its question word already crossed out. Jack taps the pieces of
    the answer in order. A wrong piece shakes; after two misses the right piece glows. */
 function startBuild() {
@@ -497,25 +960,26 @@ function startBuild() {
 }
 function buildQ() {
   const n = B.order[B.i], it = SHEET[n];
-  Object.assign(B, { placed: 0, bank: shuffle(it.tiles.map(w => ({ w, used: false }))), missQ: false, missSlot: 0, busy: false });
+  Object.assign(B, { placed: 0, bank: shuffle(it.tiles.map(w => ({ w, used: false }))), missQ: false, missSlot: 0 });
   app.innerHTML = topbar('Build the Answer', `<span class="pill" id="mist">Mistakes: ${B.mistakes}</span>`) + `
-    <div class="panel" id="panel"><div class="qnum">Question ${n + 1} · ${B.i + 1} of ${SHEET.length}</div>${qHTML(it, false)}<div class="ans he" lang="he" id="ans"></div></div>
+    <div class="panel" id="panel"><div class="qnum">Question ${n + 1} · ${B.i + 1} of ${SHEET.length}</div>${qHTML(it, false)}<div class="ans he" lang="he" id="ans"></div><div class="en" id="ansen" hidden></div></div>
     <div class="say" id="say">Tap the pieces in order to build the answer.</div>
     <div class="bank he" lang="he" id="bank"></div>
     <div class="actions" id="act"></div>`;
   wireTop();
   crossAll(app, false);
   drawBuild();
-  window.scrollTo(0, 0);
+  top0();
 }
 function drawBuild() {
   const it = SHEET[B.order[B.i]], done = B.placed >= it.tiles.length;
-  $('ans').innerHTML = it.tiles.slice(0, B.placed).map((w, k) => `<span class="fill${k === B.placed - 1 ? ' new' : ''}">${w}</span>`).join(' ') + (done ? '.' : (B.placed ? ' ' : '') + '<span class="slot"></span>');
+  $('ans').innerHTML = it.tiles.slice(0, B.placed).map((w, k) => `<span class="fill${k === B.placed - 1 ? ' new' : ''}">${hw(w)}</span>`).join(' ') + (done ? '.' : (B.placed ? ' ' : '') + '<span class="slot"></span>');
   const want = it.tiles[B.placed];
-  $('bank').innerHTML = B.bank.map((t, idx) => t.used ? '' : `<button class="tw${B.missSlot >= 2 && t.w === want ? ' hint' : ''}" data-idx="${idx}">${t.w}</button>`).join('');
+  $('bank').innerHTML = B.bank.map((t, idx) => t.used ? '' : `<button class="tw${B.missSlot >= 2 && t.w === want ? ' hint' : ''}" data-idx="${idx}">${t.w}<span class="en">${esc(enOf(t.w))}</span></button>`).join('');
   document.querySelectorAll('#bank .tw').forEach(b => b.onclick = () => pickTile(b));
   if (done) {
     $('panel').classList.add('ok');
+    $('ansen').hidden = false; $('ansen').textContent = it.aen;
     $('say').className = 'say yes'; $('say').textContent = B.missQ ? 'You built it!' : 'Built it with no mistakes!';
     $('act').innerHTML = `<button class="btnbig" id="next">${B.i + 1 < SHEET.length ? 'Next question ›' : 'See my score ›'}</button>`;
     $('next').onclick = () => { B.i++; if (B.i >= SHEET.length) finishBuild(); else buildQ(); };
@@ -556,21 +1020,21 @@ function finishBuild() {
   $('again').onclick = startBuild; $('menu').onclick = home;
 }
 
-/* ============================================================ MALACH MATCH
+/* ============================================================ STEP 3d: MALACH MATCH
    Tap a malach, then his job (either order). Then a bonus: why three malachim? */
 function startMatch() {
   M = { names: shuffle(MALACHIM), jobs: shuffle(MALACHIM), sel: null, done: new Set(), mistakes: 0, missBonus: false };
   drawMatch();
 }
 function drawMatch() {
-  const tile = (m, side) => `<button class="tile he" lang="he" data-side="${side}" data-k="${m.k}">${side === 'N' ? `<span><small>מַלְאָךְ ${m.k}</small>${m.name}</span>` : m.job}</button>`;
+  const tile = (m, side) => `<button class="tile heb" lang="he" data-side="${side}" data-k="${m.k}">${side === 'N' ? `<span><small>מַלְאָךְ ${m.k}</small>${m.name}<span class="en">${m.eng}</span></span>` : `<span>${m.job}<span class="en">${esc(m.jen)}</span></span>`}</button>`;
   app.innerHTML = topbar('Malach Match', `<span class="pill" id="mist">Mistakes: ${M.mistakes}</span>`) + `
-    <div class="panel"><div class="q he" lang="he" style="text-align:center">${MQ}</div></div>
+    <div class="panel"><div class="q he" lang="he" style="text-align:center">${hw(MQ)}</div><div class="en" style="text-align:center">${MQ_EN}</div></div>
     <div class="say" id="say">Tap a malach, then tap his job.</div>
     <div class="mcols" dir="rtl"><div class="mcol">${M.names.map(m => tile(m, 'N')).join('')}</div><div class="mcol">${M.jobs.map(m => tile(m, 'J')).join('')}</div></div>`;
   wireTop();
   document.querySelectorAll('.tile').forEach(b => b.onclick = () => matchPick(b));
-  window.scrollTo(0, 0);
+  top0();
 }
 function matchPick(b) {
   if (!M || b.disabled) return;
@@ -585,8 +1049,8 @@ function matchPick(b) {
   if (a.k === k) {
     M.done.add(k); yay();
     [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.disabled = true; });
-    $('say').className = 'say yes'; $('say').innerHTML = `Yes! <bdi class="he" lang="he">${m.name} – ${m.job}</bdi>`;
-    if (M.done.size === MALACHIM.length) setTimeout(matchBonus, 1100);
+    $('say').className = 'say yes'; $('say').innerHTML = `Yes! ${m.eng}’s job was ${esc(m.jen)}.`;
+    if (M.done.size === MALACHIM.length) setTimeout(matchBonus, 1300);
   } else {
     M.mistakes++; nope();
     $('mist').textContent = `Mistakes: ${M.mistakes}`;
@@ -599,18 +1063,19 @@ function matchBonus() {
   const it = SHEET[3], blank = it.a[1], choices = shuffle([blank.f, ...blank.alt]);
   app.innerHTML = topbar('Malach Match', `<span class="pill" id="mist">Mistakes: ${M.mistakes}</span>`) + `
     <div class="say" style="margin-top:0">⭐ Bonus question!</div>
-    <div class="panel" id="panel">${qHTML(it, false)}<div class="ans he" lang="he" id="ans"><span>${it.a[0]}</span> <span class="blank cur">?</span></div></div>
+    <div class="panel" id="panel">${qHTML(it, false)}<div class="ans he" lang="he" id="ans"><span>${hw(it.a[0])}</span> <span class="blank cur">?</span></div><div class="en" id="ansen" hidden></div></div>
     <div class="say" id="say">Why did Hashem send three malachim?</div>
-    <div class="opts" id="opts">${choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}</button>`).join('')}</div>`;
+    <div class="opts" id="opts">${choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}<span class="en">${esc(enOf(c))}</span></button>`).join('')}</div>`;
   wireTop();
   crossAll(app, false);
   document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => {
     if (!M || b.disabled) return;
     if (choices[+b.dataset.n] === blank.f) {
       yay(); logAnswer({ mode: 'match', item: 'Bonus: why 3 malachim', ok: !M.missBonus });
-      $('ans').innerHTML = `<span>${it.a[0]}</span> <span class="fill new">${blank.f}</span>.`;
+      $('ans').innerHTML = `<span>${hw(it.a[0])}</span> <span class="fill new">${hw(blank.f)}</span>.`;
+      $('ansen').hidden = false; $('ansen').textContent = it.aen;
       $('panel').classList.add('ok');
-      $('say').className = 'say yes'; $('say').textContent = 'Yes! One malach can only do one job.';
+      $('say').className = 'say yes'; $('say').textContent = 'Yes! Each malach had his own job.';
       $('opts').innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">See my score ›</button></div>`;
       $('next').onclick = finishMatch;
     } else {
@@ -632,7 +1097,7 @@ function finishMatch() {
       ${starsHTML(stars)}
       <div class="big">All matched!</div>
       <div>${m === 0 ? 'No mistakes at all!' : plural(m, 'mistake') + '.'}${isBest && best != null ? ' New best!' : ''}</div>
-      <div class="review he" lang="he">${MALACHIM.map(x => `<div>${mLine(x)}</div>`).join('')}</div>
+      <div class="review he" lang="he">${MALACHIM.map(x => `<div>${hw(mLine(x))}</div>`).join('')}</div>
       ${rankHTML('match', true, rt)}
       <div class="actions"><button class="btnbig" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
     </div>`;
@@ -647,7 +1112,7 @@ function study() {
     <div class="actions"><button class="btnbig" id="toQuiz">Word quiz</button></div>`;
   wireTop();
   $('toQuiz').onclick = startQuiz;
-  window.scrollTo(0, 0);
+  top0();
 }
 function startQuiz() {
   const qs = [];
