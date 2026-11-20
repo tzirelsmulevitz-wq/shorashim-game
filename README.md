@@ -8,6 +8,20 @@ A flash card game for 30 shorashim (Hebrew roots) from Parshas Vayera: flip card
 
 Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/shorashim/
 
+## Chumash
+
+Review for Parshas Vayera, perek 18, made from the teacher's answer key (דַּפֵּי חֲזָרָה). The teacher crosses out the question word (מִי, לָמָּה, אֵיזוֹ, מַדּוּעַ) and writes the answer back in the question's own words, so the games practice exactly that:
+
+- **Answer Key**: each question; tap to cross out the question word and see the answer.
+- **Cross It Out**: tap the question word to cross it out, then fill in the blanks of the answer. Question 5 is each malach's job. Score = steps right on the first try.
+- **Build the Answer**: tap the pieces of the answer in order (after two misses the right piece glows).
+- **Malach Match**: match Refael, Gavriel and Michael to their jobs, then a bonus question.
+- **The six words**: study and quiz for the six verb forms (roots and meanings) from the earlier worksheet.
+
+The questions and answers are in `SHEET` and `MALACHIM` at the top of the script in `chumash/index.html`. In each answer, `tiles` must read the same as the answer (`a`) when joined with spaces.
+
+Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/chumash/
+
 ## Reading
 
 Short stories at reading levels O–P with tap-to-answer comprehension questions. After each answer, "Show me in the story" highlights the sentences that prove it. To add a story, add an entry at the top of `STORIES` in `reading/index.html` (the first answer listed is the right one; `look` sentences must be copied exactly from the story; a paragraph starting with `## ` becomes a heading). Then run `node tools/check-reading.js` and fix anything it reports. Stories Jack hasn't opened yet show a NEW badge.

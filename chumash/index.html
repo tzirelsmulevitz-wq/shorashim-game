@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -11,8 +11,10 @@
   --sky: #eaf4f6; --sand: #fffaf0; --ink: #1d2b45; --muted: #5d6b82; --line: #cfdce3;
   --block: #2f63c9; --block-edge: #1d4596; --block-ink: #ffffff; --sun: #f2b544;
   --good: #2b9a68; --good-bg: #dff3e8; --bad: #d9534f; --bad-bg: #fbe3e2; --btn: #ffffff;
+  --pen: #1f4fb8; --xpen: #d8342a;
   --shadow: 0 2px 0 rgba(29,43,69,.12), 0 8px 24px rgba(29,43,69,.08);
   --f-ui: ui-rounded, "SF Pro Rounded", "Avenir Next", "Trebuchet MS", system-ui, sans-serif;
+  --f-heb: "Times New Roman", "Arial Hebrew", "Noto Serif Hebrew", "David", serif;
   color-scheme: light;
   padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -20,12 +22,14 @@
   :root:not([data-theme="light"]) {
     --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
     --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+    --pen: #8fb3ff; --xpen: #ff6b5f;
     --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --sky: #111a2b; --sand: #1b2740; --ink: #eef2f8; --muted: #a8b4c8; --line: #2c3a57;
   --block: #4d7fe0; --block-edge: #2c58b0; --sun: #f5c35f; --good: #4cc48d; --good-bg: #173a2c; --bad: #ef7a76; --bad-bg: #44201f; --btn: #22304d;
+  --pen: #8fb3ff; --xpen: #ff6b5f;
   --shadow: 0 2px 0 rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3); color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -35,51 +39,119 @@ body { margin: 0; font-family: var(--f-ui); font-size: 18px; line-height: 1.4; -
 button, a { font: inherit; color: inherit; touch-action: manipulation; }
 button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
 .band { height: 14px; background: repeating-linear-gradient(90deg, #2f9e8f 0 28px, #d8efe9 28px 56px); }
-.wrap { max-width: 620px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 720px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .topbar { display: flex; align-items: center; gap: 12px; min-height: 48px; margin-bottom: 14px; }
-.topbar h1 { font-size: 22px; font-weight: 600; margin: 0; flex: 1; }
-.iconbtn { min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; text-decoration: none; }
+.topbar h1 { font-size: 22px; font-weight: 700; margin: 0; flex: 1; }
+.iconbtn { min-width: 48px; height: 48px; padding: 0 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .pill { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); white-space: nowrap; }
-.hero { text-align: center; padding: 6px 0 4px; }
-.hero .w { font-size: 56px; font-weight: 800; line-height: 1.2; }
-.hero p { color: var(--muted); margin: 8px 0 0; }
-.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
-.mode { background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 6px; justify-items: center; }
-.mode .ico { font-size: 38px; line-height: 1; }
+.he { font-family: var(--f-heb); direction: rtl; }
+
+/* ---------- home ---------- */
+.hero { text-align: center; padding: 4px 0 2px; }
+.hero .t { font-family: var(--f-heb); font-size: clamp(44px, 10vw, 60px); font-weight: 800; line-height: 1.25; }
+.hero .s { font-family: var(--f-heb); font-size: 26px; font-weight: 700; color: var(--muted); }
+.hero p { color: var(--muted); margin: 10px auto 0; max-width: 34ch; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+@media (max-width: 480px) { .modes { grid-template-columns: 1fr; } }
+.mode { background: var(--sand); border: 2px solid var(--line); border-radius: 22px; padding: 18px 14px; text-align: center; cursor: pointer; box-shadow: var(--shadow); display: grid; gap: 6px; justify-items: center; align-content: start; }
+.mode:active { transform: translateY(2px); }
+.mode .ico { font-size: 38px; line-height: 1; height: 46px; display: grid; place-items: center; }
 .mode b { font-size: 22px; }
 .mode span { color: var(--muted); font-size: 15px; }
 .mode .best { color: var(--block); font-weight: 700; font-variant-numeric: tabular-nums; }
+.sec { margin-top: 30px; }
+.sec h2 { font-size: 18px; color: var(--muted); margin: 0 0 10px; text-align: center; }
+.sec .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ---------- worksheet look ---------- */
+.panel { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 20px 18px; margin-bottom: 14px; transition: background .2s, border-color .2s; }
+.panel.ok { background: var(--good-bg); border-color: var(--good); }
+.qnum { font-size: 15px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+.q { font-size: clamp(26px, 5.4vw, 34px); font-weight: 700; line-height: 1.9; text-align: right; }
+.qw { position: relative; display: inline-block; line-height: 1.35; padding: 0 .12em; border-radius: 10px; }
+button.qw { font: inherit; color: inherit; background: var(--btn); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--line); cursor: pointer; padding: 0 .22em; margin: .1em 0; }
+button.qw:active { transform: translateY(2px); box-shadow: none; }
+.q.locked button.qw { background: transparent; border-color: transparent; box-shadow: none; cursor: default; }
+.qw.bad { background: var(--bad-bg); border-color: var(--bad); animation: shake .35s; }
+.qw svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.qw svg path { fill: none; stroke: var(--xpen); stroke-width: 5; stroke-linecap: round; }
+.qw svg.draw path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: drawx .22s ease-out forwards; }
+.qw svg.draw path + path { animation-delay: .2s; }
+.ans { color: var(--pen); font-size: clamp(24px, 5vw, 31px); font-weight: 700; line-height: 2; text-align: right; margin-top: 6px; padding: 0 4px;
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(2em - 2px), var(--line) calc(2em - 2px), var(--line) 2em); }
+.blank { color: var(--muted); padding: 0 1.3em; border-bottom: 4px solid var(--line); }
+.blank.cur { border-bottom-color: var(--sun); background: rgba(242,181,68,.18); border-radius: 6px 6px 0 0; animation: pulse 1.3s ease-in-out infinite; }
+.fill.new { animation: hl 1.2s ease-out; border-radius: 6px; }
+.slot { display: inline-block; width: 2.6em; height: 1.15em; vertical-align: middle; border: 3px dashed var(--sun); border-radius: 10px; }
+.mline { white-space: normal; }
+.say { font-size: 19px; font-weight: 700; color: var(--muted); margin: 14px 0 12px; text-align: center; min-height: 27px; }
+.say.yes { color: var(--good); } .say.no { color: var(--bad); }
+.say bdi.he { font-size: 1.25em; }
+.opts { display: grid; gap: 10px; }
+.opt { min-height: 60px; padding: 10px 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; text-align: start; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.opt.he { font-size: clamp(22px, 4.6vw, 27px); line-height: 1.5; }
+.opt:active { transform: translateY(2px); box-shadow: none; }
+.opt:disabled { cursor: default; }
+.opt.right { background: var(--good); color: #fff; border-color: var(--good); box-shadow: none; }
+.opt.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); box-shadow: none; opacity: .7; animation: shake .35s; }
+.bank { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.tw { font-family: var(--f-heb); font-size: clamp(24px, 5vw, 30px); font-weight: 700; line-height: 1.4; min-height: 60px; padding: 6px 18px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); box-shadow: 0 3px 0 var(--line); cursor: pointer; }
+.tw:active { transform: translateY(2px); box-shadow: none; }
+.tw.oops { background: var(--bad-bg); border-color: var(--bad); animation: shake .35s; }
+.tw.hint { border-color: var(--sun); box-shadow: 0 0 0 4px rgba(242,181,68,.45); }
+.mcols { display: grid; grid-template-columns: 1fr 1.5fr; gap: 14px; }
+.mcol { display: grid; gap: 10px; align-content: start; }
+.tile { min-height: 76px; border-radius: 16px; border: 3px solid var(--line); background: var(--btn); cursor: pointer; display: grid; place-items: center; padding: 8px 12px; font-size: clamp(21px, 4.4vw, 26px); font-weight: 700; line-height: 1.4; text-align: center; transition: opacity .3s, transform .15s; }
+.tile small { display: block; font-size: .62em; color: var(--muted); }
+.tile.sel { border-color: var(--sun); transform: scale(1.03); }
+.tile.done { border-color: var(--good); background: var(--good-bg); opacity: .55; cursor: default; }
+.tile.oops { border-color: var(--bad); background: var(--bad-bg); animation: shake .35s; }
+.reveal { margin-top: 10px; }
+
+/* ---------- six words ---------- */
 .card { background: var(--sand); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 16px 18px; margin-bottom: 12px; }
-.card .w { font-size: 34px; font-weight: 800; }
+.card .w { font-family: var(--f-heb); font-size: 34px; font-weight: 800; }
 .card .root { color: var(--muted); font-weight: 700; margin-top: 2px; }
 .card .m { font-size: 19px; margin-top: 6px; }
 .sheet { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 24px 16px 22px; text-align: center; transition: background .15s, border-color .15s; }
 .sheet.ok { background: var(--good-bg); border-color: var(--good); }
 .sheet.no { background: var(--bad-bg); border-color: var(--bad); }
-.sheet .w { font-size: clamp(44px, 12vw, 72px); font-weight: 800; line-height: 1.3; }
+.sheet .w { font-family: var(--f-heb); font-size: clamp(44px, 12vw, 72px); font-weight: 800; line-height: 1.3; }
 .sheet .ask { font-size: 18px; color: var(--muted); font-weight: 700; }
 .sheet .meaning { font-size: clamp(22px, 5.5vw, 28px); font-weight: 700; line-height: 1.3; }
 .gloss { margin-top: 10px; font-size: 18px; font-weight: 600; min-height: 24px; }
-.dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.wopt.right { background: var(--good); color: #fff; border-color: var(--good); box-shadow: none; }
+.wopt.wrong { background: var(--bad); color: #fff; border-color: var(--bad); box-shadow: none; }
+
+/* ---------- results ---------- */
+.dots { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
 .dot.g { background: var(--good); } .dot.b { background: var(--bad); }
-.opts { display: grid; gap: 10px; margin-top: 16px; }
-.opt { min-height: 58px; padding: 12px 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 19px; font-weight: 700; text-align: start; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
-.opt:disabled { cursor: default; }
-.opt.right { background: var(--good); color: #fff; border-color: var(--good); box-shadow: none; }
-.opt.wrong { background: var(--bad); color: #fff; border-color: var(--bad); box-shadow: none; }
 .result { text-align: center; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 26px 20px; }
-.big { font-size: 64px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.05; }
+.big { font-size: 60px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .stars { font-size: 54px; letter-spacing: 6px; line-height: 1; }
 .stars .on { color: var(--sun); } .stars .off { color: var(--line); }
-.actions { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.review { margin-top: 16px; text-align: right; color: var(--pen); font-size: 22px; font-weight: 700; line-height: 1.7; }
+.actions { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
 .btnbig { min-height: 56px; padding: 0 24px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
+.btnbig:active, .ghost:active { transform: translateY(2px); }
 .ghost { min-height: 56px; padding: 0 22px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-size: 20px; font-weight: 700; cursor: pointer; }
 .rank { margin-top: 18px; text-align: left; }
 .rank h3 { font-size: 18px; color: var(--muted); margin: 0 0 8px; text-align: center; }
 .hsrow { display: grid; grid-template-columns: 48px 1fr auto; gap: 8px; padding: 8px 10px; border-radius: 12px; font-variant-numeric: tabular-nums; }
 .hsrow:nth-child(odd) { background: rgba(127,127,127,.08); }
 .hsrow.me { background: var(--good-bg); font-weight: 800; }
+
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes drawx { to { stroke-dashoffset: 0; } }
+@keyframes pulse { 50% { background: rgba(242,181,68,.38); } }
+@keyframes hl { from { background: rgba(242,181,68,.55); } to { background: transparent; } }
+.popin { animation: pop .35s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .popin, .opt.wrong, .tw.oops, .tile.oops, .qw.bad, .blank.cur, .fill.new { animation: none; }
+  .qw svg.draw path { animation-duration: .01s; }
+}
 </style>
 </head>
 <body>
@@ -89,8 +161,46 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--sun); outline-o
 const $ = id => document.getElementById(id), app = $('app');
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('chumash:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('chumash:' + k, JSON.stringify(v)); } catch (e) {} }
+};
 
-/* The six verb forms from Jack's Chumash worksheet ("What is the root and translation?"). */
+/* ============================================================
+   The review sheet: דַּפֵּי חֲזָרָה, פָּרָשַׁת וַיֵּרָא, פֶּרֶק יח (teacher's answer key).
+   q: the question, word by word. x: true = a question word the teacher crosses out.
+   a: the answer. A string is written for him; { f, alt, lab } is a blank Jack fills in
+      (f = the right words, alt = wrong choices, lab = name on the Progress page).
+   tiles: the same answer cut into pieces for Build the Answer (in order).
+   ============================================================ */
+const SHEET = [
+  { q: [{ w: 'מִי', x: true }, { w: 'נִרְאָה' }, { w: 'אֶל' }, { w: 'אַבְרָהָם' }, { w: 'וְלָמָּה', x: true }],
+    a: [{ f: 'ה׳', alt: ['מִיכָאֵל', 'שָׂרָה'], lab: 'Q1: who appeared to Avraham' }, 'נִרְאָה אֶל אַבְרָהָם',
+        { f: 'לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים', alt: ['לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים', 'לַהֲפוֹךְ אֶת סְדוֹם'], lab: 'Q1: why Hashem came' }],
+    tiles: ['ה׳', 'נִרְאָה', 'אֶל אַבְרָהָם', 'לַעֲשׂוֹת', 'מִצְוַת', 'בִּקּוּר חוֹלִים'] },
+  { q: [{ w: 'לָמָּה', x: true }, { w: 'יָשַׁב' }, { w: 'אַבְרָהָם' }, { w: 'בְּפֶתַח' }, { w: 'הָאֹהֶל' }],
+    a: ['אַבְרָהָם יָשַׁב בְּפֶתַח הָאֹהֶל',
+        { f: 'לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים', alt: ['לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים', 'לָנוּחַ בַּצֵּל'], lab: 'Q2: why Avraham sat at the tent' }],
+    tiles: ['אַבְרָהָם', 'יָשַׁב', 'בְּפֶתַח הָאֹהֶל', 'לַעֲשׂוֹת', 'הַכְנָסַת אוֹרְחִים'] },
+  { q: [{ w: 'אֵיזוֹ', x: true }, { w: 'מִצְוָה' }, { w: 'אָהַב' }, { w: 'אַבְרָהָם' }, { w: 'לְקַיֵּם' }],
+    a: ['אַבְרָהָם אָהַב לְקַיֵּם מִצְוַת',
+        { f: 'הַכְנָסַת אוֹרְחִים', alt: ['בִּקּוּר חוֹלִים', 'כִּבּוּד אָב וָאֵם'], lab: 'Q3: which mitzvah Avraham loved' }],
+    tiles: ['אַבְרָהָם', 'אָהַב', 'לְקַיֵּם', 'מִצְוַת', 'הַכְנָסַת אוֹרְחִים'] },
+  { q: [{ w: 'מַדּוּעַ', x: true }, { w: 'ה׳' }, { w: 'שָׁלַח' }, { w: 'שְׁלֹשָׁה' }, { w: 'מַלְאָכִים' }, { w: 'וְלֹא' }, { w: 'מַלְאָךְ' }, { w: 'אֶחָד' }],
+    a: ['ה׳ שָׁלַח שְׁלֹשָׁה מַלְאָכִים וְלֹא מַלְאָךְ אֶחָד',
+        { f: 'כִּי מַלְאָךְ אֶחָד לֹא יָכוֹל לַעֲשׂוֹת שָׁלוֹשׁ תַּפְקִידִים', alt: ['כִּי אַבְרָהָם אָהַב הַרְבֵּה אוֹרְחִים', 'כִּי הָיָה חַם מְאֹד'], lab: 'Q4: why 3 malachim' }],
+    tiles: ['ה׳ שָׁלַח', 'שְׁלֹשָׁה מַלְאָכִים', 'וְלֹא מַלְאָךְ אֶחָד', 'כִּי', 'מַלְאָךְ אֶחָד', 'לֹא יָכוֹל', 'לַעֲשׂוֹת', 'שָׁלוֹשׁ תַּפְקִידִים'] }
+];
+const MQ = 'מָה הָיָה הַתַּפְקִיד שֶׁל כָּל מַלְאָךְ?';
+const MALACHIM = [
+  { k: 'א', name: 'רְפָאֵל', eng: 'Refael', job: 'לְרַפְּאוֹת אֶת אַבְרָהָם' },
+  { k: 'ב', name: 'גַּבְרִיאֵל', eng: 'Gavriel', job: 'לַהֲפוֹךְ אֶת סְדוֹם' },
+  { k: 'ג', name: 'מִיכָאֵל', eng: 'Michael', job: 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה' }
+];
+const fullAnswer = it => it.tiles.join(' ') + '.';
+const mLine = m => `מַלְאָךְ ${m.k} – ${m.name} – ${m.job}.`;
+
+/* The six verb forms from the earlier worksheet ("What is the root and translation?"). */
 const WORDS = [
   { w: 'אֵרְדָה', root: 'י.ר.ד', m: 'I will go down' },
   { w: 'אֶרְאֶה', root: 'ר.א.ה', m: 'I will see' },
@@ -101,16 +211,16 @@ const WORDS = [
 ];
 const ROUND = 12;
 
-/* Results log, shared by the games on this site (same browser). Never throws. */
-function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now() }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
+/* ---------- shared results log (same browser), high scores, sending ---------- */
+function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now(), game: 'chumash' }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
 function logRound(rec) {
   const t = Date.now();
-  try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t, round: true }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {}
+  try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t, round: true, game: 'chumash' }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {}
   return t;
 }
-function rankHTML(game, mode, t) {
+function rankHTML(mode, low, t) {
   let a = []; try { a = JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) {}
-  const rows = a.filter(e => e.round && e.game === game && e.mode === mode).sort((x, y) => y.score - x.score || x.t - y.t);
+  const rows = a.filter(e => e.round && e.game === 'chumash' && e.mode === mode).sort((x, y) => (low ? x.score - y.score : y.score - x.score) || x.t - y.t);
   const pos = rows.findIndex(r => r.t === t) + 1;
   return `<div class="rank"><h3>High scores${pos ? ' · your rank #' + pos : ''}</h3>${rows.slice(0, 10).map((r, i) => `<div class="hsrow${r.t === t ? ' me' : ''}"><span>#${i + 1}</span><span>${esc(r.label)}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')}</div>`;
 }
@@ -134,34 +244,411 @@ async function sendLog() {
   } catch (e) {}
 }
 
-/* ---------- HOME ---------- */
-let Q = null;
+/* ---------- sound (starts only after a tap) ---------- */
+let soundOn = store.get('sound', true), actx = null;
+function tone(freqs, dur = .12) {
+  if (!soundOn) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    let t = actx.currentTime;
+    freqs.forEach(f => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.18, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur + .02); t += dur * .9;
+    });
+  } catch (e) {}
+}
+const yay = () => tone([523, 659, 784]);
+const tick = () => tone([660], .08);
+const nope = () => tone([220, 196], .16);
+
+function topbar(title, right = '') {
+  return `<div class="topbar">
+    <button class="iconbtn" id="homeBtn" aria-label="Back to the Chumash menu">‹ Menu</button>
+    <h1>${title}</h1>${right}
+    <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button>
+  </div>`;
+}
+function wireTop() {
+  const h = $('homeBtn'); if (h) h.onclick = home;
+  const s = $('sndBtn');
+  if (s) s.onclick = () => { soundOn = !soundOn; store.set('sound', soundOn); s.textContent = soundOn ? '🔊' : '🔈'; };
+}
+const starsHTML = n => `<div class="stars">${[0, 1, 2].map(i => `<span class="${i < n ? 'on' : 'off'}">★</span>`).join('')}</div>`;
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+
+/* ---------- the question line, and the teacher's red X ---------- */
+function qHTML(it, tap) {
+  const words = it.q.map((t, i) => tap
+    ? `<button class="qw${t.x ? ' xw' : ''}" data-i="${i}">${t.w}</button>`
+    : `<span class="qw${t.x ? ' xw' : ''}">${t.w}</span>`);
+  return `<div class="q he" lang="he">${words.join(' ')}?</div>`;
+}
+function crossOut(el, animate) {
+  el.classList.add('crossed');
+  const old = el.querySelector('svg'); if (old) old.remove();
+  const w = el.offsetWidth, h = el.offsetHeight, p = 3;
+  if (!w || !h) return;
+  el.insertAdjacentHTML('beforeend', `<svg class="${animate ? 'draw' : ''}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path pathLength="1" d="M${p} ${p} L${w - p} ${h - p}"/><path pathLength="1" d="M${w - p} ${p} L${p} ${h - p}"/></svg>`);
+}
+const crossAll = (root, animate) => (root || document).querySelectorAll('.xw').forEach(el => crossOut(el, animate));
+window.addEventListener('resize', () => document.querySelectorAll('.qw.crossed').forEach(el => crossOut(el, false)));
+
+/* ============================================================ HOME */
+let C = null, B = null, M = null, Q = null;
 function home() {
-  Q = null;
-  let best = null; try { best = JSON.parse(localStorage.getItem('jackchumash') || 'null'); } catch (e) {}
+  C = B = M = Q = null;
+  const bc = store.get('bestCross', null), bb = store.get('bestBuild', null), bm = store.get('bestMatch', null);
+  let bw = null; try { bw = JSON.parse(localStorage.getItem('jackchumash') || 'null'); } catch (e) {}
   app.innerHTML = `
-    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a></div>
-    <div class="hero"><div class="w">עָמַד</div><p>Learn the words and their roots, then take the quiz.</p></div>
+    <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a><h1></h1>
+      <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button></div>
+    <div class="hero">
+      <div class="t he" lang="he">פָּרָשַׁת וַיֵּרָא</div>
+      <div class="s he" lang="he">פֶּרֶק יח · דַּפֵּי חֲזָרָה</div>
+      <p>Answer like the teacher: cross out the question word, then write the answer.</p>
+    </div>
     <div class="modes">
-      <button class="mode" id="mStudy"><div class="ico">📚</div><b>Study the Words</b><span>The 6 words, roots and meanings</span></button>
-      <button class="mode" id="mQuiz"><div class="ico">⭐</div><b>Quiz</b><span>12 questions, earn 3 stars</span><span class="best">${best != null ? 'Best: ' + best + ' / ' + ROUND : ''}</span></button>
+      <button class="mode" id="mKey"><div class="ico">📝</div><b>Answer Key</b><span>Read each question, say the answer, then check</span></button>
+      <button class="mode" id="mCross"><div class="ico">❌</div><b>Cross It Out</b><span>Cross out the question word, then finish the answer</span><span class="best">${bc != null ? `Best: ${bc} / ${crossTotal()}` : ''}</span></button>
+      <button class="mode" id="mBuild"><div class="ico">🧩</div><b>Build the Answer</b><span>Put the answer together, piece by piece</span><span class="best">${bb != null ? `Best: ${plural(bb, 'mistake')}` : ''}</span></button>
+      <button class="mode" id="mMatch"><div class="ico">✨</div><b>Malach Match</b><span>Match each malach to his job</span><span class="best">${bm != null ? `Best: ${plural(bm, 'mistake')}` : ''}</span></button>
+    </div>
+    <div class="sec">
+      <h2>The six words (roots and meanings)</h2>
+      <div class="row">
+        <button class="ghost" id="wStudy">📚 Study the words</button>
+        <button class="ghost" id="wQuiz">⭐ Word quiz${bw != null ? ` · best ${bw} / ${ROUND}` : ''}</button>
+      </div>
     </div>`;
-  $('mStudy').onclick = study;
-  $('mQuiz').onclick = startQuiz;
+  wireTop();
+  $('mKey').onclick = answerKey;
+  $('mCross').onclick = startCross;
+  $('mBuild').onclick = startBuild;
+  $('mMatch').onclick = startMatch;
+  $('wStudy').onclick = study;
+  $('wQuiz').onclick = startQuiz;
+  window.scrollTo(0, 0);
 }
 
-/* ---------- STUDY ---------- */
+/* ============================================================ ANSWER KEY */
+function answerKey() {
+  const card = (i, qHtml, ansHtml) => `
+    <div class="panel" data-k="${i}">
+      <div class="qnum">Question ${i + 1}</div>${qHtml}
+      <div class="ans he" lang="he" hidden>${ansHtml}</div>
+      <button class="ghost reveal">Show the answer</button>
+    </div>`;
+  app.innerHTML = topbar('Answer Key') + `
+    <div class="say" style="margin-top:0">Read the question. Say the whole answer out loud. Then tap to check.</div>
+    <div class="actions" style="margin:0 0 14px"><button class="ghost" id="all">Show all answers</button></div>
+    ${SHEET.map((it, i) => card(i, qHTML(it, false), fullAnswer(it))).join('')}
+    ${card(SHEET.length, `<div class="q he" lang="he">${MQ}</div>`, MALACHIM.map(m => `<div class="mline">${mLine(m)}</div>`).join(''))}
+    <div class="actions"><button class="btnbig" id="toCross">Play Cross It Out</button><button class="ghost" id="menu">Menu</button></div>`;
+  wireTop();
+  const show = (panel, animate) => {
+    const a = panel.querySelector('.ans'); if (!a.hidden) return;
+    a.hidden = false; panel.querySelector('.reveal').hidden = true;
+    crossAll(panel, animate);
+  };
+  document.querySelectorAll('.panel').forEach(p => { p.querySelector('.reveal').onclick = () => { tick(); show(p, true); }; });
+  $('all').onclick = () => document.querySelectorAll('.panel').forEach(p => show(p, true));
+  $('toCross').onclick = startCross;
+  $('menu').onclick = home;
+  window.scrollTo(0, 0);
+}
+
+/* ============================================================ CROSS IT OUT
+   Questions 1-4: cross out the question word(s), then fill in the blanks of the answer.
+   Question 5: pick each malach's job. Score = steps done right on the first try. */
+const crossTotal = () => SHEET.reduce((s, it) => s + it.q.filter(t => t.x).length + it.a.filter(a => typeof a !== 'string').length, 0) + MALACHIM.length;
+function startCross() {
+  C = { i: 0, right: 0, total: crossTotal(), marks: [] };
+  crossQ();
+}
+function crossDots() { return `<div class="dots">${Array.from({ length: C.total }, (_, n) => `<span class="dot ${C.marks[n] === true ? 'g' : C.marks[n] === false ? 'b' : ''}"></span>`).join('')}</div>`; }
+function crossStep(ok, item) {
+  logAnswer({ mode: 'cross', item, ok });
+  C.marks.push(ok); if (ok) C.right++;
+  C.miss = false;
+  const d = document.querySelectorAll('.dots .dot')[C.marks.length - 1]; if (d) d.className = 'dot ' + (ok ? 'g' : 'b');
+}
+function crossQ() {
+  if (C.i >= SHEET.length) return crossMalachim();
+  const it = SHEET[C.i], nx = it.q.filter(t => t.x).length;
+  Object.assign(C, { phase: 'cross', miss: false, left: nx, fills: it.a.map((a, k) => typeof a === 'string' ? -1 : k).filter(k => k >= 0), fi: 0, newK: -1 });
+  app.innerHTML = topbar('Cross It Out', `<span class="pill">${C.i + 1} of ${SHEET.length + 1}</span>`) + crossDots() + `
+    <div class="panel" id="panel"><div class="qnum">Question ${C.i + 1}</div>${qHTML(it, true)}<div class="ans he" lang="he" id="ans" hidden></div></div>
+    <div class="say" id="say">${nx > 1 ? `Cross out the ${nx} question words.` : 'Cross out the question word.'}</div>
+    <div class="opts" id="opts"></div>`;
+  wireTop();
+  document.querySelectorAll('button.qw').forEach(b => b.onclick = () => tapWord(b));
+  window.scrollTo(0, 0);
+}
+function tapWord(b) {
+  if (!C || C.phase !== 'cross' || b.classList.contains('crossed')) return;
+  const it = SHEET[C.i], t = it.q[+b.dataset.i];
+  if (t.x) {
+    crossOut(b, true); tick();
+    crossStep(!C.miss, `Q${C.i + 1}: cross out ${t.w}`);
+    C.left--;
+    const say = $('say'); say.className = 'say yes';
+    say.textContent = C.left ? 'Yes! Find the other question word.' : 'Yes! Now finish the answer.';
+    if (!C.left) { C.phase = 'wait'; document.querySelector('.q').classList.add('locked'); setTimeout(crossFill, 750); }
+  } else {
+    nope(); C.miss = true;
+    b.classList.remove('bad'); void b.offsetWidth; b.classList.add('bad'); setTimeout(() => b.classList.remove('bad'), 450);
+    const say = $('say'); say.className = 'say no';
+    say.innerHTML = 'That word stays in the answer. Find the question word, like <bdi class="he" lang="he">מִי</bdi> or <bdi class="he" lang="he">לָמָּה</bdi>.';
+  }
+}
+function crossFill() {
+  if (!C) return;
+  C.phase = 'fill';
+  const it = SHEET[C.i], ans = $('ans');
+  ans.hidden = false;
+  const done = C.fi >= C.fills.length, cur = C.fills[C.fi];
+  ans.innerHTML = it.a.map((a, k) => typeof a === 'string' ? `<span>${a}</span>`
+    : C.fills.indexOf(k) < C.fi ? `<span class="fill${k === C.newK ? ' new' : ''}">${a.f}</span>`
+    : `<span class="blank${k === cur ? ' cur' : ''}">?</span>`).join(' ') + (done ? '.' : '');
+  const say = $('say'), opts = $('opts');
+  if (done) {
+    $('panel').classList.add('ok');
+    say.className = 'say yes'; say.textContent = 'That’s the whole answer!';
+    opts.innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">${C.i + 1 < SHEET.length ? 'Next question ›' : 'Last question ›'}</button></div>`;
+    $('next').onclick = () => { C.i++; crossQ(); };
+    return;
+  }
+  const a = it.a[cur];
+  say.className = 'say'; say.textContent = 'Fill in the blank. Which words go here?';
+  const choices = shuffle([a.f, ...a.alt]);
+  opts.innerHTML = choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}</button>`).join('');
+  opts.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    if (C.phase !== 'fill' || b.disabled) return;
+    if (choices[+b.dataset.n] === a.f) {
+      yay(); crossStep(!C.miss, a.lab);
+      C.newK = cur; C.fi++; crossFill();
+    } else {
+      nope(); C.miss = true; b.disabled = true; b.classList.add('wrong');
+      say.className = 'say no'; say.textContent = 'Not that one. Try again!';
+    }
+  });
+}
+function crossMalachim() {
+  Object.assign(C, { phase: 'fill', miss: false, mi: 0 });
+  app.innerHTML = topbar('Cross It Out', `<span class="pill">${SHEET.length + 1} of ${SHEET.length + 1}</span>`) + crossDots() + `
+    <div class="panel" id="panel"><div class="qnum">Question ${SHEET.length + 1}</div><div class="q he" lang="he">${MQ}</div><div class="ans he" lang="he" id="ans"></div></div>
+    <div class="say" id="say">No question word to cross out here! What was each malach’s job?</div>
+    <div class="opts" id="opts"></div>`;
+  wireTop();
+  window.scrollTo(0, 0);
+  drawMalachim();
+}
+function drawMalachim() {
+  const ans = $('ans'), opts = $('opts');
+  ans.innerHTML = MALACHIM.map((m, n) => `<div class="mline">מַלְאָךְ ${m.k} – ${m.name} – ${n < C.mi ? `<span class="fill${n === C.mi - 1 ? ' new' : ''}">${m.job}.</span>` : `<span class="blank${n === C.mi ? ' cur' : ''}">?</span>`}</div>`).join('');
+  if (C.mi >= MALACHIM.length) {
+    $('panel').classList.add('ok');
+    $('say').className = 'say yes'; $('say').textContent = 'You finished the whole sheet!';
+    opts.innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">See my score ›</button></div>`;
+    $('next').onclick = finishCross;
+    return;
+  }
+  const m = MALACHIM[C.mi], choices = shuffle(MALACHIM.map(x => x.job));
+  opts.innerHTML = choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}</button>`).join('');
+  opts.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    if (b.disabled || !C) return;
+    if (choices[+b.dataset.n] === m.job) {
+      yay(); crossStep(!C.miss, `${m.eng}’s job`);
+      C.mi++; $('say').className = 'say'; $('say').textContent = C.mi < MALACHIM.length ? 'Yes! Next malach.' : '';
+      drawMalachim();
+    } else {
+      nope(); C.miss = true; b.disabled = true; b.classList.add('wrong');
+      $('say').className = 'say no'; $('say').innerHTML = `That’s not the job of <bdi class="he" lang="he">${m.name}</bdi>. Try again!`;
+    }
+  });
+}
+function finishCross() {
+  sendLog();
+  const r = C.right, n = C.total, stars = r >= n ? 3 : r >= n - 2 ? 2 : r >= n / 2 ? 1 : 0;
+  const best = store.get('bestCross', null), isBest = best == null || r > best;
+  if (isBest) store.set('bestCross', r);
+  const rt = logRound({ mode: 'cross', score: r, total: n, label: `${r} / ${n}` });
+  C = null;
+  app.innerHTML = topbar('Cross It Out') + `
+    <div class="result popin">
+      ${starsHTML(stars)}
+      <div class="big">${r} / ${n}</div>
+      <div>${r === n ? 'Perfect! Every step right the first time!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}${isBest && best != null ? ' New best!' : ''}</div>
+      ${rankHTML('cross', false, rt)}
+      <div class="actions"><button class="btnbig" id="again">Play again</button><button class="ghost" id="key">Answer Key</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  $('again').onclick = startCross; $('key').onclick = answerKey; $('menu').onclick = home;
+}
+
+/* ============================================================ BUILD THE ANSWER
+   The question shows with its question word already crossed out. Jack taps the pieces of
+   the answer in order. A wrong piece shakes; after two misses the right piece glows. */
+function startBuild() {
+  B = { order: shuffle(SHEET.map((_, i) => i)), i: 0, mistakes: 0 };
+  buildQ();
+}
+function buildQ() {
+  const n = B.order[B.i], it = SHEET[n];
+  Object.assign(B, { placed: 0, bank: shuffle(it.tiles.map(w => ({ w, used: false }))), missQ: false, missSlot: 0, busy: false });
+  app.innerHTML = topbar('Build the Answer', `<span class="pill" id="mist">Mistakes: ${B.mistakes}</span>`) + `
+    <div class="panel" id="panel"><div class="qnum">Question ${n + 1} · ${B.i + 1} of ${SHEET.length}</div>${qHTML(it, false)}<div class="ans he" lang="he" id="ans"></div></div>
+    <div class="say" id="say">Tap the pieces in order to build the answer.</div>
+    <div class="bank he" lang="he" id="bank"></div>
+    <div class="actions" id="act"></div>`;
+  wireTop();
+  crossAll(app, false);
+  drawBuild();
+  window.scrollTo(0, 0);
+}
+function drawBuild() {
+  const it = SHEET[B.order[B.i]], done = B.placed >= it.tiles.length;
+  $('ans').innerHTML = it.tiles.slice(0, B.placed).map((w, k) => `<span class="fill${k === B.placed - 1 ? ' new' : ''}">${w}</span>`).join(' ') + (done ? '.' : (B.placed ? ' ' : '') + '<span class="slot"></span>');
+  const want = it.tiles[B.placed];
+  $('bank').innerHTML = B.bank.map((t, idx) => t.used ? '' : `<button class="tw${B.missSlot >= 2 && t.w === want ? ' hint' : ''}" data-idx="${idx}">${t.w}</button>`).join('');
+  document.querySelectorAll('#bank .tw').forEach(b => b.onclick = () => pickTile(b));
+  if (done) {
+    $('panel').classList.add('ok');
+    $('say').className = 'say yes'; $('say').textContent = B.missQ ? 'You built it!' : 'Built it with no mistakes!';
+    $('act').innerHTML = `<button class="btnbig" id="next">${B.i + 1 < SHEET.length ? 'Next question ›' : 'See my score ›'}</button>`;
+    $('next').onclick = () => { B.i++; if (B.i >= SHEET.length) finishBuild(); else buildQ(); };
+  }
+}
+function pickTile(b) {
+  if (!B) return;
+  const it = SHEET[B.order[B.i]], t = B.bank[+b.dataset.idx];
+  if (t.w === it.tiles[B.placed]) {
+    t.used = true; B.placed++; B.missSlot = 0;
+    if (B.placed >= it.tiles.length) { yay(); logAnswer({ mode: 'build', item: `Build: Q${B.order[B.i] + 1} answer`, ok: !B.missQ }); } else tick();
+    $('say').className = 'say'; $('say').textContent = B.placed < it.tiles.length ? 'Good! What comes next?' : '';
+    drawBuild();
+  } else {
+    nope(); B.mistakes++; B.missQ = true; B.missSlot++;
+    $('mist').textContent = `Mistakes: ${B.mistakes}`;
+    $('say').className = 'say no'; $('say').textContent = B.missSlot >= 2 ? 'Look for the glowing piece.' : 'Not yet. Read the question again: what comes next?';
+    if (B.missSlot >= 2) drawBuild();
+    else { b.classList.remove('oops'); void b.offsetWidth; b.classList.add('oops'); setTimeout(() => b.classList.remove('oops'), 450); }
+  }
+}
+function finishBuild() {
+  sendLog();
+  const m = B.mistakes, stars = m === 0 ? 3 : m <= 3 ? 2 : 1;
+  const best = store.get('bestBuild', null), isBest = best == null || m < best;
+  if (isBest) store.set('bestBuild', m);
+  const rt = logRound({ mode: 'build', score: m, total: SHEET.length, label: plural(m, 'mistake') });
+  B = null;
+  app.innerHTML = topbar('Build the Answer') + `
+    <div class="result popin">
+      ${starsHTML(stars)}
+      <div class="big">All built!</div>
+      <div>${m === 0 ? 'No mistakes at all!' : plural(m, 'mistake') + '.'}${isBest && best != null ? ' New best!' : ''}</div>
+      ${rankHTML('build', true, rt)}
+      <div class="actions"><button class="btnbig" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  $('again').onclick = startBuild; $('menu').onclick = home;
+}
+
+/* ============================================================ MALACH MATCH
+   Tap a malach, then his job (either order). Then a bonus: why three malachim? */
+function startMatch() {
+  M = { names: shuffle(MALACHIM), jobs: shuffle(MALACHIM), sel: null, done: new Set(), mistakes: 0, missBonus: false };
+  drawMatch();
+}
+function drawMatch() {
+  const tile = (m, side) => `<button class="tile he" lang="he" data-side="${side}" data-k="${m.k}">${side === 'N' ? `<span><small>מַלְאָךְ ${m.k}</small>${m.name}</span>` : m.job}</button>`;
+  app.innerHTML = topbar('Malach Match', `<span class="pill" id="mist">Mistakes: ${M.mistakes}</span>`) + `
+    <div class="panel"><div class="q he" lang="he" style="text-align:center">${MQ}</div></div>
+    <div class="say" id="say">Tap a malach, then tap his job.</div>
+    <div class="mcols" dir="rtl"><div class="mcol">${M.names.map(m => tile(m, 'N')).join('')}</div><div class="mcol">${M.jobs.map(m => tile(m, 'J')).join('')}</div></div>`;
+  wireTop();
+  document.querySelectorAll('.tile').forEach(b => b.onclick = () => matchPick(b));
+  window.scrollTo(0, 0);
+}
+function matchPick(b) {
+  if (!M || b.disabled) return;
+  const side = b.dataset.side, k = b.dataset.k;
+  if (!M.sel || M.sel.side === side) {
+    document.querySelectorAll('.tile.sel').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); M.sel = { side, k, el: b }; tick(); return;
+  }
+  const a = M.sel; M.sel = null;
+  const nameK = side === 'N' ? k : a.k, m = MALACHIM.find(x => x.k === nameK);
+  logAnswer({ mode: 'match', item: `${m.eng}’s job`, ok: a.k === k });
+  if (a.k === k) {
+    M.done.add(k); yay();
+    [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.disabled = true; });
+    $('say').className = 'say yes'; $('say').innerHTML = `Yes! <bdi class="he" lang="he">${m.name} – ${m.job}</bdi>`;
+    if (M.done.size === MALACHIM.length) setTimeout(matchBonus, 1100);
+  } else {
+    M.mistakes++; nope();
+    $('mist').textContent = `Mistakes: ${M.mistakes}`;
+    $('say').className = 'say no'; $('say').textContent = 'Not a match. Try again!';
+    [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('oops'); setTimeout(() => x.classList.remove('oops'), 450); });
+  }
+}
+function matchBonus() {
+  if (!M) return;
+  const it = SHEET[3], blank = it.a[1], choices = shuffle([blank.f, ...blank.alt]);
+  app.innerHTML = topbar('Malach Match', `<span class="pill" id="mist">Mistakes: ${M.mistakes}</span>`) + `
+    <div class="say" style="margin-top:0">⭐ Bonus question!</div>
+    <div class="panel" id="panel">${qHTML(it, false)}<div class="ans he" lang="he" id="ans"><span>${it.a[0]}</span> <span class="blank cur">?</span></div></div>
+    <div class="say" id="say">Why did Hashem send three malachim?</div>
+    <div class="opts" id="opts">${choices.map((c, n) => `<button class="opt he" lang="he" data-n="${n}">${c}</button>`).join('')}</div>`;
+  wireTop();
+  crossAll(app, false);
+  document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => {
+    if (!M || b.disabled) return;
+    if (choices[+b.dataset.n] === blank.f) {
+      yay(); logAnswer({ mode: 'match', item: 'Bonus: why 3 malachim', ok: !M.missBonus });
+      $('ans').innerHTML = `<span>${it.a[0]}</span> <span class="fill new">${blank.f}</span>.`;
+      $('panel').classList.add('ok');
+      $('say').className = 'say yes'; $('say').textContent = 'Yes! One malach can only do one job.';
+      $('opts').innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">See my score ›</button></div>`;
+      $('next').onclick = finishMatch;
+    } else {
+      nope(); M.mistakes++; M.missBonus = true; b.disabled = true; b.classList.add('wrong');
+      $('mist').textContent = `Mistakes: ${M.mistakes}`;
+      $('say').className = 'say no'; $('say').textContent = 'Not that one. Think about the three jobs!';
+    }
+  });
+}
+function finishMatch() {
+  sendLog();
+  const m = M.mistakes, stars = m === 0 ? 3 : m <= 2 ? 2 : 1;
+  const best = store.get('bestMatch', null), isBest = best == null || m < best;
+  if (isBest) store.set('bestMatch', m);
+  const rt = logRound({ mode: 'match', score: m, total: MALACHIM.length + 1, label: plural(m, 'mistake') });
+  M = null;
+  app.innerHTML = topbar('Malach Match') + `
+    <div class="result popin">
+      ${starsHTML(stars)}
+      <div class="big">All matched!</div>
+      <div>${m === 0 ? 'No mistakes at all!' : plural(m, 'mistake') + '.'}${isBest && best != null ? ' New best!' : ''}</div>
+      <div class="review he" lang="he">${MALACHIM.map(x => `<div>${mLine(x)}</div>`).join('')}</div>
+      ${rankHTML('match', true, rt)}
+      <div class="actions"><button class="btnbig" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  $('again').onclick = startMatch; $('menu').onclick = home;
+}
+
+/* ============================================================ THE SIX WORDS */
 function study() {
-  app.innerHTML = `
-    <div class="topbar"><button class="iconbtn" id="back">‹ Back</button><h1>Study the Words</h1></div>
-    ${WORDS.map(x => `<div class="card"><div class="w">${x.w}</div><div class="root">Root: ${x.root}</div><div class="m">${x.m}</div></div>`).join('')}
-    <div class="actions"><button class="btnbig" id="toQuiz">Quiz</button></div>`;
-  $('back').onclick = home;
+  app.innerHTML = topbar('Study the Words') + `
+    ${WORDS.map(x => `<div class="card"><div class="w" lang="he">${x.w}</div><div class="root">Root: <span class="he" lang="he">${x.root}</span></div><div class="m">${x.m}</div></div>`).join('')}
+    <div class="actions"><button class="btnbig" id="toQuiz">Word quiz</button></div>`;
+  wireTop();
   $('toQuiz').onclick = startQuiz;
+  window.scrollTo(0, 0);
 }
-
-/* ---------- QUIZ ----------
-   Each question shows a word and asks its meaning, or shows a meaning and asks its word. */
 function startQuiz() {
   const qs = [];
   while (qs.length < ROUND) for (const x of shuffle(WORDS)) { if (qs.length < ROUND) {
@@ -173,24 +660,23 @@ function startQuiz() {
 function showQ() {
   const q = Q.qs[Q.i];
   const top = q.dir === 'wm'
-    ? `<div class="w">${q.word.w}</div><div class="ask">What does it mean?</div>`
+    ? `<div class="w he" lang="he">${q.word.w}</div><div class="ask">What does it mean?</div>`
     : `<div class="ask">Which word means:</div><div class="meaning">${q.word.m}</div>`;
-  const opts = q.opts.map((o, k) => `<button class="opt" data-k="${k}">${q.dir === 'wm' ? esc(o.m) : `<span style="font-size:24px">${o.w}</span>`}</button>`).join('');
-  app.innerHTML = `
-    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>Quiz</h1><span class="pill">${Q.i + 1} of ${ROUND}</span></div>
+  const opts = q.opts.map((o, k) => `<button class="opt wopt${q.dir === 'wm' ? '' : ' he'}" data-k="${k}"${q.dir === 'wm' ? '' : ' lang="he"'}>${q.dir === 'wm' ? esc(o.m) : o.w}</button>`).join('');
+  app.innerHTML = topbar('Word Quiz', `<span class="pill">${Q.i + 1} of ${ROUND}</span>`) + `
     <div class="dots" id="dots">${Array.from({ length: ROUND }, (_, n) => `<span class="dot ${Q.marks[n] === true ? 'g' : Q.marks[n] === false ? 'b' : ''}"></span>`).join('')}</div>
-    <div class="sheet" id="sheet" style="margin-top:14px">${top}<div class="gloss" id="gloss"></div></div>
-    <div class="opts" id="opts">${opts}</div>`;
-  $('quit').onclick = home;
+    <div class="sheet" id="sheet">${top}<div class="gloss" id="gloss"></div></div>
+    <div class="opts" id="opts" style="margin-top:16px">${opts}</div>`;
+  wireTop();
   Q.answered = false;
-  document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => pick(+b.dataset.k));
+  document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => pickWord(+b.dataset.k));
 }
-function pick(k) {
+function pickWord(k) {
   if (!Q || Q.answered) return;
   Q.answered = true;
   const q = Q.qs[Q.i], ok = q.opts[k] === q.word;
-  logAnswer({ game: 'chumash', mode: 'quiz', item: `${q.word.w} (${q.word.root})`, kind: q.dir === 'wm' ? 'word to meaning' : 'meaning to word', ok });
-  Q.marks[Q.i] = ok; if (ok) Q.right++;
+  logAnswer({ mode: 'quiz', item: `${q.word.w} (${q.word.root})`, kind: q.dir === 'wm' ? 'word to meaning' : 'meaning to word', ok });
+  Q.marks[Q.i] = ok; if (ok) { Q.right++; yay(); } else nope();
   $('sheet').className = 'sheet ' + (ok ? 'ok' : 'no');
   $('gloss').textContent = `${q.word.w} · root ${q.word.root} · ${q.word.m}`;
   document.querySelectorAll('#opts .opt').forEach((b, n) => {
@@ -198,38 +684,69 @@ function pick(k) {
     if (q.opts[n] === q.word) b.classList.add('right'); else if (n === k) b.classList.add('wrong');
   });
   const dot = document.querySelectorAll('#dots .dot')[Q.i]; if (dot) dot.className = 'dot ' + (ok ? 'g' : 'b');
-  setTimeout(next, ok ? 900 : 2000);
+  setTimeout(nextWord, ok ? 900 : 2000);
 }
-function next() {
+function nextWord() {
   if (!Q) return;
   Q.i++;
-  if (Q.i >= ROUND) return finish();
+  if (Q.i >= ROUND) return finishQuiz();
   showQ();
 }
-function finish() {
+function finishQuiz() {
   sendLog();
   const right = Q.right, stars = right >= ROUND ? 3 : right >= ROUND - 2 ? 2 : right >= ROUND / 2 ? 1 : 0;
   let best = null; try { best = JSON.parse(localStorage.getItem('jackchumash') || 'null'); } catch (e) {}
   const isBest = best == null || right > best;
   if (isBest) { try { localStorage.setItem('jackchumash', JSON.stringify(right)); } catch (e) {} }
-  const rt = logRound({ game: 'chumash', mode: 'quiz', score: right, total: ROUND, label: `${right} / ${ROUND}` });
+  const rt = logRound({ mode: 'quiz', score: right, total: ROUND, label: `${right} / ${ROUND}` });
   Q = null;
-  app.innerHTML = `
-    <div class="topbar"><button class="iconbtn" id="quit">‹ Back</button><h1>Quiz</h1></div>
-    <div class="result">
-      <div class="stars">${[0, 1, 2].map(i => `<span class="${i < stars ? 'on' : 'off'}">★</span>`).join('')}</div>
+  app.innerHTML = topbar('Word Quiz') + `
+    <div class="result popin">
+      ${starsHTML(stars)}
       <div class="big">${right} / ${ROUND}</div>
-      <div>${right === ROUND ? 'Perfect!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}${isBest && best != null ? ' · new best!' : ''}</div>
-      ${rankHTML('chumash', 'quiz', rt)}
-      <div class="actions">
-        <button class="btnbig" id="again">Play again</button>
-        <button class="ghost" id="study">Study the words</button>
-        <button class="ghost" id="menu">Menu</button>
-      </div>
+      <div>${right === ROUND ? 'Perfect!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}${isBest && best != null ? ' New best!' : ''}</div>
+      ${rankHTML('quiz', false, rt)}
+      <div class="actions"><button class="btnbig" id="again">Play again</button><button class="ghost" id="study">Study the words</button><button class="ghost" id="menu">Menu</button></div>
     </div>`;
-  $('quit').onclick = home; $('menu').onclick = home; $('study').onclick = study; $('again').onclick = startQuiz;
+  wireTop();
+  $('menu').onclick = home; $('study').onclick = study; $('again').onclick = startQuiz;
 }
+
 home();
+</script>
+<!-- auto-update -->
+<script>
+/* Auto-update. Safari can keep showing an old copy of a page for up to 10 minutes after it changes.
+   On load: compare this copy with the live one and switch to the new version if they differ.
+   If a newer version appears while the page is open, show a tap-to-update button instead,
+   so a game in progress isn't lost. The ?v= check means it can never reload in a loop. */
+(function () {
+  if (!window.fetch || !window.Promise) return;
+  var path = location.pathname, busy = false;
+  function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function text(url, mode) { return fetch(url, { cache: mode }).then(function (r) { return r.ok ? r.text() : null; }); }
+  function go(v) { location.replace(path + '?v=' + v + location.hash); }
+  function offer(v) {
+    if (document.getElementById('autoUpd')) return;
+    var b = document.createElement('button');
+    b.id = 'autoUpd'; b.type = 'button'; b.textContent = '✨ New update! Tap to get it';
+    b.style.cssText = 'position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);z-index:99;border:none;border-radius:999px;padding:14px 26px;font:600 19px system-ui,sans-serif;background:#2f63c9;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.28);cursor:pointer;white-space:nowrap';
+    b.onclick = function () { go(v); };
+    document.body.appendChild(b);
+  }
+  function check(onLoad) {
+    if (busy) return; busy = true;
+    Promise.all([text(location.href, 'force-cache'), text(path + '?t=' + Date.now(), 'no-store')]).then(function (r) {
+      var mine = r[0], live = r[1];
+      if (!mine || !live || mine === live) return;
+      var v = hash(live);
+      if (new URLSearchParams(location.search).get('v') === v) return;
+      if (onLoad) go(v); else offer(v);
+    }).catch(function () {}).then(function () { busy = false; });
+  }
+  check(true);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') check(false); });
+})();
 </script>
 </body>
 </html>

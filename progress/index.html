@@ -85,7 +85,7 @@ h2 { font-size: 20px; margin: 26px 0 10px; }
   <div id="status" role="status"></div>
 </main>
 <script>
-const NAMES = { times: 'Times Tables', shorashim: 'Shorashim', vocab: 'Vocabulary' };
+const NAMES = { times: 'Times Tables', shorashim: 'Shorashim', vocab: 'Vocabulary', chumash: 'Chumash' };
 function load() { try { return JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) { return []; } }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
