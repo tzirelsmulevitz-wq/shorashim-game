@@ -258,7 +258,7 @@ const STORY = {
         'But nobody came. Rashi says Hashem made the sun extra hot, so no travelers would bother Avraham while he was healing. Avraham was sad. He had no guests!'
       ],
       qs: [
-        { q: 'Who came to visit Avraham?', a: ['Hashem', 'Sarah', 'Three kings', 'Lot'],
+        { q: 'Who came to visit Avraham because he was sick?', a: ['Hashem', 'Sarah', 'Lot', 'Yishmael'],
           why: 'Hashem appeared to Avraham to visit him.', look: ['Suddenly, Hashem appeared to Avraham.'] },
         { q: 'Why did Hashem come to Avraham?', a: ['To visit him because he was sick (bikur cholim)', 'To bring him food', 'To tell him to move away', 'To give him a present'],
           why: 'Avraham was still in pain from his bris milah, so Hashem came to visit him. That mitzvah is called bikur cholim.', look: ['Rashi tells us that Hashem came to visit Avraham because he was sick.'] },
@@ -272,7 +272,7 @@ const STORY = {
         'Avraham looked up, and there were three men standing near him! He didn’t know it yet, but they were not really men. They were malachim (angels) who looked like people. Hashem sent them because Avraham was sad that he had no guests.',
         'Why did Hashem send three malachim? Couldn’t one malach do everything? No! Each malach had his own job, and one malach can’t do three jobs. So Hashem sent three.',
         'Refael’s job was to heal Avraham, so he would feel better after his bris milah.',
-        'Gavriel’s job was to turn over the city of Sedom, because the people there were very wicked.',
+        'Gavriel’s job was to destroy the city of Sedom, because the people there were very wicked.',
         'Michael’s job was to tell Avraham that Sarah would have a baby boy in a year.'
       ],
       qs: [
@@ -282,9 +282,9 @@ const STORY = {
           why: 'Each malach had his own job, and one malach can’t do three jobs.', look: ['Each malach had his own job, and one malach can’t do three jobs.'] },
         { q: 'Which malach came to heal Avraham?', a: ['Refael', 'Gavriel', 'Michael'],
           why: 'Refael’s job was to heal Avraham.', look: ['Refael’s job was to heal Avraham, so he would feel better after his bris milah.'] },
-        { q: 'What was Gavriel’s job?', a: ['To turn over the city of Sedom', 'To heal Avraham', 'To tell Avraham about the baby', 'To cook the food'],
-          why: 'Gavriel’s job was to turn over Sedom.', look: ['Gavriel’s job was to turn over the city of Sedom, because the people there were very wicked.'] },
-        { q: 'What was Michael’s job?', a: ['To tell Avraham that Sarah would have a baby boy', 'To heal Avraham', 'To turn over Sedom', 'To bring water'],
+        { q: 'What was Gavriel’s job?', a: ['To destroy the city of Sedom', 'To heal Avraham', 'To tell Avraham about the baby', 'To cook the food'],
+          why: 'Gavriel’s job was to destroy Sedom.', look: ['Gavriel’s job was to destroy the city of Sedom, because the people there were very wicked.'] },
+        { q: 'What was Michael’s job?', a: ['To tell Avraham that Sarah would have a baby boy', 'To heal Avraham', 'To destroy Sedom', 'To bring water'],
           why: 'Michael’s job was to bring the good news about the baby.', look: ['Michael’s job was to tell Avraham that Sarah would have a baby boy in a year.'] }
       ] },
     { title: 'Avraham Runs!', emoji: '🏃',
@@ -351,7 +351,7 @@ const VOCAB = [
   { h: 'מַלְאָכִים', en: 'malachim (angels)', emo: '✨✨✨' },
   { h: 'תַּפְקִיד', en: 'job', emo: '🛠️' },
   { h: 'לְרַפְּאוֹת', en: 'to heal', emo: '🩹' },
-  { h: 'לַהֲפוֹךְ', en: 'to turn over', emo: '🔄' },
+  { h: 'לַהֲפוֹךְ', en: 'to destroy', emo: '💥' },
   { h: 'בֵּן', en: 'a son', emo: '👶' },
   { h: 'כִּי', en: 'because', emo: '💡' },
   { h: 'לַעֲשׂוֹת', en: 'to do', emo: '✅' }
@@ -389,7 +389,7 @@ const SHEET = [
 const MQ = 'מָה הָיָה הַתַּפְקִיד שֶׁל כָּל מַלְאָךְ?', MQ_EN = '<b>What</b> was each malach’s job?';
 const MALACHIM = [
   { k: 'א', name: 'רְפָאֵל', eng: 'Refael', job: 'לְרַפְּאוֹת אֶת אַבְרָהָם', jen: 'to heal Avraham' },
-  { k: 'ב', name: 'גַּבְרִיאֵל', eng: 'Gavriel', job: 'לַהֲפוֹךְ אֶת סְדוֹם', jen: 'to turn over Sedom' },
+  { k: 'ב', name: 'גַּבְרִיאֵל', eng: 'Gavriel', job: 'לַהֲפוֹךְ אֶת סְדוֹם', jen: 'to destroy the city of Sedom' },
   { k: 'ג', name: 'מִיכָאֵל', eng: 'Michael', job: 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה', jen: 'to tell Avraham that Sarah will have a son in a year' }
 ];
 const fullAnswer = it => it.tiles.join(' ') + '.';
@@ -404,7 +404,7 @@ const GLOSS = {
   'מִצְוַת': 'the mitzvah of', 'בִּקּוּר': 'visiting', 'חוֹלִים': 'sick people', 'הַכְנָסַת': 'bringing in', 'אוֹרְחִים': 'guests',
   'כִּי': 'because', 'לֹא': 'not', 'יָכוֹל': 'can', 'שָׁלוֹשׁ': 'three', 'תַּפְקִידִים': 'jobs', 'מָה': 'what', 'הָיָה': 'was',
   'הַתַּפְקִיד': 'the job', 'שֶׁל': 'of', 'כָּל': 'each', 'רְפָאֵל': 'Refael', 'גַּבְרִיאֵל': 'Gavriel', 'מִיכָאֵל': 'Michael',
-  'לְרַפְּאוֹת': 'to heal', 'אֶת': '(a pointing word, no English word)', 'לַהֲפוֹךְ': 'to turn over', 'סְדוֹם': 'Sedom',
+  'לְרַפְּאוֹת': 'to heal', 'אֶת': '(a pointing word, no English word)', 'לַהֲפוֹךְ': 'to destroy', 'סְדוֹם': 'Sedom',
   'לֵאמֹר': 'to tell', 'לְאַבְרָהָם': 'to Avraham', 'שֶׁשָּׂרָה': 'that Sarah', 'תֵּלֵד': 'will have (a baby)', 'בֵּן': 'a son',
   'בְּשָׁנָה': 'in a year', 'שָׂרָה': 'Sarah', 'לָנוּחַ': 'to rest', 'בַּצֵּל': 'in the shade', 'כִּבּוּד': 'honoring',
   'אָב': 'father', 'וָאֵם': 'and mother', 'הַרְבֵּה': 'lots of', 'חַם': 'hot', 'מְאֹד': 'very',
@@ -417,7 +417,7 @@ const PHRASES = {
   'שְׁלֹשָׁה מַלְאָכִים': 'three malachim', 'וְלֹא מַלְאָךְ אֶחָד': 'and not one malach', 'מַלְאָךְ אֶחָד': 'one malach',
   'לֹא יָכוֹל': 'can’t', 'שָׁלוֹשׁ תַּפְקִידִים': 'three jobs', 'לְקַיֵּם': 'to do',
   'לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים': 'to do the mitzvah of visiting the sick', 'לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים': 'to welcome guests',
-  'לַהֲפוֹךְ אֶת סְדוֹם': 'to turn over Sedom', 'לָנוּחַ בַּצֵּל': 'to rest in the shade', 'כִּבּוּד אָב וָאֵם': 'honoring father and mother',
+  'לַהֲפוֹךְ אֶת סְדוֹם': 'to destroy the city of Sedom', 'לָנוּחַ בַּצֵּל': 'to rest in the shade', 'כִּבּוּד אָב וָאֵם': 'honoring father and mother',
   'כִּי מַלְאָךְ אֶחָד לֹא יָכוֹל לַעֲשׂוֹת שָׁלוֹשׁ תַּפְקִידִים': 'because one malach can’t do three jobs',
   'כִּי אַבְרָהָם אָהַב הַרְבֵּה אוֹרְחִים': 'because Avraham loved lots of guests', 'כִּי הָיָה חַם מְאֹד': 'because it was very hot',
   'לְרַפְּאוֹת אֶת אַבְרָהָם': 'to heal Avraham', 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה': 'to tell Avraham that Sarah will have a son in a year'
