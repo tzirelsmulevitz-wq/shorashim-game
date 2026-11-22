@@ -15,6 +15,7 @@ Review for Parshas Vayera, perek 18, made from both sides of the teacher's answe
 1. **The Story**: the whole story of the pesukim (with the Rashis the test uses) in English, in four short chapters with comprehension questions after each one and "Show me in the story". Finishing it once opens steps 2 and 3 on that iPad.
 2. **Learn the Words**: flip cards and Word Match for the key Hebrew words, starting with the question words (מִי, לָמָּה, מַדּוּעַ, אֵיזוֹ, מָה).
 3. **The Worksheet**: the teacher crosses out the question word and writes the answer back in the question's own words, so these games practice exactly that.
+4. **More from the Review Sheet** (pages 3-4 of the blank review sheet on Google Classroom): Vav Hahipuch (root and meaning), Prefixes and Endings (what the added letters mean, then the whole word), Who Am I?, Who Said It? and True or False. Data is in `HIPUCH`, `TCHILIYOT`, `SOFIYOT`, `MIMI`, `SAID` and `TF`; roots are written without final letters, like the class does.
 
 Help everywhere: tap any Hebrew word to see what it means, and the **EN** button (on at first) shows English under the questions, answers, choices and pieces.
 

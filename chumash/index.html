@@ -181,6 +181,12 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 .tile.done { border-color: var(--good); background: var(--good-bg); opacity: .55; cursor: default; }
 .tile.oops { border-color: var(--bad); background: var(--bad-bg); animation: shake .35s; }
 .reveal { margin-top: 10px; }
+.dshow { font-family: var(--f-heb); direction: rtl; text-align: center; font-size: clamp(28px, 5.8vw, 38px); font-weight: 700; line-height: 1.7; }
+.dshow.big { font-size: clamp(56px, 13vw, 84px); line-height: 1.35; }
+.mk { color: var(--xpen); background: rgba(216,52,42,.12); border-radius: 8px; }
+.after { margin-top: 10px; font-size: 19px; font-weight: 600; text-align: center; }
+.after bdi, .say bdi.he { font-family: var(--f-heb); font-size: 1.25em; }
+.mode .heb { font-family: var(--f-heb); font-size: 20px; color: var(--ink); font-weight: 700; }
 
 /* ---------- six words ---------- */
 .card { background: var(--sand); border: 2px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 16px 18px; margin-bottom: 12px; }
@@ -291,6 +297,7 @@ const STORY = {
       paras: [
         'Even though he was in pain, Avraham jumped up and ran to greet the guests. He bowed down and said, “Please don’t pass me by! Stay and rest.”',
         '“Let me bring some water so you can wash your feet. Rest here under the tree, and I’ll bring you a little bread.”',
+        'The guests answered, “Do just what you said.”',
         'Why did the guests have to wash their feet? Rashi says Avraham thought they were Arabs who bowed down to the dust on their feet. That is avodah zarah (idol worship), and Avraham did not want any avodah zarah in his house!',
         'Avraham hurried into the tent. “Sarah, quick! Take the best flour and bake some cakes!”',
         'Then Avraham ran to his cattle and picked a calf that was soft and good. He gave it to a young man to cook quickly. Rashi says the young man was Yishmael, Avraham’s son. Avraham wanted to teach him to do mitzvos too.',
@@ -433,6 +440,59 @@ const MALACHIM = [
 const fullAnswer = it => it.tiles.join(' ') + '.';
 const mLine = m => `מַלְאָךְ ${m.k} – ${m.name} – ${m.job}.`;
 
+/* ============================================================
+   STEP 4: MORE FROM THE REVIEW SHEET (pages 3-4 of the blank review sheet the teacher posted on Google Classroom).
+   Roots are written the way Jack's class writes them, without final letters (נ.ת.נ, ר.ו.צ).
+   ============================================================ */
+const HIPUCH = [   /* הַהִפּוּךְ: the וַ turns "he will" into "and he did" */
+  { w: 'וַיִּתֵּן', rest: 'יִּתֵּן', root: 'נ.ת.נ', fut: 'יִתֵּן', futEn: 'he will give', en: 'and he gave' },
+  { w: 'וַיַּרְא', rest: 'יַּרְא', root: 'ר.א.ה', fut: 'יִרְאֶה', futEn: 'he will see', en: 'and he saw' },
+  { w: 'וַיְמַהֵר', rest: 'יְמַהֵר', root: 'מ.ה.ר', fut: 'יְמַהֵר', futEn: 'he will hurry', en: 'and he hurried' },
+  { w: 'וַיֹּאמְרוּ', rest: 'יֹּאמְרוּ', root: 'א.מ.ר', fut: 'יֹאמְרוּ', futEn: 'they will say', en: 'and they said' },
+  { w: 'וַיָּרָץ', rest: 'יָּרָץ', root: 'ר.ו.צ', fut: 'יָרוּץ', futEn: 'he will run', en: 'and he ran' },
+  { w: 'וַיִּשָּׂא', rest: 'יִּשָּׂא', root: 'נ.ש.א', fut: 'יִשָּׂא', futEn: 'he will lift', en: 'and he lifted' },
+  { w: 'וַיֹּאכְלוּ', rest: 'יֹּאכְלוּ', root: 'א.כ.ל', fut: 'יֹאכְלוּ', futEn: 'they will eat', en: 'and they ate' },
+  { w: 'וַתִּצְחַק', rest: 'תִּצְחַק', root: 'צ.ח.ק', fut: 'תִּצְחַק', futEn: 'she will laugh', en: 'and she laughed' }
+];
+const TCHILIYOT = [   /* תְּחִלִּיּוֹת: letters added at the beginning */
+  { w: 'מֵעַל', pre: 'מֵ', rest: 'עַל', pm: 'from', en: 'from (near)' },
+  { w: 'וְאֶקְחָה', pre: 'וְאֶ', rest: 'קְחָה', pm: 'and I will', en: 'and I will take' },
+  { w: 'הָעֵץ', pre: 'הָ', rest: 'עֵץ', pm: 'the', en: 'the tree' },
+  { w: 'לַעֲשׂוֹת', pre: 'לַ', rest: 'עֲשׂוֹת', pm: 'to', en: 'to do' },
+  { w: 'אָשׁוּב', pre: 'אָ', rest: 'שׁוּב', pm: 'I will', en: 'I will return' },
+  { w: 'כְּחֹם', pre: 'כְּ', rest: 'חֹם', pm: 'like, as', en: 'as (in) the heat' },
+  { w: 'בְּאֵלֹנֵי', pre: 'בְּ', rest: 'אֵלֹנֵי', pm: 'in', en: 'in Elonei (Mamre)' },
+  { w: 'תַּעֲשֶׂה', pre: 'תַּ', rest: 'עֲשֶׂה', pm: 'you will', en: 'you will do' },
+  { w: 'וְהוּא', pre: 'וְ', rest: 'הוּא', pm: 'and', en: 'and he' }
+];
+const PRE_POOL = ['from', 'and', 'the', 'to', 'I will', 'like, as', 'in', 'you will', 'he will', 'we will'];
+const SOFIYOT = [   /* סוֹפִיּוֹת: letters added at the end */
+  { w: 'עֵינָיו', rest: 'עֵינָ', suf: 'יו', sm: 'his', en: 'his eyes' },
+  { w: 'עַבְדֶּךָ', rest: 'עַבְדֶּ', suf: 'ךָ', sm: 'your (one person)', en: 'your servant' },
+  { w: 'רַגְלֵיכֶם', rest: 'רַגְלֵי', suf: 'כֶם', sm: 'your (more than one)', en: 'your feet' },
+  { w: 'וַאֲדֹנִי', rest: 'וַאֲדֹנִ', suf: 'י', sm: 'my', en: 'and my master' }
+];
+const SUF_POOL = ['his', 'your (one person)', 'your (more than one)', 'my', 'her', 'our', 'their'];
+const MIMI = [   /* מִי אוֹ מָה אֲנִי */
+  { s: 'בָּא לְבַקֵּר אֶת אַבְרָהָם', en: 'I came to visit Avraham.', a: 'ה׳' },
+  { s: 'שָׁמְעָה מִפֶּתַח הָאֹהֶל', en: 'I listened from the opening of the tent.', a: 'שָׂרָה' },
+  { s: 'צָחֲקָה בַּלֵּב', en: 'I laughed in my heart.', a: 'שָׂרָה' },
+  { s: 'אָמַר שֶׁשָּׂרָה תֵּלֵד בֵּן', en: 'I said that Sarah will have a son.', a: 'הַמַּלְאָךְ (מִיכָאֵל)' },
+  { s: 'הִשְׁתַּחֲוָה לַמַּלְאָכִים', en: 'I bowed down to the malachim.', a: 'אַבְרָהָם' }
+];
+const MIMI_POOL = ['ה׳', 'אַבְרָהָם', 'שָׂרָה', 'הַמַּלְאָךְ (מִיכָאֵל)'];
+const SAID = [   /* מִי אָמַר אֶל מִי */
+  { s: 'אַל־נָא תַעֲבֹר מֵעַל עַבְדֶּךָ', en: '“Please don’t pass by your servant.”', a: 'אַבְרָהָם אֶל הַמַּלְאָכִים' },
+  { s: 'וְאֶקְחָה פַת־לֶחֶם וְסַעֲדוּ לִבְּכֶם', en: '“I will get a piece of bread, and you will eat and feel strong.”', a: 'אַבְרָהָם אֶל הַמַּלְאָכִים' },
+  { s: 'כֵּן תַּעֲשֶׂה כַּאֲשֶׁר דִּבַּרְתָּ', en: '“Do just what you said.”', a: 'הַמַּלְאָכִים אֶל אַבְרָהָם' },
+  { s: 'מַהֲרִי שְׁלֹשׁ סְאִים קֶמַח סֹלֶת לוּשִׁי וַעֲשִׂי עֻגוֹת', en: '“Hurry! Three measures of the best flour, knead it and make cakes.”', a: 'אַבְרָהָם אֶל שָׂרָה' }
+];
+const SAID_POOL = ['אַבְרָהָם אֶל הַמַּלְאָכִים', 'הַמַּלְאָכִים אֶל אַבְרָהָם', 'אַבְרָהָם אֶל שָׂרָה', 'שָׂרָה אֶל אַבְרָהָם'];
+const TF = [   /* נָכוֹן אוֹ לֹא נָכוֹן */
+  { s: 'הָיָה יוֹם קַר כְּשֶׁה׳ נִרְאָה אֶל אַבְרָהָם', en: 'It was a cold day when Hashem appeared to Avraham.', a: 'לֹא נָכוֹן', why: 'Not true! It was a very hot day (כְּחֹם הַיּוֹם).' },
+  { s: 'אַבְרָהָם הָלַךְ לְאַט אֶל הָאֹהֶל שֶׁל שָׂרָה', en: 'Avraham walked slowly to Sarah’s tent.', a: 'לֹא נָכוֹן', why: 'Not true! Avraham hurried to Sarah’s tent (וַיְמַהֵר).' }
+];
+
 /* What each Hebrew word means, for tap-a-word. */
 const GLOSS = {
   'מִי': 'who', 'נִרְאָה': 'appeared', 'אֶל': 'to', 'אַבְרָהָם': 'Avraham', 'וְלָמָּה': 'and why', 'לָמָּה': 'why',
@@ -447,6 +507,13 @@ const GLOSS = {
   'בְּשָׁנָה': 'in a year', 'שָׂרָה': 'Sarah', 'לָנוּחַ': 'to rest', 'בַּצֵּל': 'in the shade', 'כִּבּוּד': 'honoring',
   'אָב': 'father', 'וָאֵם': 'and mother', 'הַרְבֵּה': 'a lot', 'חַם': 'hot', 'מְאֹד': 'very',
   'א': 'aleph (the 1st)', 'ב': 'bet (the 2nd)', 'ג': 'gimmel (the 3rd)',
+  'בָּא': 'came', 'לְבַקֵּר': 'to visit', 'שָׁמְעָה': 'she listened', 'מִפֶּתַח': 'from the opening of', 'צָחֲקָה': 'she laughed',
+  'בַּלֵּב': 'in her heart (to herself)', 'הִשְׁתַּחֲוָה': 'bowed down', 'לַמַּלְאָכִים': 'to the malachim', 'הַמַּלְאָכִים': 'the malachim',
+  'אַל־נָא': 'please don’t', 'תַעֲבֹר': 'pass by', 'מֵעַל': 'from (near)', 'עַבְדֶּךָ': 'your servant', 'וְאֶקְחָה': 'and I will take',
+  'פַת־לֶחֶם': 'a piece of bread', 'וְסַעֲדוּ': 'and eat (to feel strong)', 'לִבְּכֶם': 'your hearts', 'כֵּן': 'so (yes)',
+  'תַּעֲשֶׂה': 'you will do', 'כַּאֲשֶׁר': 'just as', 'דִּבַּרְתָּ': 'you said', 'מַהֲרִי': 'hurry!', 'שְׁלֹשׁ': 'three',
+  'סְאִים': 'measures (se’ahs)', 'קֶמַח': 'flour', 'סֹלֶת': 'fine (the best flour)', 'לוּשִׁי': 'knead it!', 'וַעֲשִׂי': 'and make!',
+  'עֻגוֹת': 'cakes', 'יוֹם': 'day', 'קַר': 'cold', 'כְּשֶׁה׳': 'when Hashem', 'הָלַךְ': 'walked', 'נָכוֹן': 'true', 'אוֹ': 'or', 'אֲנִי': 'I',
   'הָאוֹרְחִים': 'the guests', 'הָיוּ': 'were', 'צְרִיכִים': 'had to (needed to)', 'לִרְחֹץ': 'to wash', 'הָרַגְלַיִם': 'the feet',
   'שֶׁלָּהֶם': 'their', 'חָשַׁב': 'thought', 'שֶׁהֵם': 'that they', 'עֲרָבִים': 'Arabs', 'וְעוֹשִׂים': 'and do',
   'עֲבוֹדָה': 'worship (avodah zarah = idol worship)', 'זָרָה': 'strange (avodah zarah = idol worship)', 'מְלֻכְלָכוֹת': 'dirty',
@@ -463,6 +530,9 @@ const PHRASES = {
   'בְּפֶתַח הָאֹהֶל': 'at the opening of the tent', 'הַכְנָסַת אוֹרְחִים': 'welcoming guests', 'ה׳ שָׁלַח': 'Hashem sent',
   'שְׁלֹשָׁה מַלְאָכִים': 'three malachim', 'וְלֹא מַלְאָךְ אֶחָד': 'and not one malach', 'מַלְאָךְ אֶחָד': 'one malach',
   'לֹא יָכוֹל': 'can’t', 'שָׁלוֹשׁ תַּפְקִידִים': 'three jobs', 'לְקַיֵּם': 'to do',
+  'הַמַּלְאָךְ (מִיכָאֵל)': 'the malach (Michael)', 'אַבְרָהָם אֶל הַמַּלְאָכִים': 'Avraham to the malachim',
+  'הַמַּלְאָכִים אֶל אַבְרָהָם': 'the malachim to Avraham', 'אַבְרָהָם אֶל שָׂרָה': 'Avraham to Sarah', 'שָׂרָה אֶל אַבְרָהָם': 'Sarah to Avraham',
+  'לֹא נָכוֹן': 'not true',
   'לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים': 'to do the mitzvah of visiting the sick', 'לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים': 'to welcome guests',
   'לַהֲפוֹךְ אֶת סְדוֹם': 'to destroy the city of Sedom', 'לָנוּחַ בַּצֵּל': 'to rest in the shade', 'כִּבּוּד אָב וָאֵם': 'honoring father and mother',
   'כִּי מַלְאָךְ אֶחָד לֹא יָכוֹל לַעֲשׂוֹת שָׁלוֹשׁ תַּפְקִידִים': 'because one malach can’t do three jobs',
@@ -482,6 +552,7 @@ const glossOf = t => GLOSS[bare(t)];
 const enOf = h => PHRASES[h] || h.split(' ').map(t => glossOf(t) || '').join(' ');
 const HEB = /[א-ת]/;
 const hw = s => s.split(' ').map(t => HEB.test(t) ? `<span class="hw">${t}</span>` : t).join(' ');
+const bidi = s => esc(s).replace(/[א-ת](?:[֑-ׇא-ת׳]|\s(?=[א-ת]))*/g, m => `<bdi class="he" lang="he">${m}</bdi>`);
 
 /* The six verb forms from the earlier worksheet ("What is the root and translation?"). */
 const WORDS = [
@@ -622,10 +693,10 @@ const crossAll = (root, animate) => (root || document).querySelectorAll('.xw').f
 window.addEventListener('resize', () => document.querySelectorAll('.qw.crossed').forEach(el => crossOut(el, false)));
 
 /* ============================================================ HOME */
-let C = null, B = null, M = null, Q = null, S = null, F = null, W = null;
+let C = null, B = null, M = null, Q = null, S = null, F = null, W = null, D = null;
 const unlocked = () => store.get('storyDone', false);
 function home() {
-  C = B = M = Q = S = F = W = null;
+  C = B = M = Q = S = F = W = D = null;
   hideGloss();
   const open = unlocked(), bs = store.get('bestStory', null);
   const bc = store.get('bestCross2', null), bb = store.get('bestBuild2', null), bm = store.get('bestMatch', null), bv = store.get('bestWords', null);
@@ -656,6 +727,10 @@ function home() {
         <button class="mode" id="mMatch"><div class="ico">✨</div><b>Malach Match</b><span>Match each malach to his job</span><span class="best">${bm != null ? `Best: ${plural(bm, 'mistake')}` : ''}</span></button>
       </div>` : lock}
     </section>
+    <section class="step${open ? '' : ' locked'}">
+      <div class="sh"><span class="num">4</span><div><h2>📚 More from the Review Sheet</h2><p>The rest of the review sheet: word endings and beginnings, who said it, true or false.</p></div></div>
+      ${open ? `<div class="modes">${Object.keys(DRILLS).map(k => { const d = DRILLS[k], b = store.get('bestD_' + k, null); return `<button class="mode" data-drill="${k}"><div class="ico">${d.ico}</div><b>${d.title}</b><span class="heb" lang="he">${d.he}</span><span>${d.blurb}</span><span class="best">${b != null ? `Best: ${b} / ${drillTotal(k)}` : ''}</span></button>`; }).join('')}</div>` : lock}
+    </section>
     <div class="sec">
       <h2>The six words (roots and meanings)</h2>
       <div class="row">
@@ -677,6 +752,7 @@ function home() {
     $('mCross').onclick = startCross;
     $('mBuild').onclick = startBuild;
     $('mMatch').onclick = startMatch;
+    document.querySelectorAll('[data-drill]').forEach(b => b.onclick = () => startDrill(b.dataset.drill));
   }
   $('wStudy').onclick = study;
   $('wQuiz').onclick = startQuiz;
@@ -1164,6 +1240,112 @@ function finishMatch() {
     </div>`;
   wireTop();
   $('again').onclick = startMatch; $('menu').onclick = home;
+}
+
+/* ============================================================ STEP 4: DRILLS
+   Each item shows a Hebrew word or sentence and asks one or two multiple-choice steps.
+   Score = steps right on the first try. */
+const pick = (right, pool, n = 3) => shuffle([right, ...shuffle([...new Set(pool)].filter(p => p !== right && !right.includes(p) && !p.includes(right))).slice(0, n - 1)]);
+const DRILLS = {
+  hipuch: { title: 'Vav Hahipuch', he: 'הַהִפּוּךְ', ico: '🔄', blurb: 'The וַ flips “he will” into “and he did”',
+    items: () => shuffle(HIPUCH).map(x => ({ show: `<span class="mk">וַ</span>${x.rest}`, big: true, item: x.w,
+      steps: [
+        { ask: 'What is the shoresh (שֹׁרֶשׁ)?', he: true, right: x.root, choices: pick(x.root, HIPUCH.map(h => h.root)) },
+        { ask: 'What does the word mean?', right: x.en, choices: shuffle([x.en, x.futEn, shuffle(HIPUCH.filter(h => h !== x))[0].en]) }
+      ],
+      after: `${x.fut} = “${x.futEn}.” The וַ flips it: ${x.w} = “${x.en}.”` })) },
+  tchiliyot: { title: 'Prefixes', he: 'תְּחִלִּיּוֹת', ico: '⬅️', blurb: 'Letters at the beginning of a word',
+    items: () => shuffle(TCHILIYOT).map(x => ({ show: x.w, show2: `<span class="mk">${x.pre}</span>${x.rest}`, big: true, item: x.w,
+      steps: [
+        { ask: `What does the beginning ${x.pre} mean?`, right: x.pm, choices: pick(x.pm, PRE_POOL) },
+        { ask: 'What does the whole word mean?', right: x.en, choices: pick(x.en, TCHILIYOT.map(t => t.en)) }
+      ],
+      after: `${x.w} = “${x.en}.”` })) },
+  sofiyot: { title: 'Endings', he: 'סוֹפִיּוֹת', ico: '➡️', blurb: 'Letters at the end of a word',
+    items: () => shuffle(SOFIYOT).map(x => ({ show: x.w, show2: `${x.rest}<span class="mk">${x.suf}</span>`, big: true, item: x.w,
+      steps: [
+        { ask: `What does the ending ${x.suf} mean?`, right: x.sm, choices: pick(x.sm, SUF_POOL) },
+        { ask: 'What does the whole word mean?', right: x.en, choices: pick(x.en, SOFIYOT.map(t => t.en)) }
+      ],
+      after: `${x.w} = “${x.en}.”` })) },
+  mimi: { title: 'Who Am I?', he: 'מִי אוֹ מָה אֲנִי', ico: '🙋', blurb: 'Who in the story did this?',
+    items: () => shuffle(MIMI).map(x => ({ show: hw(x.s), en: x.en, item: x.s,
+      steps: [{ ask: 'Who am I?', he: true, right: x.a, choices: shuffle(MIMI_POOL.slice()) }], after: `${x.s} – ${x.a}` })) },
+  said: { title: 'Who Said It?', he: 'מִי אָמַר אֶל מִי', ico: '💬', blurb: 'Who said it, and to whom?',
+    items: () => shuffle(SAID).map(x => ({ show: hw(x.s), en: x.en, item: x.s,
+      steps: [{ ask: 'Who said it to whom?', he: true, right: x.a, choices: shuffle(SAID_POOL.slice()) }], after: x.a })) },
+  tf: { title: 'True or False', he: 'נָכוֹן אוֹ לֹא נָכוֹן', ico: '✅', blurb: 'Is it true or not?',
+    items: () => shuffle(TF).map(x => ({ show: hw(x.s), en: x.en, item: x.s,
+      steps: [{ ask: 'True or not true?', he: true, right: x.a, choices: ['נָכוֹן', 'לֹא נָכוֹן'] }], after: x.why })) }
+};
+const drillTotal = k => ({ hipuch: HIPUCH.length * 2, tchiliyot: TCHILIYOT.length * 2, sofiyot: SOFIYOT.length * 2, mimi: MIMI.length, said: SAID.length, tf: TF.length })[k];
+function startDrill(k) {
+  D = { k, def: DRILLS[k], items: DRILLS[k].items(), i: 0, right: 0, total: drillTotal(k), marks: [] };
+  drillItem();
+}
+function drillItem() {
+  const d = D.def, it = D.items[D.i];
+  D.si = 0; D.miss = false;
+  app.innerHTML = topbar(d.title, `<span class="pill">${D.i + 1} of ${D.items.length}</span>`) + `
+    <div class="dots">${Array.from({ length: D.total }, (_, n) => `<span class="dot ${D.marks[n] === true ? 'g' : D.marks[n] === false ? 'b' : ''}"></span>`).join('')}</div>
+    <div class="panel" id="panel"><div class="qnum he" lang="he" style="text-align:right">${d.he}</div>
+      <div class="dshow${it.big ? ' big' : ''}" lang="he" id="dshow">${it.show}</div>
+      ${it.en ? `<div class="en" style="text-align:center">${esc(it.en)}</div>` : ''}
+      <div class="after" id="after" hidden></div>
+    </div>
+    <div class="say" id="say"></div>
+    <div class="opts" id="opts"></div>`;
+  wireTop();
+  drillStep();
+  top0();
+}
+function drillStep() {
+  const it = D.items[D.i], st = it.steps[D.si];
+  $('say').className = 'say'; $('say').innerHTML = bidi(st.ask);
+  const opts = $('opts');
+  opts.innerHTML = st.choices.map((c, n) => {
+    const en = st.he ? enOf(c) : '';
+    return `<button class="opt${st.he ? ' he' : ''}" ${st.he ? 'lang="he"' : ''} data-n="${n}">${esc(c)}${en.trim() ? `<span class="en">${esc(en)}</span>` : ''}</button>`;
+  }).join('');
+  opts.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    if (!D || b.disabled) return;
+    if (st.choices[+b.dataset.n] === st.right) {
+      yay();
+      const ok = !D.miss;
+      logAnswer({ mode: 'd-' + D.k, item: `${it.item}: ${st.ask}`, ok });
+      D.marks.push(ok); if (ok) D.right++; D.miss = false;
+      const dot = document.querySelectorAll('.dots .dot')[D.marks.length - 1]; if (dot) dot.className = 'dot ' + (ok ? 'g' : 'b');
+      if (it.show2) $('dshow').innerHTML = it.show2;
+      D.si++;
+      if (D.si < it.steps.length) { $('say').className = 'say yes'; drillStep(); $('say').innerHTML = 'Yes! ' + bidi(it.steps[D.si].ask); return; }
+      $('panel').classList.add('ok');
+      if (it.after) { $('after').hidden = false; $('after').innerHTML = bidi(it.after); }
+      $('say').className = 'say yes'; $('say').textContent = shuffle(['Yes!', 'Great job!', 'You got it!', 'Correct!'])[0];
+      opts.innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">${D.i + 1 < D.items.length ? 'Next ›' : 'See my score ›'}</button></div>`;
+      $('next').onclick = () => { D.i++; if (D.i < D.items.length) drillItem(); else drillDone(); };
+    } else {
+      nope(); D.miss = true; b.disabled = true; b.classList.add('wrong');
+      $('say').className = 'say no'; $('say').textContent = 'Not that one. Try again!';
+    }
+  });
+}
+function drillDone() {
+  sendLog();
+  const k = D.k, d = D.def, r = D.right, n = D.total, stars = r >= n ? 3 : r >= n - 2 ? 2 : r >= n / 2 ? 1 : 0;
+  const best = store.get('bestD_' + k, null), isBest = best == null || r > best;
+  if (isBest) store.set('bestD_' + k, r);
+  const rt = logRound({ mode: 'd-' + k, score: r, total: n, label: `${r} / ${n}` });
+  D = null;
+  app.innerHTML = topbar(d.title) + `
+    <div class="result popin">
+      ${starsHTML(stars)}
+      <div class="big">${r} / ${n}</div>
+      <div>${r === n ? 'Perfect! Every one right the first time!' : stars >= 2 ? 'Great job!' : 'Keep practicing!'}${isBest && best != null ? ' New best!' : ''}</div>
+      ${rankHTML('d-' + k, false, rt, n)}
+      <div class="actions"><button class="btnbig" id="again">Play again</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  $('again').onclick = () => startDrill(k); $('menu').onclick = home;
 }
 
 /* ============================================================ THE SIX WORDS */
