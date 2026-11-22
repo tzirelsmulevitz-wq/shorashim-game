@@ -52,13 +52,32 @@ h2 { font-size: 20px; margin: 26px 0 10px; }
 .actions { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
 .btnbig { min-height: 56px; padding: 0 22px; border-radius: 16px; border: none; background: var(--block); color: var(--block-ink); font-weight: 700; font-size: 18px; cursor: pointer; box-shadow: inset 0 -4px 0 var(--block-edge); }
 .ghost { min-height: 56px; padding: 0 20px; border-radius: 16px; border: 2px solid var(--line); background: var(--btn); font-weight: 700; font-size: 18px; cursor: pointer; }
+.rtop { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.rtop b { font-size: 26px; color: var(--good); font-variant-numeric: tabular-nums; }
+.bar { height: 12px; border-radius: 999px; background: var(--line); overflow: hidden; margin: 10px 0 4px; }
+.bar i { display: block; height: 100%; background: var(--good); border-radius: 999px; }
+.he { font-family: "Times New Roman", "Arial Hebrew", serif; font-size: 1.1em; }
+.todo { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.chip { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 15px; border: 2px solid var(--line); background: var(--btn); font-family: "Times New Roman", "Arial Hebrew", serif; }
+.chip.missed { border-color: var(--bad); background: var(--bad-bg); }
+.chip.help { border-color: #f2b544; background: #fdf0d2; color: #1d2b45; }
+.chip.new { color: var(--muted); }
+.legend { color: var(--muted); font-size: 14px; margin-top: 10px; }
+.legend .chip { font-family: inherit; font-size: 13px; }
+h3 { font-size: 17px; margin: 16px 0 6px; }
 #status { min-height: 24px; color: var(--good); font-weight: 700; margin-top: 12px; }
 </style>
 </head>
 <body>
 <main class="wrap">
   <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a><h1>Jack's Progress</h1></div>
-  <p class="sub">Every answer from the games on this iPad. Tap <b>Copy report</b> and paste it into a message to Claude.</p>
+  <p class="sub">Every answer from Jack's games. Tap <b>Copy report</b> and paste it into a message to Claude.</p>
+
+  <h2 style="margin-top:6px">Chumash test readiness</h2>
+  <div class="card" id="ready"></div>
+  <p class="sub" id="src" style="margin:8px 0 0"></p>
+
+  <h2>All games</h2>
 
   <div class="card"><div class="games" id="totals"></div></div>
 
@@ -70,7 +89,7 @@ h2 { font-size: 20px; margin: 26px 0 10px; }
 
   <h2>Send to Claude</h2>
   <div class="card">
-    <p class="sub" style="margin-bottom:10px">Paste the access token once. It is saved only on this iPad. Then tap <b>Send results</b> and Claude can read them.</p>
+    <p class="sub" style="margin-bottom:10px">Paste the access token once. It is saved only on this device. On the iPad, the games then send Jack's results after every round (or tap <b>Send results</b>). On your own phone, the same token lets this page show Jack's latest results from the iPad.</p>
     <input id="tok" type="password" autocomplete="off" autocapitalize="off" placeholder="Access token" style="width:100%;min-height:48px;padding:0 12px;border-radius:12px;border:2px solid var(--line);background:var(--btn);color:var(--ink);font:inherit">
     <div class="actions" style="margin-top:12px">
       <button class="btnbig" id="send">Send results</button>
@@ -84,6 +103,7 @@ h2 { font-size: 20px; margin: 26px 0 10px; }
   </div>
   <div id="status" role="status"></div>
 </main>
+<script src="../chumash/ready.js?v=1" charset="utf-8"></script>
 <script>
 const NAMES = { times: 'Times Tables', shorashim: 'Shorashim', vocab: 'Vocabulary', chumash: 'Chumash' };
 function load() { try { return JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) { return []; } }
@@ -92,7 +112,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 function summarize(entries) {
   const byGame = {}, byItem = {};
   for (const e of entries) {
-    if (e.round) continue;
+    if (e.round || e.skill) continue;
     const g = byGame[e.game] = byGame[e.game] || { n: 0, right: 0 };
     g.n++; if (e.ok) g.right++;
     const key = e.game + '|' + e.item;
@@ -103,8 +123,41 @@ function summarize(entries) {
   return { byGame, items };
 }
 
+let REMOTE = null;
+function current() { const loc = load(); return REMOTE && Array.isArray(REMOTE.entries) && REMOTE.entries.length > loc.length ? REMOTE.entries : loc; }
+const whenStr = t => t ? new Date(t).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'not yet';
+function renderReady(entries) {
+  const el = document.getElementById('ready');
+  if (!el || typeof chumashReadiness !== 'function') return;
+  const R = chumashReadiness(entries), days = chumashDaysLeft(), pct = Math.round(100 * R.ready / R.total);
+  const tests = entries.filter(e => e.round && e.game === 'chumash' && e.mode === 'ptest').slice(-5).reverse();
+  const helpN = R.sections.reduce((n, x) => n + x.helpOnly, 0);
+  const secName = id => (CHUMASH_TEST.sections.find(s => s.id === id) || {}).name || id;
+  el.innerHTML = `<div class="rtop"><div><b>${R.ready} of ${R.total}</b> questions ready</div><div class="gm">${days > 1 ? 'Test in ' + days + ' days' : days === 1 ? 'Test tomorrow' : days === 0 ? 'Test today' : 'Test was'} · ${CHUMASH_TEST.label}</div></div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="gm">Ready = his latest try with no English help was right the first time.${helpN ? ` ${helpN} more ${helpN === 1 ? 'question was' : 'questions were'} only answered with English help on.` : ''} Last practiced: ${whenStr(R.last)}.</div>
+    ${R.sections.map(s => `<div class="row"><div><div class="name">${esc(s.name)}${s.he ? ` <span class="he" dir="rtl">${s.he}</span>` : ''}</div><div class="gm">${s.ready} of ${s.total} ready · last practiced ${whenStr(s.t)}</div>${s.state !== 'ready' ? `<div class="todo">${s.items.filter(i => i.status !== 'ready').map(i => `<span class="chip ${i.status}" dir="rtl">${esc(i.label)}</span>`).join('')}</div>` : ''}</div><div class="pct ${s.state === 'ready' ? 'good' : s.ready === 0 ? 'bad' : ''}">${Math.round(100 * s.ready / s.total)}%</div></div>`).join('')}
+    <div class="legend">Not ready yet: <span class="chip missed">missed</span> <span class="chip help">only with English help</span> <span class="chip new">not tried yet</span></div>
+    <h3>Practice tests</h3>
+    ${tests.length ? tests.map(t => `<div class="gm">${whenStr(t.t)} · <b>${esc(t.label)}</b>${t.secs ? (Object.keys(t.secs).some(k => t.secs[k][0] < t.secs[k][1]) ? ' · missed some in: ' + Object.keys(t.secs).filter(k => t.secs[k][0] < t.secs[k][1]).map(secName).join(', ') : ' · all right') : ''}</div>`).join('') : '<div class="empty">No practice test yet. It’s on the Chumash page, under “Ready for the test?”.</div>'}`;
+}
+function setSrc() {
+  const el = document.getElementById('src'); if (!el) return;
+  if (REMOTE && current() === REMOTE.entries) el.textContent = 'Showing Jack’s results sent from the iPad (last sent ' + whenStr(Date.parse(REMOTE.updated)) + ').';
+  else el.textContent = savedToken() ? 'Showing the results saved on this device.' : 'Showing the results saved on this device. To see Jack’s results from the iPad on your own phone, paste the access token at the bottom of this page once.';
+}
+async function fetchRemote() {
+  const t = savedToken();
+  if (!t) return setSrc();
+  try {
+    const r = await fetch(API, { headers: { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github.raw+json', 'X-GitHub-Api-Version': '2022-11-28' }, cache: 'no-store' });
+    if (r.ok) { REMOTE = await r.json(); render(); }
+  } catch (e) {}
+  setSrc();
+}
 function render() {
-  const entries = load(), { byGame, items } = summarize(entries);
+  const entries = current(), { byGame, items } = summarize(entries);
+  renderReady(entries);
   const totals = Object.keys(NAMES).map(k => {
     const g = byGame[k];
     return `<div class="g"><b>${g ? Math.round(100 * g.right / g.n) + '%' : '–'}</b><span>${NAMES[k]}<br>${g ? g.n + ' answers' : 'no answers yet'}</span></div>`;
@@ -119,8 +172,14 @@ function render() {
 }
 
 function report() {
-  const entries = load(), { byGame, items } = summarize(entries);
+  const entries = current(), { byGame, items } = summarize(entries);
   const lines = ['Jack\'s game results (from the Progress page, ' + new Date().toLocaleString() + ')', ''];
+  if (typeof chumashReadiness === 'function') {
+    const R = chumashReadiness(entries);
+    lines.push('Chumash test (' + CHUMASH_TEST.label + ') readiness: ' + R.ready + ' of ' + R.total + ' questions ready (latest try without English help right the first time).');
+    R.sections.forEach(s => lines.push(`- ${s.name}: ${s.ready} of ${s.total} ready${s.state === 'ready' ? '' : '; not ready: ' + s.items.filter(i => i.status !== 'ready').map(i => i.label + ' (' + i.status + ')').join(', ')}`));
+    lines.push('');
+  }
   if (!entries.length) return lines.concat('No answers logged yet.').join('\n');
   lines.push('Totals:');
   for (const k of Object.keys(byGame)) lines.push(`- ${NAMES[k] || k}: ${byGame[k].right} of ${byGame[k].n} right (${Math.round(100 * byGame[k].right / byGame[k].n)}%)`);
@@ -152,11 +211,11 @@ document.getElementById('clear').onclick = () => {
 const REPO = 'tzirelsmulevitz-wq/jack-progress', FILE = 'results.json', API = 'https://api.github.com/repos/' + REPO + '/contents/' + FILE;
 function savedToken() { try { return localStorage.getItem('jackgh') || ''; } catch (e) { return ''; } }
 function b64(text) { const bytes = new TextEncoder().encode(text); let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); }
-document.getElementById('tok').placeholder = savedToken() ? 'Token saved on this iPad' : 'Paste the access token';
+document.getElementById('tok').placeholder = savedToken() ? 'Token saved on this device' : 'Paste the access token';
 document.getElementById('send').onclick = async () => {
   const typed = document.getElementById('tok').value.trim(), t = typed || savedToken();
   if (!t) return say('Paste the access token first.');
-  if (typed) { try { localStorage.setItem('jackgh', typed); } catch (e) {} document.getElementById('tok').value = ''; document.getElementById('tok').placeholder = 'Token saved on this iPad'; }
+  if (typed) { try { localStorage.setItem('jackgh', typed); } catch (e) {} document.getElementById('tok').value = ''; document.getElementById('tok').placeholder = 'Token saved on this device'; }
   const h = { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
   try {
     let sha = null;
@@ -169,8 +228,10 @@ document.getElementById('send').onclick = async () => {
     say(p.ok ? 'Sent. Claude can now read Jack\'s results.' : 'Not sent (' + p.status + '). Try again.');
   } catch (e) { say('No internet connection. Try again when you are online.'); }
 };
-document.getElementById('forget').onclick = () => { try { localStorage.removeItem('jackgh'); } catch (e) {} document.getElementById('tok').placeholder = 'Paste the access token'; say('Token removed from this iPad.'); };
+document.getElementById('forget').onclick = () => { try { localStorage.removeItem('jackgh'); } catch (e) {} document.getElementById('tok').placeholder = 'Paste the access token'; say('Token removed from this device.'); };
 render();
+setSrc();
+fetchRemote();
 </script>
 <!-- auto-update -->
 <script>

@@ -17,6 +17,12 @@ Review for Parshas Vayera, perek 18, made from both sides of the teacher's answe
 3. **The Worksheet**: the teacher crosses out the question word and writes the answer back in the question's own words, so these games practice exactly that.
 4. **More from the Review Sheet** (pages 3-4 of the blank review sheet on Google Classroom): Vav Hahipuch (root and meaning), Prefixes and Endings (what the added letters mean, then the whole word), Who Am I?, Who Said It? and True or False. Data is in `HIPUCH`, `TCHILIYOT`, `SOFIYOT`, `MIMI`, `SAID` and `TF`; roots are written without final letters, like the class does.
 
+**Ready for the test?** (on the Chumash page once the story is done) lists the 9 parts of the test with how many of their 44 questions are ready. Every test question Jack answers is logged with `skill` (its id in `chumash/ready.js`), `ok` (right on the first try) and `help` (English help was on, or he tapped a word for its meaning). A question is ready when his latest try *without* help was right the first time. From the card:
+- **Today's practice**: 10 questions, the ones not tried or missed first, at most two from each part.
+- **Practice test**: 16 questions from every part, one try each, English help switched off, with a score for each part.
+
+The Progress page shows the same readiness for parents: each part, when it was last practiced, which questions are not ready yet (missed, only with English help, not tried) and the practice tests. On a parent's phone, paste the access token once and the page loads the results the iPad last sent. `chumash/ready.js` holds the test date and the list of test questions for both pages.
+
 A countdown to the test shows on the Chumash page and on its tile in the menu, and hides itself after the test day. For the next test, change `TEST` near the top of the script in `chumash/index.html` and the date in the countdown script in `index.html`.
 
 Help everywhere: tap any Hebrew word to see what it means, and the **EN** button (on at first) shows English under the questions, answers, choices and pieces.

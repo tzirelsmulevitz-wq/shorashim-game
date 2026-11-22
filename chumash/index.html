@@ -68,6 +68,32 @@ body:not(.helper) .en { display: none !important; }
 .countdown .cd-num { flex: none; min-width: 58px; height: 58px; padding: 0 8px; border-radius: 16px; background: var(--sun); color: #1d2b45; display: grid; place-items: center; font-size: 36px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .countdown b { display: block; font-size: 20px; line-height: 1.25; }
 .countdown span { color: var(--muted); font-size: 16px; }
+.ready { background: var(--sand); border: 3px solid var(--good); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 18px 18px; margin-top: 16px; }
+.rhead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ready h2 { margin: 0; font-size: 23px; }
+.rbig { font-size: 30px; font-weight: 800; color: var(--good); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rbig small { font-size: 16px; color: var(--muted); font-weight: 700; }
+.bar { height: 14px; border-radius: 999px; background: var(--line); overflow: hidden; margin: 10px 0 12px; }
+.bar i { display: block; height: 100%; background: var(--good); border-radius: 999px; }
+.rlist { display: grid; gap: 8px; }
+.rrow { display: grid; grid-template-columns: 30px 1fr auto 64px; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 14px; border: 2px solid var(--line); background: var(--btn); cursor: pointer; text-align: left; font-size: 17px; }
+.rrow.ready { border-color: var(--good); background: var(--good-bg); }
+.ricon { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 15px; background: var(--sky); color: var(--muted); }
+.rrow.ready .ricon { background: var(--good); color: #fff; }
+.rrow.practicing .ricon { background: var(--sun); color: #1d2b45; }
+.rname { font-weight: 700; line-height: 1.25; }
+.rname bdi { font-family: var(--f-heb); font-size: 1.1em; color: var(--muted); }
+.rcount { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--muted); }
+.rmini { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.rmini i { display: block; height: 100%; background: var(--good); }
+.rnote { color: var(--muted); font-size: 15px; margin: 12px 0 0; }
+.ready .row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.secres { display: grid; gap: 6px; margin-top: 16px; text-align: left; }
+.srow2 { display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: 12px; background: var(--good-bg); font-weight: 700; }
+.srow2.no { background: var(--bad-bg); }
+.rv .dshow { font-size: 24px; text-align: right; line-height: 1.5; }
+.rv .dshow, .rv .dshow span { color: var(--ink); }
+.rv .dshow .mk { color: var(--xpen); }
 .step { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 18px 18px; margin-top: 16px; }
 .step .sh { display: flex; align-items: center; gap: 14px; }
 .step .num { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--block); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 21px; }
@@ -242,6 +268,7 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 <body>
 <div class="band" aria-hidden="true"></div>
 <main class="wrap" id="app" aria-live="polite"></main>
+<script src="ready.js?v=1" charset="utf-8"></script>
 <script>
 const $ = id => document.getElementById(id), app = $('app');
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -341,7 +368,7 @@ const STORY = {
   ]
 };
 /* The Chumash test (class 3D). Change these when the next test is announced; the countdown hides itself after the day. */
-const TEST = { y: 2026, m: 11, d: 25, label: 'Wednesday, November 25' };
+const TEST = CHUMASH_TEST;   /* the date is in ready.js */
 function countdownHTML() {
   const t = new Date(TEST.y, TEST.m - 1, TEST.d), now = new Date(); now.setHours(0, 0, 0, 0);
   const days = Math.round((t - now) / 86400000);
@@ -585,6 +612,15 @@ const ROUND = 12;
 
 /* ---------- shared results log (same browser), high scores, sending ---------- */
 function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now(), game: 'chumash' }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
+const readLog = () => { try { return JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) { return []; } };
+const SKILL_LABEL = {}; CHUMASH_TEST.sections.forEach(sec => sec.skills.forEach(k => { SKILL_LABEL[k[0]] = k[1]; }));
+/* A test question was answered: ok = right on the first try. help = English help on, or a word was tapped. */
+function logSkill(skill, ok, src) {
+  const help = !testMode && (helper || tapped);
+  logAnswer({ mode: src, skill, item: SKILL_LABEL[skill] || skill, ok: !!ok, help });
+  tapped = false;
+  return help;
+}
 function logRound(rec) {
   const t = Date.now();
   try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t, round: true, game: 'chumash' }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {}
@@ -636,13 +672,13 @@ const tick = () => tone([660], .08);
 const nope = () => tone([220, 196], .16);
 
 /* ---------- English help switch (on by default) ---------- */
-let helper = store.get('helper', true);
-const applyHelper = () => document.body.classList.toggle('helper', helper);
+let helper = store.get('helper', true), testMode = false, tapped = false;
+const applyHelper = () => document.body.classList.toggle('helper', helper && !testMode);
 applyHelper();
-const enBtnHTML = () => `<button class="iconbtn enbtn" id="enBtn" aria-pressed="${helper}" aria-label="English help on or off">EN</button>`;
+const enBtnHTML = () => testMode ? '' : `<button class="iconbtn enbtn" id="enBtn" aria-pressed="${helper}" aria-label="English help on or off">EN</button>`;
 function wireEn() {
   const b = $('enBtn'); if (!b) return;
-  b.onclick = () => { helper = !helper; store.set('helper', helper); applyHelper(); b.setAttribute('aria-pressed', helper); tick(); };
+  b.onclick = () => { helper = !helper; store.set('helper', helper); applyHelper(); b.setAttribute('aria-pressed', helper); tick(); if ($('readyCard')) home(); };
 }
 
 function topbar(title, right = '') {
@@ -672,8 +708,10 @@ function hideGloss() {
 }
 function showGloss(el) {
   hideGloss();
+  if (testMode) return;
   const word = bare(el.textContent), g = glossOf(word);
   if (!g) return;
+  tapped = true;
   el.classList.add('on');
   const b = document.createElement('div');
   b.className = 'bubble'; b.id = 'bubble';
@@ -714,7 +752,8 @@ window.addEventListener('resize', () => document.querySelectorAll('.qw.crossed')
 let C = null, B = null, M = null, Q = null, S = null, F = null, W = null, D = null;
 const unlocked = () => store.get('storyDone', false);
 function home() {
-  C = B = M = Q = S = F = W = D = null;
+  C = B = M = Q = S = F = W = D = P = null;
+  if (testMode) { testMode = false; applyHelper(); }
   hideGloss();
   const open = unlocked(), bs = store.get('bestStory', null);
   const bc = store.get('bestCross2', null), bb = store.get('bestBuild2', null), bm = store.get('bestMatch', null), bv = store.get('bestWords', null);
@@ -729,6 +768,7 @@ function home() {
       <p>First read the story. Then learn the words. Then practice the worksheet!</p>
       ${countdownHTML()}
     </div>
+    ${open ? readyCardHTML() : ''}
     <section class="step${bs != null ? ' done' : ''}" id="step1">
       <div class="sh"><span class="num">${bs != null ? '✓' : '1'}</span><div><h2>📖 The Story</h2><p>What happened at Avraham’s tent, in English, with questions as you read.</p></div></div>
       <div class="row"><button class="btnbig" id="sStory">${bs != null ? 'Read it again' : 'Start here ›'}</button>${bs != null ? `<span class="best">Best: ${bs} / ${storyTotal()}</span>` : ''}</div>
@@ -760,6 +800,7 @@ function home() {
     <p class="foot">Tip: tap any Hebrew word to see what it means. The <b>EN</b> button turns English help on and off.</p>`;
   wireTop();
   $('sStory').onclick = () => startStory();
+  wireReadyCard();
   document.querySelectorAll('[data-lock]').forEach(b => b.onclick = () => {
     nope(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
     $('step1').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -992,7 +1033,8 @@ function crossQ() {
   if (C.i >= SEQ.length) return finishCross();
   if (SEQ[C.i] === 'M') return crossMalachim();
   const it = curItem(), nx = it.q.filter(t => t.x).length;
-  Object.assign(C, { phase: 'cross', miss: false, left: nx, fills: it.a.map((a, k) => typeof a === 'string' ? -1 : k).filter(k => k >= 0), fi: 0, newK: -1 });
+  tapped = false;
+  Object.assign(C, { phase: 'cross', miss: false, qMiss: false, logged: false, left: nx, fills: it.a.map((a, k) => typeof a === 'string' ? -1 : k).filter(k => k >= 0), fi: 0, newK: -1 });
   app.innerHTML = topbar('Cross It Out', `<span class="pill">${C.i + 1} of ${SEQ.length}</span>`) + crossDots() + `
     <div class="panel" id="panel"><div class="qnum">Question ${it.n}</div>${qHTML(it, nx > 0)}<div class="ans he" lang="he" id="ans" hidden></div><div class="en" id="ansen" hidden></div></div>
     <div class="say" id="say">${nx > 1 ? `Cross out the ${nx} question words.` : nx ? 'Cross out the question word.' : 'No question word to cross out here!'}</div>
@@ -1015,7 +1057,7 @@ function tapWord(b) {
     say.innerHTML = `Yes! <bdi lang="he">${t.w}</bdi> means “${esc(GLOSS[t.w])}.” ${C.left ? 'Find the other question word.' : 'Now finish the answer.'}`;
     if (!C.left) { C.phase = 'wait'; document.querySelector('.q').classList.add('locked'); setTimeout(crossFill, 1100); }
   } else {
-    nope(); C.miss = true;
+    nope(); C.miss = true; C.qMiss = true;
     b.classList.remove('bad'); void b.offsetWidth; b.classList.add('bad'); setTimeout(() => b.classList.remove('bad'), 450);
     const say = $('say'); say.className = 'say no';
     say.innerHTML = `<bdi lang="he">${t.w}</bdi> means “${esc(GLOSS[t.w] || '')},” so it stays. Find the question word!`;
@@ -1033,6 +1075,7 @@ function crossFill() {
   const say = $('say'), opts = $('opts');
   if (done) {
     $('panel').classList.add('ok');
+    if (!C.logged) { C.logged = true; logSkill('q' + it.n, !C.qMiss, 'cross'); }
     $('ansen').hidden = false; $('ansen').textContent = it.aen;
     say.className = 'say yes'; say.textContent = 'That’s the whole answer!';
     opts.innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">${nextLabel()}</button></div>`;
@@ -1049,7 +1092,7 @@ function crossFill() {
       yay(); crossStep(!C.miss, a.lab);
       C.newK = cur; C.fi++; crossFill();
     } else {
-      nope(); C.miss = true; b.disabled = true; b.classList.add('wrong');
+      nope(); C.miss = true; C.qMiss = true; b.disabled = true; b.classList.add('wrong');
       say.className = 'say no'; say.textContent = 'Not that one. Try again!';
     }
   });
@@ -1079,7 +1122,7 @@ function drawMalachim() {
   opts.querySelectorAll('.opt').forEach(b => b.onclick = () => {
     if (b.disabled || !C) return;
     if (choices[+b.dataset.n] === m.job) {
-      yay(); crossStep(!C.miss, `${m.eng}’s job`);
+      yay(); logSkill('m-' + m.eng.toLowerCase(), !C.miss, 'cross'); crossStep(!C.miss, `${m.eng}’s job`);
       C.mi++; $('say').className = 'say'; $('say').textContent = C.mi < MALACHIM.length ? 'Yes! Next malach.' : '';
       drawMalachim();
     } else {
@@ -1116,6 +1159,7 @@ function startBuild() {
 }
 function buildQ() {
   const n = B.order[B.i], it = SHEET[n];
+  tapped = false;
   Object.assign(B, { placed: 0, bank: shuffle(it.tiles.map(w => ({ w, used: false }))), missQ: false, missSlot: 0 });
   app.innerHTML = topbar('Build the Answer', `<span class="pill" id="mist">Mistakes: ${B.mistakes}</span>`) + `
     <div class="panel" id="panel"><div class="qnum">Question ${it.n} · ${B.i + 1} of ${SHEET.length}</div>${qHTML(it, false)}<div class="ans he" lang="he" id="ans"></div><div class="en" id="ansen" hidden></div></div>
@@ -1146,7 +1190,7 @@ function pickTile(b) {
   const it = SHEET[B.order[B.i]], t = B.bank[+b.dataset.idx];
   if (t.w === it.tiles[B.placed]) {
     t.used = true; B.placed++; B.missSlot = 0;
-    if (B.placed >= it.tiles.length) { yay(); logAnswer({ mode: 'build', item: `Build: Q${it.n} answer`, ok: !B.missQ }); } else tick();
+    if (B.placed >= it.tiles.length) { yay(); logAnswer({ mode: 'build', item: `Build: Q${it.n} answer`, ok: !B.missQ }); logSkill('q' + it.n, !B.missQ, 'build'); } else tick();
     $('say').className = 'say'; $('say').textContent = B.placed < it.tiles.length ? 'Good! What comes next?' : '';
     drawBuild();
   } else {
@@ -1179,7 +1223,8 @@ function finishBuild() {
 /* ============================================================ STEP 3d: MALACH MATCH
    Tap a malach, then his job (either order). Then a bonus: why three malachim? */
 function startMatch() {
-  M = { names: shuffle(MALACHIM), jobs: shuffle(MALACHIM), sel: null, done: new Set(), mistakes: 0, missBonus: false };
+  tapped = false;
+  M = { names: shuffle(MALACHIM), jobs: shuffle(MALACHIM), sel: null, done: new Set(), mistakes: 0, missBonus: false, missBy: {} };
   drawMatch();
 }
 function drawMatch() {
@@ -1204,11 +1249,12 @@ function matchPick(b) {
   logAnswer({ mode: 'match', item: `${m.eng}’s job`, ok: a.k === k });
   if (a.k === k) {
     M.done.add(k); yay();
+    logSkill('m-' + m.eng.toLowerCase(), !M.missBy[k], 'match');
     [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.disabled = true; });
     $('say').className = 'say yes'; $('say').innerHTML = `Yes! ${m.eng}’s job was ${esc(m.jen)}.`;
     if (M.done.size === MALACHIM.length) setTimeout(matchBonus, 1300);
   } else {
-    M.mistakes++; nope();
+    M.mistakes++; nope(); M.missBy[nameK] = true;
     $('mist').textContent = `Mistakes: ${M.mistakes}`;
     $('say').className = 'say no'; $('say').textContent = 'Not a match. Try again!';
     [a.el, b].forEach(x => { x.classList.remove('sel'); x.classList.add('oops'); setTimeout(() => x.classList.remove('oops'), 450); });
@@ -1227,7 +1273,7 @@ function matchBonus() {
   document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => {
     if (!M || b.disabled) return;
     if (choices[+b.dataset.n] === blank.f) {
-      yay(); logAnswer({ mode: 'match', item: 'Bonus: why 3 malachim', ok: !M.missBonus });
+      yay(); logAnswer({ mode: 'match', item: 'Bonus: why 3 malachim', ok: !M.missBonus }); logSkill('q4', !M.missBonus, 'match');
       $('ans').innerHTML = `<span>${hw(it.a[0])}</span> <span class="fill new">${hw(blank.f)}</span>.`;
       $('ansen').hidden = false; $('ansen').textContent = it.aen;
       $('panel').classList.add('ok');
@@ -1265,40 +1311,61 @@ function finishMatch() {
    Each item shows a Hebrew word or sentence and asks one or two multiple-choice steps.
    Score = steps right on the first try. */
 const pick = (right, pool, n = 3) => shuffle([right, ...shuffle([...new Set(pool)].filter(p => p !== right && !right.includes(p) && !p.includes(right))).slice(0, n - 1)]);
+const mkHipuch = x => ({ skill: 'h:' + x.w, show: `<span class="mk">${x.pre}</span>${x.mid}${x.end ? `<span class="mk">${x.end}</span>` : ''}`, big: true, item: x.w, answer: `${x.who} ${x.past}`,
+  steps: [
+    { ask: 'Who did it? Look at the letters in red.', he: true, right: x.who, choices: ['הוּא', 'הֵם', 'הִיא'] },
+    { ask: 'What did they do?', he: true, right: x.past, choices: pick(x.past, HIPUCH.map(h => h.past)) }
+  ],
+  after: `${x.w} = ${x.who} ${x.past} = “${WHO_EN[x.who]} ${x.en}.”` });
+const mkTch = x => {
+  const bareW = x.w.replace(/[֑-ׇ]/g, ''), wrong1 = x.pl.length > 1 ? bareW[0] : bareW.slice(0, 2);
+  return { skill: 't:' + x.w, show: x.w, show2: `<span class="mk">${x.pre}</span>${x.rest}`, big: true, item: x.w, answer: `${x.pl} = ${x.pm}`,
+    steps: [
+      { ask: 'Which letters were added at the beginning?', he: true, right: x.pl, choices: shuffle([x.pl, wrong1, shuffle(TCHILIYOT.map(t => t.pl).filter(l => l !== x.pl && l !== wrong1))[0]]) },
+      { ask: `What does ${x.pl} mean here?`, right: x.pm, choices: pick(x.pm, PRE_POOL) }
+    ],
+    after: `${x.pl} = “${x.pm}.” ${x.w} = “${x.en}.”` };
+};
+const mkSof = x => ({ skill: 's:' + x.w, show: x.w, show2: `${x.rest}<span class="mk">${x.suf}</span>`, big: true, item: x.w, answer: x.sh,
+  steps: [
+    { ask: `The ending ${x.suf} means…`, he: true, right: x.sh, choices: shuffle(SOFIYOT.map(t => t.sh)) },
+    { ask: 'What does the whole word mean?', right: x.en, choices: pick(x.en, SOFIYOT.map(t => t.en)) }
+  ],
+  after: `${x.suf} = ${x.sh} = “${x.sm}.” ${x.w} = “${x.en}.”` });
+const mkMimi = (x, i) => ({ skill: 'mimi:' + (i + 1), show: hw(x.s), en: x.en, item: x.s, answer: x.a,
+  steps: [{ ask: 'Who am I?', he: true, right: x.a, choices: shuffle(MIMI_POOL.slice()) }], after: `${x.s} – ${x.a}` });
+const mkSaid = (x, i) => ({ skill: 'said:' + (i + 1), show: hw(x.s), en: x.en, item: x.s, answer: x.a,
+  steps: [{ ask: 'Who said it to whom?', he: true, right: x.a, choices: shuffle(SAID_POOL.slice()) }], after: x.a });
+const mkTf = (x, i) => ({ skill: 'tf:' + (i + 1), show: hw(x.s), en: x.en, item: x.s, answer: x.a,
+  steps: [{ ask: 'True or not true?', he: true, right: x.a, choices: ['נָכוֹן', 'לֹא נָכוֹן'] }], after: x.why });
+/* Questions 1-9 as one multiple-choice step: the right answer, or the same answer with a wrong blank. */
+const mkSheet = it => {
+  const right = fullAnswer(it), variants = [];
+  it.a.forEach((a, k) => { if (typeof a !== 'string') a.alt.forEach(alt => variants.push(it.a.map((b, j) => j === k ? alt : (typeof b === 'string' ? b : b.f)).join(' ') + '.')); });
+  return { skill: 'q' + it.n, show: hw(it.q.map(t => t.w).join(' ') + (it.stmt ? '' : '?')), enHtml: it.en, item: 'Q' + it.n, answer: right,
+    steps: [{ ask: 'Which is the right answer?', he: true, noEn: true, right, choices: shuffle([right, ...shuffle([...new Set(variants)]).slice(0, 2)]) }], after: it.aen };
+};
+const mkMal = m => ({ skill: 'm-' + m.eng.toLowerCase(), show: hw(`מָה הָיָה הַתַּפְקִיד שֶׁל ${m.name}?`), en: `What was ${m.eng}’s job?`, item: m.eng, answer: m.job,
+  steps: [{ ask: 'What was his job?', he: true, right: m.job, choices: shuffle(MALACHIM.map(x => x.job)) }], after: `${m.eng}: ${m.jen}.` });
+function makeItem(id) {
+  if (/^q\d$/.test(id)) return mkSheet(SHEET.find(s => 'q' + s.n === id));
+  if (id.startsWith('m-')) return mkMal(MALACHIM.find(m => 'm-' + m.eng.toLowerCase() === id));
+  const c = id.indexOf(':'), p = id.slice(0, c), rest = id.slice(c + 1);
+  if (p === 'h') return mkHipuch(HIPUCH.find(x => x.w === rest));
+  if (p === 't') return mkTch(TCHILIYOT.find(x => x.w === rest));
+  if (p === 's') return mkSof(SOFIYOT.find(x => x.w === rest));
+  if (p === 'mimi') return mkMimi(MIMI[+rest - 1], +rest - 1);
+  if (p === 'said') return mkSaid(SAID[+rest - 1], +rest - 1);
+  if (p === 'tf') return mkTf(TF[+rest - 1], +rest - 1);
+  throw new Error('No question for ' + id);
+}
 const DRILLS = {
-  hipuch: { title: 'Vav Hahipuch', he: 'הַהִפּוּךְ', ico: '🔄', blurb: 'Who did it, and what did they do?', rule: HIPUCH_RULE,
-    items: () => shuffle(HIPUCH).map(x => ({ show: `<span class="mk">${x.pre}</span>${x.mid}${x.end ? `<span class="mk">${x.end}</span>` : ''}`, big: true, item: x.w,
-      steps: [
-        { ask: 'Who did it? Look at the letters in red.', he: true, right: x.who, choices: ['הוּא', 'הֵם', 'הִיא'] },
-        { ask: 'What did they do?', he: true, right: x.past, choices: pick(x.past, HIPUCH.map(h => h.past)) }
-      ],
-      after: `${x.w} = ${x.who} ${x.past} = “${WHO_EN[x.who]} ${x.en}.”` })) },
-  tchiliyot: { title: 'Prefixes', he: 'תְּחִלִּיּוֹת', ico: '⬅️', blurb: 'Letters added at the beginning of a word',
-    items: () => shuffle(TCHILIYOT).map(x => {
-      const bareW = x.w.replace(/[֑-ׇ]/g, ''), wrong1 = x.pl.length > 1 ? bareW[0] : bareW.slice(0, 2);
-      return { show: x.w, show2: `<span class="mk">${x.pre}</span>${x.rest}`, big: true, item: x.w,
-        steps: [
-          { ask: 'Which letters were added at the beginning?', he: true, right: x.pl, choices: shuffle([x.pl, wrong1, shuffle(TCHILIYOT.map(t => t.pl).filter(l => l !== x.pl && l !== wrong1))[0]]) },
-          { ask: `What does ${x.pl} mean here?`, right: x.pm, choices: pick(x.pm, PRE_POOL) }
-        ],
-        after: `${x.pl} = “${x.pm}.” ${x.w} = “${x.en}.”` };
-    }) },
-  sofiyot: { title: 'Endings', he: 'סוֹפִיּוֹת', ico: '➡️', blurb: 'Letters added at the end of a word',
-    items: () => shuffle(SOFIYOT).map(x => ({ show: x.w, show2: `${x.rest}<span class="mk">${x.suf}</span>`, big: true, item: x.w,
-      steps: [
-        { ask: `The ending ${x.suf} means…`, he: true, right: x.sh, choices: shuffle(SOFIYOT.map(t => t.sh)) },
-        { ask: 'What does the whole word mean?', right: x.en, choices: pick(x.en, SOFIYOT.map(t => t.en)) }
-      ],
-      after: `${x.suf} = ${x.sh} = “${x.sm}.” ${x.w} = “${x.en}.”` })) },
-  mimi: { title: 'Who Am I?', he: 'מִי אוֹ מָה אֲנִי', ico: '🙋', blurb: 'Who in the story did this?',
-    items: () => shuffle(MIMI).map(x => ({ show: hw(x.s), en: x.en, item: x.s,
-      steps: [{ ask: 'Who am I?', he: true, right: x.a, choices: shuffle(MIMI_POOL.slice()) }], after: `${x.s} – ${x.a}` })) },
-  said: { title: 'Who Said It?', he: 'מִי אָמַר אֶל מִי', ico: '💬', blurb: 'Who said it, and to whom?',
-    items: () => shuffle(SAID).map(x => ({ show: hw(x.s), en: x.en, item: x.s,
-      steps: [{ ask: 'Who said it to whom?', he: true, right: x.a, choices: shuffle(SAID_POOL.slice()) }], after: x.a })) },
-  tf: { title: 'True or False', he: 'נָכוֹן אוֹ לֹא נָכוֹן', ico: '✅', blurb: 'Is it true or not?',
-    items: () => shuffle(TF).map(x => ({ show: hw(x.s), en: x.en, item: x.s,
-      steps: [{ ask: 'True or not true?', he: true, right: x.a, choices: ['נָכוֹן', 'לֹא נָכוֹן'] }], after: x.why })) }
+  hipuch: { title: 'Vav Hahipuch', he: 'הַהִפּוּךְ', ico: '🔄', blurb: 'Who did it, and what did they do?', rule: HIPUCH_RULE, items: () => shuffle(HIPUCH.map(mkHipuch)) },
+  tchiliyot: { title: 'Prefixes', he: 'תְּחִלִּיּוֹת', ico: '⬅️', blurb: 'Letters added at the beginning of a word', items: () => shuffle(TCHILIYOT.map(mkTch)) },
+  sofiyot: { title: 'Endings', he: 'סוֹפִיּוֹת', ico: '➡️', blurb: 'Letters added at the end of a word', items: () => shuffle(SOFIYOT.map(mkSof)) },
+  mimi: { title: 'Who Am I?', he: 'מִי אוֹ מָה אֲנִי', ico: '🙋', blurb: 'Who in the story did this?', items: () => shuffle(MIMI.map(mkMimi)) },
+  said: { title: 'Who Said It?', he: 'מִי אָמַר אֶל מִי', ico: '💬', blurb: 'Who said it, and to whom?', items: () => shuffle(SAID.map(mkSaid)) },
+  tf: { title: 'True or False', he: 'נָכוֹן אוֹ לֹא נָכוֹן', ico: '✅', blurb: 'Is it true or not?', items: () => shuffle(TF.map(mkTf)) }
 };
 const drillTotal = k => ({ hipuch: HIPUCH.length * 2, tchiliyot: TCHILIYOT.length * 2, sofiyot: SOFIYOT.length * 2, mimi: MIMI.length, said: SAID.length, tf: TF.length })[k];
 function startDrill(k) {
@@ -1307,7 +1374,7 @@ function startDrill(k) {
 }
 function drillItem() {
   const d = D.def, it = D.items[D.i];
-  D.si = 0; D.miss = false;
+  D.si = 0; D.miss = false; D.itemMiss = false; tapped = false;
   app.innerHTML = topbar(d.title, `<span class="pill">${D.i + 1} of ${D.items.length}</span>`) + `
     <div class="dots">${Array.from({ length: D.total }, (_, n) => `<span class="dot ${D.marks[n] === true ? 'g' : D.marks[n] === false ? 'b' : ''}"></span>`).join('')}</div>
     <div class="panel" id="panel"><div class="qnum he" lang="he" style="text-align:right">${d.he}</div>
@@ -1341,12 +1408,13 @@ function drillStep() {
       D.si++;
       if (D.si < it.steps.length) { $('say').className = 'say yes'; drillStep(); $('say').innerHTML = 'Yes! ' + bidi(it.steps[D.si].ask); return; }
       $('panel').classList.add('ok');
+      logSkill(it.skill, !D.itemMiss, 'd-' + D.k);
       if (it.after) { $('after').hidden = false; $('after').innerHTML = bidi(it.after); }
       $('say').className = 'say yes'; $('say').textContent = shuffle(['Yes!', 'Great job!', 'You got it!', 'Correct!'])[0];
       opts.innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">${D.i + 1 < D.items.length ? 'Next ›' : 'See my score ›'}</button></div>`;
       $('next').onclick = () => { D.i++; if (D.i < D.items.length) drillItem(); else drillDone(); };
     } else {
-      nope(); D.miss = true; b.disabled = true; b.classList.add('wrong');
+      nope(); D.miss = true; D.itemMiss = true; b.disabled = true; b.classList.add('wrong');
       $('say').className = 'say no'; $('say').innerHTML = D.def.rule && D.si === 0 ? 'Not that one. Remember: ' + bidi(D.def.rule) : 'Not that one. Try again!';
     }
   });
@@ -1368,6 +1436,130 @@ function drillDone() {
     </div>`;
   wireTop();
   $('again').onclick = () => startDrill(k); $('menu').onclick = home;
+}
+
+/* ============================================================ READY FOR THE TEST?
+   The checklist on the Chumash page, Today's practice (weakest questions first, at most two from each part)
+   and the practice test (a few questions from every part, one try each, English help off). */
+const SECS = CHUMASH_TEST.sections, secName = id => (SECS.find(s => s.id === id) || {}).name || '';
+const TEST_PLAN = { sheet1: 2, mal: 1, sheet2: 2, hipuch: 2, sofiyot: 2, mimi: 2, tchiliyot: 2, tf: 1, said: 2 };
+function readyCardHTML() {
+  const R = chumashReadiness(readLog()), pct = Math.round(100 * R.ready / R.total);
+  return `<section class="ready" id="readyCard">
+    <div class="rhead"><h2>✅ Ready for the test?</h2><span class="rbig">${R.ready} <small>of ${R.total}</small></span></div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="rlist">${R.sections.map(s => `<button class="rrow ${s.state}" data-go="${s.id}"><span class="ricon">${s.state === 'ready' ? '✓' : s.state === 'practicing' ? '½' : ''}</span><span class="rname">${esc(s.name)}${s.he ? ` <bdi lang="he">${s.he}</bdi>` : ''}</span><span class="rcount">${s.ready}/${s.total}</span><span class="rmini"><i style="width:${Math.round(100 * s.ready / s.total)}%"></i></span></button>`).join('')}</div>
+    <p class="rnote">${helper ? '⚠️ The <b>EN</b> help is on. Questions only turn green when you answer them right with EN off.' : 'A question turns green when you get it right the first time, with no help.'}</p>
+    <div class="row"><button class="btnbig" id="todayBtn">⭐ Today’s practice</button><button class="ghost" id="ptestBtn">📝 Practice test</button></div>
+  </section>`;
+}
+function wireReadyCard() {
+  if (!$('readyCard')) return;
+  document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
+    const id = b.dataset.go;
+    if (id === 'sheet1' || id === 'sheet2') startCross(); else if (id === 'mal') startMatch(); else startDrill(id);
+  });
+  $('todayBtn').onclick = () => startSession('today');
+  $('ptestBtn').onclick = () => startSession('test');
+}
+function buildTest() {
+  return SECS.flatMap(sec => shuffle(sec.skills.map(k => k[0])).slice(0, TEST_PLAN[sec.id] || 1).map(id => Object.assign(makeItem(id), { sec: sec.id })));
+}
+function buildToday() {
+  const R = chumashReadiness(readLog()), rank = { new: 0, missed: 1, help: 2, ready: 3 }, order = SECS.map(s => s.id);
+  const all = shuffle(R.sections.flatMap(sec => sec.items.map(i => Object.assign({ sec: sec.id }, i)))).sort((a, b) => rank[a.status] - rank[b.status] || a.t - b.t);
+  const per = {}, chosen = [];
+  for (const q of all) { if (chosen.length >= 10) break; if ((per[q.sec] || 0) >= 2) continue; per[q.sec] = (per[q.sec] || 0) + 1; chosen.push(q); }
+  return chosen.sort((a, b) => order.indexOf(a.sec) - order.indexOf(b.sec)).map(q => Object.assign(makeItem(q.id), { sec: q.sec }));
+}
+let P = null;
+function startSession(kind) {
+  testMode = kind === 'test'; applyHelper();
+  P = { kind, items: kind === 'test' ? buildTest() : buildToday(), i: 0, right: 0, res: [], helped: 0, before: chumashReadiness(readLog()).ready };
+  sessItem();
+}
+function sessItem() {
+  const it = P.items[P.i];
+  P.si = 0; P.miss = false; tapped = false;
+  app.innerHTML = topbar(P.kind === 'test' ? '📝 Practice Test' : '⭐ Today’s Practice', `<span class="pill">${P.i + 1} of ${P.items.length}</span>`) + `
+    <div class="dots">${P.items.map((_, n) => `<span class="dot ${P.res[n] === true ? 'g' : P.res[n] === false ? 'b' : ''}"></span>`).join('')}</div>
+    ${P.kind === 'test' && P.i === 0 ? '<div class="say" style="margin-top:0">Like the real test: one try for each question, no English help.</div>' : ''}
+    <div class="panel" id="panel"><div class="qnum">${esc(secName(it.sec))}</div>
+      <div class="dshow${it.big ? ' big' : ''}" lang="he" id="dshow">${it.show}</div>
+      ${it.enHtml ? `<div class="en" style="text-align:center">${it.enHtml}</div>` : it.en ? `<div class="en" style="text-align:center">${esc(it.en)}</div>` : ''}
+      <div class="after" id="after" hidden></div>
+    </div>
+    <div class="say" id="say"></div>
+    <div class="opts" id="opts"></div>`;
+  wireTop();
+  sessStep();
+  top0();
+}
+function sessStep() {
+  const it = P.items[P.i], st = it.steps[P.si];
+  $('say').className = 'say'; $('say').innerHTML = bidi(st.ask);
+  $('opts').innerHTML = st.choices.map((c, n) => {
+    const en = st.he && !st.noEn ? enOf(c) : '';
+    return `<button class="opt${st.he ? ' he' : ''}" ${st.he ? 'lang="he"' : ''} data-n="${n}">${esc(c)}${en.trim() ? `<span class="en">${esc(en)}</span>` : ''}</button>`;
+  }).join('');
+  document.querySelectorAll('#opts .opt').forEach(b => b.onclick = () => sessPick(b, st));
+}
+function sessPick(b, st) {
+  if (!P || b.disabled) return;
+  const it = P.items[P.i], ok = st.choices[+b.dataset.n] === st.right;
+  if (P.kind === 'test') {   /* one try: show the right answer, then move on */
+    document.querySelectorAll('#opts .opt').forEach((x, n) => { x.disabled = true; if (st.choices[n] === st.right) x.classList.add('right'); });
+    if (ok) tick(); else { b.classList.add('wrong'); P.miss = true; nope(); }
+    if (it.show2) $('dshow').innerHTML = it.show2;
+    const at = P.i;
+    setTimeout(() => { if (!P || P.i !== at) return; P.si++; if (P.si < it.steps.length) sessStep(); else sessItemDone(); }, ok ? 700 : 1900);
+    return;
+  }
+  if (!ok) { nope(); P.miss = true; b.disabled = true; b.classList.add('wrong'); $('say').className = 'say no'; $('say').textContent = 'Not that one. Try again!'; return; }
+  yay();
+  if (it.show2) $('dshow').innerHTML = it.show2;
+  P.si++;
+  if (P.si < it.steps.length) { sessStep(); $('say').className = 'say yes'; $('say').innerHTML = 'Yes! ' + bidi(it.steps[P.si].ask); return; }
+  sessItemDone();
+}
+function sessItemDone() {
+  const it = P.items[P.i], ok = !P.miss;
+  if (logSkill(it.skill, ok, P.kind === 'test' ? 'ptest' : 'today')) P.helped++;
+  P.res.push(ok); if (ok) P.right++;
+  const dot = document.querySelectorAll('.dots .dot')[P.i]; if (dot) dot.className = 'dot ' + (ok ? 'g' : 'b');
+  if (P.kind === 'test') { P.i++; return P.i < P.items.length ? sessItem() : sessDone(); }
+  $('panel').classList.add('ok');
+  if (it.after) { $('after').hidden = false; $('after').innerHTML = bidi(it.after); }
+  $('say').className = 'say yes'; $('say').textContent = ok ? 'Right the first time!' : 'You got it!';
+  $('opts').innerHTML = `<div class="actions" style="margin-top:4px"><button class="btnbig" id="next">${P.i + 1 < P.items.length ? 'Next ›' : 'See how I did ›'}</button></div>`;
+  $('next').onclick = () => { P.i++; if (P.i < P.items.length) sessItem(); else sessDone(); };
+}
+function sessDone() {
+  sendLog();
+  const k = P.kind, r = P.right, n = P.items.length, stars = r >= n ? 3 : r >= n - 2 ? 2 : r >= n / 2 ? 1 : 0;
+  testMode = false; applyHelper();
+  const now = chumashReadiness(readLog()), per = {};
+  P.items.forEach((it, i) => { const x = per[it.sec] = per[it.sec] || [0, 0]; x[1]++; if (P.res[i]) x[0]++; });
+  const missed = P.items.filter((_, i) => !P.res[i]);
+  const rt = logRound({ mode: k === 'test' ? 'ptest' : 'today', score: r, total: n, label: `${r} / ${n}`, secs: per });
+  const before = P.before, helped = P.helped;
+  P = null;
+  app.innerHTML = topbar(k === 'test' ? '📝 Practice Test' : '⭐ Today’s Practice') + `
+    <div class="result popin">
+      ${starsHTML(stars)}
+      <div class="big">${r} / ${n}</div>
+      <div>${k === 'test' ? (r === n ? 'Perfect! You’re ready for the test!' : r >= n - 2 ? 'Almost there! Look at the ones below.' : 'Good practice! Work on the parts in red.') : 'Right the first time.'}</div>
+      <div class="unlocked">Ready for the test: ${now.ready > before ? `${before} → ` : ''}${now.ready} of ${now.total}</div>
+      ${helped ? `<p class="rnote">${helped} ${helped === 1 ? 'answer' : 'answers'} had English help, so ${helped === 1 ? 'it doesn’t' : 'they don’t'} count toward Ready yet. Try them again with EN off.</p>` : ''}
+      <div class="secres">${SECS.filter(s => per[s.id]).map(s => `<div class="srow2 ${per[s.id][0] === per[s.id][1] ? '' : 'no'}"><span>${esc(s.name)}</span><b>${per[s.id][0]} / ${per[s.id][1]}</b></div>`).join('')}</div>
+      ${missed.length ? `<div class="reviewlist"><h3>Look at these again</h3>${missed.map(it => `<div class="rv"><div class="dshow" lang="he">${it.show}</div><span>${bidi(it.answer)}</span></div>`).join('')}</div>` : ''}
+      ${k === 'test' ? rankHTML('ptest', false, rt, n) : ''}
+      <div class="actions"><button class="btnbig" id="again">${k === 'test' ? 'Take it again' : 'Practice more'}</button><button class="ghost" id="menu">Menu</button></div>
+    </div>`;
+  wireTop();
+  if (stars === 3) yay();
+  $('again').onclick = () => startSession(k); $('menu').onclick = home;
+  top0();
 }
 
 /* ============================================================ THE SIX WORDS */
