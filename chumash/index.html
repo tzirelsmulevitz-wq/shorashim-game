@@ -64,6 +64,10 @@ body:not(.helper) .en { display: none !important; }
 .hero .t { font-family: var(--f-heb); font-size: clamp(44px, 10vw, 60px); font-weight: 800; line-height: 1.25; }
 .hero .s { font-family: var(--f-heb); font-size: 26px; font-weight: 700; color: var(--muted); }
 .hero p { color: var(--muted); margin: 10px auto 0; max-width: 36ch; }
+.countdown { display: flex; align-items: center; gap: 14px; max-width: 470px; margin: 16px auto 0; padding: 12px 18px; background: var(--sand); border: 3px solid var(--sun); border-radius: 20px; box-shadow: var(--shadow); text-align: left; }
+.countdown .cd-num { flex: none; min-width: 58px; height: 58px; padding: 0 8px; border-radius: 16px; background: var(--sun); color: #1d2b45; display: grid; place-items: center; font-size: 36px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.countdown b { display: block; font-size: 20px; line-height: 1.25; }
+.countdown span { color: var(--muted); font-size: 16px; }
 .step { background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 18px 18px; margin-top: 16px; }
 .step .sh { display: flex; align-items: center; gap: 14px; }
 .step .num { flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--block); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 21px; }
@@ -336,6 +340,15 @@ const STORY = {
       ] }
   ]
 };
+/* The Chumash test (class 3D). Change these when the next test is announced; the countdown hides itself after the day. */
+const TEST = { y: 2026, m: 11, d: 25, label: 'Wednesday, November 25' };
+function countdownHTML() {
+  const t = new Date(TEST.y, TEST.m - 1, TEST.d), now = new Date(); now.setHours(0, 0, 0, 0);
+  const days = Math.round((t - now) / 86400000);
+  if (days < 0) return '';
+  if (days === 0) return `<div class="countdown"><div class="cd-num">⭐</div><div><b>The Chumash test is today!</b><span>You’ve got this, Jack!</span></div></div>`;
+  return `<div class="countdown"><div class="cd-num">${days}</div><div><b>${days === 1 ? 'day until the Chumash test' : 'days until the Chumash test'}</b><span>${days === 1 ? `It’s tomorrow, ${TEST.label}! A little review tonight.` : `${TEST.label} · a little review every day helps`}</span></div></div>`;
+}
 const storyTotal = () => STORY.chapters.reduce((s, c) => s + c.qs.length, 0);
 
 /* ============================================================
@@ -714,6 +727,7 @@ function home() {
       <div class="t he" lang="he">פָּרָשַׁת וַיֵּרָא</div>
       <div class="s he" lang="he">פֶּרֶק יח · דַּפֵּי חֲזָרָה</div>
       <p>First read the story. Then learn the words. Then practice the worksheet!</p>
+      ${countdownHTML()}
     </div>
     <section class="step${bs != null ? ' done' : ''}" id="step1">
       <div class="sh"><span class="num">${bs != null ? '✓' : '1'}</span><div><h2>📖 The Story</h2><p>What happened at Avraham’s tent, in English, with questions as you read.</p></div></div>

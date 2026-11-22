@@ -17,6 +17,8 @@ Review for Parshas Vayera, perek 18, made from both sides of the teacher's answe
 3. **The Worksheet**: the teacher crosses out the question word and writes the answer back in the question's own words, so these games practice exactly that.
 4. **More from the Review Sheet** (pages 3-4 of the blank review sheet on Google Classroom): Vav Hahipuch (root and meaning), Prefixes and Endings (what the added letters mean, then the whole word), Who Am I?, Who Said It? and True or False. Data is in `HIPUCH`, `TCHILIYOT`, `SOFIYOT`, `MIMI`, `SAID` and `TF`; roots are written without final letters, like the class does.
 
+A countdown to the test shows on the Chumash page and on its tile in the menu, and hides itself after the test day. For the next test, change `TEST` near the top of the script in `chumash/index.html` and the date in the countdown script in `index.html`.
+
 Help everywhere: tap any Hebrew word to see what it means, and the **EN** button (on at first) shows English under the questions, answers, choices and pieces.
 
 - **Answer Key**: each question; tap to cross out the question word and see the answer.

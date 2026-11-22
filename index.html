@@ -58,6 +58,7 @@ h1 { font-size: clamp(40px, 8vw, 60px); line-height: 1.05; margin: 0 0 6px; text
 .text { padding: 0 20px 22px; text-align: center; }
 .text b { display: block; font-size: 28px; }
 .text span { color: var(--muted); font-size: 16px; }
+.testbadge { display: inline-block; margin: 0 0 8px; padding: 4px 12px; border-radius: 999px; background: #f2b544; color: #1d2b45 !important; font-weight: 800; font-size: 16px; }
 </style>
 </head>
 <body>
@@ -83,7 +84,7 @@ h1 { font-size: clamp(40px, 8vw, 60px); line-height: 1.05; margin: 0 0 6px; text
     <a class="game chumash" href="chumash/">
       <div class="stripe"></div>
       <div class="art"><div class="times" style="color:#2f9e8f;font-size:44px;font-family:var(--f-heb)">וַיֵּרָא</div></div>
-      <div class="text"><b>Chumash</b><span>Vayera: the story, the words, the worksheet</span></div>
+      <div class="text"><span class="testbadge" id="chumashTest" hidden></span><b>Chumash</b><span>Vayera: the story, the words, the worksheet</span></div>
     </a>
     <a class="game vocab" href="vocab/">
       <div class="stripe"></div>
@@ -93,6 +94,17 @@ h1 { font-size: clamp(40px, 8vw, 60px); line-height: 1.05; margin: 0 0 6px; text
   </div>
   <p style="text-align:center;margin-top:22px"><a href="highscores/" style="color:var(--muted);font-weight:600">High scores</a> · <a href="progress/" style="color:var(--muted);font-weight:600">See Jack's progress</a></p>
 </main>
+<script>
+/* Countdown to Jack's Chumash test (class 3D), on the Chumash tile. Keep in step with TEST in chumash/index.html. */
+(function () {
+  var el = document.getElementById('chumashTest'); if (!el) return;
+  var t = new Date(2026, 10, 25), now = new Date(); now.setHours(0, 0, 0, 0);
+  var days = Math.round((t - now) / 86400000);
+  if (days < 0) return;
+  el.textContent = days === 0 ? '⭐ Test today!' : days === 1 ? '📅 Test tomorrow!' : '📅 Test in ' + days + ' days';
+  el.hidden = false;
+})();
+</script>
 <!-- auto-update -->
 <script>
 /* Auto-update. Safari can keep showing an old copy of a page for up to 10 minutes after it changes.
