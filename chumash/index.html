@@ -435,7 +435,7 @@ const MQ = 'מָה הָיָה הַתַּפְקִיד שֶׁל כָּל מַלְ�
 const MALACHIM = [
   { k: 'א', name: 'רְפָאֵל', eng: 'Refael', job: 'לְרַפְּאוֹת אֶת אַבְרָהָם', jen: 'to heal Avraham' },
   { k: 'ב', name: 'גַּבְרִיאֵל', eng: 'Gavriel', job: 'לַהֲפוֹךְ אֶת סְדוֹם', jen: 'to destroy the city of Sedom' },
-  { k: 'ג', name: 'מִיכָאֵל', eng: 'Michael', job: 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה', jen: 'to tell Avraham that Sarah will have a son in a year' }
+  { k: 'ג', name: 'מִיכָאֵל', eng: 'Michael', job: 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּעוֹד שָׁנָה', jen: 'to tell Avraham that Sarah will have a son in a year' }
 ];
 const fullAnswer = it => it.tiles.join(' ') + '.';
 const mLine = m => `מַלְאָךְ ${m.k} – ${m.name} – ${m.job}.`;
@@ -444,43 +444,44 @@ const mLine = m => `מַלְאָךְ ${m.k} – ${m.name} – ${m.job}.`;
    STEP 4: MORE FROM THE REVIEW SHEET (pages 3-4 of the blank review sheet the teacher posted on Google Classroom).
    Roots are written the way Jack's class writes them, without final letters (נ.ת.נ, ר.ו.צ).
    ============================================================ */
-const HIPUCH = [   /* הַהִפּוּךְ: the וַ turns "he will" into "and he did" */
-  { w: 'וַיִּתֵּן', rest: 'יִּתֵּן', root: 'נ.ת.נ', fut: 'יִתֵּן', futEn: 'he will give', en: 'and he gave' },
-  { w: 'וַיַּרְא', rest: 'יַּרְא', root: 'ר.א.ה', fut: 'יִרְאֶה', futEn: 'he will see', en: 'and he saw' },
-  { w: 'וַיְמַהֵר', rest: 'יְמַהֵר', root: 'מ.ה.ר', fut: 'יְמַהֵר', futEn: 'he will hurry', en: 'and he hurried' },
-  { w: 'וַיֹּאמְרוּ', rest: 'יֹּאמְרוּ', root: 'א.מ.ר', fut: 'יֹאמְרוּ', futEn: 'they will say', en: 'and they said' },
-  { w: 'וַיָּרָץ', rest: 'יָּרָץ', root: 'ר.ו.צ', fut: 'יָרוּץ', futEn: 'he will run', en: 'and he ran' },
-  { w: 'וַיִּשָּׂא', rest: 'יִּשָּׂא', root: 'נ.ש.א', fut: 'יִשָּׂא', futEn: 'he will lift', en: 'and he lifted' },
-  { w: 'וַיֹּאכְלוּ', rest: 'יֹּאכְלוּ', root: 'א.כ.ל', fut: 'יֹאכְלוּ', futEn: 'they will eat', en: 'and they ate' },
-  { w: 'וַתִּצְחַק', rest: 'תִּצְחַק', root: 'צ.ח.ק', fut: 'תִּצְחַק', futEn: 'she will laugh', en: 'and she laughed' }
+const HIPUCH = [   /* הַהִפּוּךְ: who did it (the letters at the start, and וּ at the end) + what they did, in the past */
+  { w: 'וַיִּתֵּן', pre: 'וַיִּ', mid: 'תֵּן', end: '', who: 'הוּא', past: 'נָתַן', en: 'gave' },
+  { w: 'וַיַּרְא', pre: 'וַיַּ', mid: 'רְא', end: '', who: 'הוּא', past: 'רָאָה', en: 'saw' },
+  { w: 'וַיְמַהֵר', pre: 'וַיְ', mid: 'מַהֵר', end: '', who: 'הוּא', past: 'מִהֵר', en: 'hurried' },
+  { w: 'וַיֹּאמְרוּ', pre: 'וַיֹּ', mid: 'אמְר', end: 'וּ', who: 'הֵם', past: 'אָמְרוּ', en: 'said' },
+  { w: 'וַיָּרָץ', pre: 'וַיָּ', mid: 'רָץ', end: '', who: 'הוּא', past: 'רָץ', en: 'ran' },
+  { w: 'וַיִּשָּׂא', pre: 'וַיִּ', mid: 'שָּׂא', end: '', who: 'הוּא', past: 'נָשָׂא', en: 'lifted' },
+  { w: 'וַיֹּאכְלוּ', pre: 'וַיֹּ', mid: 'אכְל', end: 'וּ', who: 'הֵם', past: 'אָכְלוּ', en: 'ate' },
+  { w: 'וַתִּצְחַק', pre: 'וַתִּ', mid: 'צְחַק', end: '', who: 'הִיא', past: 'צָחֲקָה', en: 'laughed' }
 ];
-const TCHILIYOT = [   /* תְּחִלִּיּוֹת: letters added at the beginning */
-  { w: 'מֵעַל', pre: 'מֵ', rest: 'עַל', pm: 'from', en: 'from (near)' },
-  { w: 'וְאֶקְחָה', pre: 'וְאֶ', rest: 'קְחָה', pm: 'and I will', en: 'and I will take' },
-  { w: 'הָעֵץ', pre: 'הָ', rest: 'עֵץ', pm: 'the', en: 'the tree' },
-  { w: 'לַעֲשׂוֹת', pre: 'לַ', rest: 'עֲשׂוֹת', pm: 'to', en: 'to do' },
-  { w: 'אָשׁוּב', pre: 'אָ', rest: 'שׁוּב', pm: 'I will', en: 'I will return' },
-  { w: 'כְּחֹם', pre: 'כְּ', rest: 'חֹם', pm: 'like, as', en: 'as (in) the heat' },
-  { w: 'בְּאֵלֹנֵי', pre: 'בְּ', rest: 'אֵלֹנֵי', pm: 'in', en: 'in Elonei (Mamre)' },
-  { w: 'תַּעֲשֶׂה', pre: 'תַּ', rest: 'עֲשֶׂה', pm: 'you will', en: 'you will do' },
-  { w: 'וְהוּא', pre: 'וְ', rest: 'הוּא', pm: 'and', en: 'and he' }
+const WHO_EN = { 'הוּא': 'He', 'הֵם': 'They', 'הִיא': 'She' };
+const HIPUCH_RULE = 'וַיִּ means הוּא (he), וַתִּ means הִיא (she), and a וּ at the end means הֵם (they).';
+const TCHILIYOT = [   /* תְּחִלִּיּוֹת: the letters added at the beginning, and what they mean (teacher's key) */
+  { w: 'מֵעַל', pre: 'מֵ', rest: 'עַל', pl: 'מ', pm: 'from', en: 'from (near)' },
+  { w: 'וְאֶקְחָה', pre: 'וְאֶ', rest: 'קְחָה', pl: 'וא', pm: 'and I will', en: 'and I will take' },
+  { w: 'הָעֵץ', pre: 'הָ', rest: 'עֵץ', pl: 'ה', pm: 'the', en: 'the tree' },
+  { w: 'לַעֲשׂוֹת', pre: 'לַ', rest: 'עֲשׂוֹת', pl: 'ל', pm: 'to, for', en: 'to do' },
+  { w: 'אָשׁוּב', pre: 'אָ', rest: 'שׁוּב', pl: 'א', pm: 'I will', en: 'I will return' },
+  { w: 'כְּחֹם', pre: 'כְּ', rest: 'חֹם', pl: 'כ', pm: 'like', en: 'like (in) the heat' },
+  { w: 'בְּאֵלֹנֵי', pre: 'בְּ', rest: 'אֵלֹנֵי', pl: 'ב', pm: 'in, with', en: 'in Elonei (Mamre)' },
+  { w: 'תַּעֲשֶׂה', pre: 'תַּ', rest: 'עֲשֶׂה', pl: 'ת', pm: 'she will', en: 'will do' },
+  { w: 'וְהוּא', pre: 'וְ', rest: 'הוּא', pl: 'ו', pm: 'and', en: 'and he' }
 ];
-const PRE_POOL = ['from', 'and', 'the', 'to', 'I will', 'like, as', 'in', 'you will', 'he will', 'we will'];
-const SOFIYOT = [   /* סוֹפִיּוֹת: letters added at the end */
-  { w: 'עֵינָיו', rest: 'עֵינָ', suf: 'יו', sm: 'his', en: 'his eyes' },
-  { w: 'עַבְדֶּךָ', rest: 'עַבְדֶּ', suf: 'ךָ', sm: 'your (one person)', en: 'your servant' },
-  { w: 'רַגְלֵיכֶם', rest: 'רַגְלֵי', suf: 'כֶם', sm: 'your (more than one)', en: 'your feet' },
-  { w: 'וַאֲדֹנִי', rest: 'וַאֲדֹנִ', suf: 'י', sm: 'my', en: 'and my master' }
+const PRE_POOL = ['from', 'and', 'the', 'to, for', 'I will', 'like', 'in, with', 'she will', 'he will', 'we will'];
+const SOFIYOT = [   /* סוֹפִיּוֹת: the letters added at the end = שֶׁלּוֹ, שֶׁלְּךָ, שֶׁלָּכֶם, שֶׁלִּי (teacher's key) */
+  { w: 'עֵינָיו', rest: 'עֵינָ', suf: 'יו', sh: 'שֶׁלּוֹ', sm: 'his', en: 'his eyes' },
+  { w: 'עַבְדֶּךָ', rest: 'עַבְדֶּ', suf: 'ךָ', sh: 'שֶׁלְּךָ', sm: 'yours', en: 'your servant' },
+  { w: 'רַגְלֵיכֶם', rest: 'רַגְלֵי', suf: 'כֶם', sh: 'שֶׁלָּכֶם', sm: 'yours (all of you)', en: 'your feet' },
+  { w: 'וַאֲדֹנִי', rest: 'וַאֲדֹנִ', suf: 'י', sh: 'שֶׁלִּי', sm: 'my, mine', en: 'and my master' }
 ];
-const SUF_POOL = ['his', 'your (one person)', 'your (more than one)', 'my', 'her', 'our', 'their'];
 const MIMI = [   /* מִי אוֹ מָה אֲנִי */
   { s: 'בָּא לְבַקֵּר אֶת אַבְרָהָם', en: 'I came to visit Avraham.', a: 'ה׳' },
   { s: 'שָׁמְעָה מִפֶּתַח הָאֹהֶל', en: 'I listened from the opening of the tent.', a: 'שָׂרָה' },
   { s: 'צָחֲקָה בַּלֵּב', en: 'I laughed in my heart.', a: 'שָׂרָה' },
-  { s: 'אָמַר שֶׁשָּׂרָה תֵּלֵד בֵּן', en: 'I said that Sarah will have a son.', a: 'הַמַּלְאָךְ (מִיכָאֵל)' },
+  { s: 'אָמַר שֶׁשָּׂרָה תֵּלֵד בֵּן', en: 'I said that Sarah will have a son.', a: 'מִיכָאֵל' },
   { s: 'הִשְׁתַּחֲוָה לַמַּלְאָכִים', en: 'I bowed down to the malachim.', a: 'אַבְרָהָם' }
 ];
-const MIMI_POOL = ['ה׳', 'אַבְרָהָם', 'שָׂרָה', 'הַמַּלְאָךְ (מִיכָאֵל)'];
+const MIMI_POOL = ['ה׳', 'אַבְרָהָם', 'שָׂרָה', 'מִיכָאֵל'];
 const SAID = [   /* מִי אָמַר אֶל מִי */
   { s: 'אַל־נָא תַעֲבֹר מֵעַל עַבְדֶּךָ', en: '“Please don’t pass by your servant.”', a: 'אַבְרָהָם אֶל הַמַּלְאָכִים' },
   { s: 'וְאֶקְחָה פַת־לֶחֶם וְסַעֲדוּ לִבְּכֶם', en: '“I will get a piece of bread, and you will eat and feel strong.”', a: 'אַבְרָהָם אֶל הַמַּלְאָכִים' },
@@ -490,6 +491,7 @@ const SAID = [   /* מִי אָמַר אֶל מִי */
 const SAID_POOL = ['אַבְרָהָם אֶל הַמַּלְאָכִים', 'הַמַּלְאָכִים אֶל אַבְרָהָם', 'אַבְרָהָם אֶל שָׂרָה', 'שָׂרָה אֶל אַבְרָהָם'];
 const TF = [   /* נָכוֹן אוֹ לֹא נָכוֹן */
   { s: 'הָיָה יוֹם קַר כְּשֶׁה׳ נִרְאָה אֶל אַבְרָהָם', en: 'It was a cold day when Hashem appeared to Avraham.', a: 'לֹא נָכוֹן', why: 'Not true! It was a very hot day (כְּחֹם הַיּוֹם).' },
+  { s: 'הַמַּלְאָכִים הִסְכִּימוּ לֶאֱכֹל בְּאֹהֶל שֶׁל אַבְרָהָם', en: 'The malachim agreed to eat at Avraham’s tent.', a: 'נָכוֹן', why: 'True! The malachim agreed: “כֵּן תַּעֲשֶׂה כַּאֲשֶׁר דִּבַּרְתָּ.”' },
   { s: 'אַבְרָהָם הָלַךְ לְאַט אֶל הָאֹהֶל שֶׁל שָׂרָה', en: 'Avraham walked slowly to Sarah’s tent.', a: 'לֹא נָכוֹן', why: 'Not true! Avraham hurried to Sarah’s tent (וַיְמַהֵר).' }
 ];
 
@@ -513,7 +515,7 @@ const GLOSS = {
   'פַת־לֶחֶם': 'a piece of bread', 'וְסַעֲדוּ': 'and eat (to feel strong)', 'לִבְּכֶם': 'your hearts', 'כֵּן': 'so (yes)',
   'תַּעֲשֶׂה': 'you will do', 'כַּאֲשֶׁר': 'just as', 'דִּבַּרְתָּ': 'you said', 'מַהֲרִי': 'hurry!', 'שְׁלֹשׁ': 'three',
   'סְאִים': 'measures (se’ahs)', 'קֶמַח': 'flour', 'סֹלֶת': 'fine (the best flour)', 'לוּשִׁי': 'knead it!', 'וַעֲשִׂי': 'and make!',
-  'עֻגוֹת': 'cakes', 'יוֹם': 'day', 'קַר': 'cold', 'כְּשֶׁה׳': 'when Hashem', 'הָלַךְ': 'walked', 'נָכוֹן': 'true', 'אוֹ': 'or', 'אֲנִי': 'I',
+  'עֻגוֹת': 'cakes', 'הִסְכִּימוּ': 'agreed', 'לֶאֱכֹל': 'to eat', 'בְּאֹהֶל': 'in the tent (at the tent)', 'יוֹם': 'day', 'קַר': 'cold', 'כְּשֶׁה׳': 'when Hashem', 'הָלַךְ': 'walked', 'נָכוֹן': 'true', 'אוֹ': 'or', 'אֲנִי': 'I',
   'הָאוֹרְחִים': 'the guests', 'הָיוּ': 'were', 'צְרִיכִים': 'had to (needed to)', 'לִרְחֹץ': 'to wash', 'הָרַגְלַיִם': 'the feet',
   'שֶׁלָּהֶם': 'their', 'חָשַׁב': 'thought', 'שֶׁהֵם': 'that they', 'עֲרָבִים': 'Arabs', 'וְעוֹשִׂים': 'and do',
   'עֲבוֹדָה': 'worship (avodah zarah = idol worship)', 'זָרָה': 'strange (avodah zarah = idol worship)', 'מְלֻכְלָכוֹת': 'dirty',
@@ -533,11 +535,14 @@ const PHRASES = {
   'הַמַּלְאָךְ (מִיכָאֵל)': 'the malach (Michael)', 'אַבְרָהָם אֶל הַמַּלְאָכִים': 'Avraham to the malachim',
   'הַמַּלְאָכִים אֶל אַבְרָהָם': 'the malachim to Avraham', 'אַבְרָהָם אֶל שָׂרָה': 'Avraham to Sarah', 'שָׂרָה אֶל אַבְרָהָם': 'Sarah to Avraham',
   'לֹא נָכוֹן': 'not true',
+  'הוּא': 'he', 'הֵם': 'they', 'הִיא': 'she', 'נָתַן': 'gave', 'רָאָה': 'saw', 'מִהֵר': 'hurried', 'אָמְרוּ': 'said',
+  'רָץ': 'ran', 'נָשָׂא': 'lifted', 'אָכְלוּ': 'ate', 'צָחֲקָה': 'laughed',
+  'שֶׁלּוֹ': 'his', 'שֶׁלְּךָ': 'yours', 'שֶׁלָּכֶם': 'yours (all of you)', 'שֶׁלִּי': 'my, mine',
   'לַעֲשׂוֹת מִצְוַת בִּקּוּר חוֹלִים': 'to do the mitzvah of visiting the sick', 'לַעֲשׂוֹת הַכְנָסַת אוֹרְחִים': 'to welcome guests',
   'לַהֲפוֹךְ אֶת סְדוֹם': 'to destroy the city of Sedom', 'לָנוּחַ בַּצֵּל': 'to rest in the shade', 'כִּבּוּד אָב וָאֵם': 'honoring father and mother',
   'כִּי מַלְאָךְ אֶחָד לֹא יָכוֹל לַעֲשׂוֹת שָׁלוֹשׁ תַּפְקִידִים': 'because one malach can’t do three jobs',
   'כִּי אַבְרָהָם אָהַב הַרְבֵּה אוֹרְחִים': 'because Avraham loved lots of guests', 'כִּי הָיָה חַם מְאֹד': 'because it was very hot',
-  'לְרַפְּאוֹת אֶת אַבְרָהָם': 'to heal Avraham', 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּשָׁנָה': 'to tell Avraham that Sarah will have a son in a year',
+  'לְרַפְּאוֹת אֶת אַבְרָהָם': 'to heal Avraham', 'לֵאמֹר לְאַבְרָהָם שֶׁשָּׂרָה תֵּלֵד בֵּן בְּעוֹד שָׁנָה': 'to tell Avraham that Sarah will have a son in a year',
   'הָאוֹרְחִים הָיוּ צְרִיכִים': 'the guests had to', 'לִרְחֹץ אֶת הָרַגְלַיִם': 'wash the feet', 'אַבְרָהָם חָשַׁב': 'Avraham thought',
   'שֶׁהֵם עֲרָבִים': 'that they were Arabs', 'וְעוֹשִׂים עֲבוֹדָה זָרָה': 'who did avodah zarah (idol worship)',
   'כִּי אַבְרָהָם חָשַׁב שֶׁהֵם עֲרָבִים וְעוֹשִׂים עֲבוֹדָה זָרָה': 'because Avraham thought they were Arabs who did avodah zarah (idol worship)',
@@ -729,7 +734,7 @@ function home() {
     </section>
     <section class="step${open ? '' : ' locked'}">
       <div class="sh"><span class="num">4</span><div><h2>📚 More from the Review Sheet</h2><p>The rest of the review sheet: word endings and beginnings, who said it, true or false.</p></div></div>
-      ${open ? `<div class="modes">${Object.keys(DRILLS).map(k => { const d = DRILLS[k], b = store.get('bestD_' + k, null); return `<button class="mode" data-drill="${k}"><div class="ico">${d.ico}</div><b>${d.title}</b><span class="heb" lang="he">${d.he}</span><span>${d.blurb}</span><span class="best">${b != null ? `Best: ${b} / ${drillTotal(k)}` : ''}</span></button>`; }).join('')}</div>` : lock}
+      ${open ? `<div class="modes">${Object.keys(DRILLS).map(k => { const d = DRILLS[k], b = store.get('bestD_' + k, null); return `<button class="mode" data-drill="${k}"><div class="ico">${d.ico}</div><b>${d.title}</b><span class="heb" lang="he">${d.he}</span><span>${bidi(d.blurb)}</span><span class="best">${b != null ? `Best: ${b} / ${drillTotal(k)}` : ''}</span></button>`; }).join('')}</div>` : lock}
     </section>
     <div class="sec">
       <h2>The six words (roots and meanings)</h2>
@@ -1247,27 +1252,30 @@ function finishMatch() {
    Score = steps right on the first try. */
 const pick = (right, pool, n = 3) => shuffle([right, ...shuffle([...new Set(pool)].filter(p => p !== right && !right.includes(p) && !p.includes(right))).slice(0, n - 1)]);
 const DRILLS = {
-  hipuch: { title: 'Vav Hahipuch', he: 'הַהִפּוּךְ', ico: '🔄', blurb: 'The וַ flips “he will” into “and he did”',
-    items: () => shuffle(HIPUCH).map(x => ({ show: `<span class="mk">וַ</span>${x.rest}`, big: true, item: x.w,
+  hipuch: { title: 'Vav Hahipuch', he: 'הַהִפּוּךְ', ico: '🔄', blurb: 'Who did it, and what did they do?', rule: HIPUCH_RULE,
+    items: () => shuffle(HIPUCH).map(x => ({ show: `<span class="mk">${x.pre}</span>${x.mid}${x.end ? `<span class="mk">${x.end}</span>` : ''}`, big: true, item: x.w,
       steps: [
-        { ask: 'What is the shoresh (שֹׁרֶשׁ)?', he: true, right: x.root, choices: pick(x.root, HIPUCH.map(h => h.root)) },
-        { ask: 'What does the word mean?', right: x.en, choices: shuffle([x.en, x.futEn, shuffle(HIPUCH.filter(h => h !== x))[0].en]) }
+        { ask: 'Who did it? Look at the letters in red.', he: true, right: x.who, choices: ['הוּא', 'הֵם', 'הִיא'] },
+        { ask: 'What did they do?', he: true, right: x.past, choices: pick(x.past, HIPUCH.map(h => h.past)) }
       ],
-      after: `${x.fut} = “${x.futEn}.” The וַ flips it: ${x.w} = “${x.en}.”` })) },
-  tchiliyot: { title: 'Prefixes', he: 'תְּחִלִּיּוֹת', ico: '⬅️', blurb: 'Letters at the beginning of a word',
-    items: () => shuffle(TCHILIYOT).map(x => ({ show: x.w, show2: `<span class="mk">${x.pre}</span>${x.rest}`, big: true, item: x.w,
-      steps: [
-        { ask: `What does the beginning ${x.pre} mean?`, right: x.pm, choices: pick(x.pm, PRE_POOL) },
-        { ask: 'What does the whole word mean?', right: x.en, choices: pick(x.en, TCHILIYOT.map(t => t.en)) }
-      ],
-      after: `${x.w} = “${x.en}.”` })) },
-  sofiyot: { title: 'Endings', he: 'סוֹפִיּוֹת', ico: '➡️', blurb: 'Letters at the end of a word',
+      after: `${x.w} = ${x.who} ${x.past} = “${WHO_EN[x.who]} ${x.en}.”` })) },
+  tchiliyot: { title: 'Prefixes', he: 'תְּחִלִּיּוֹת', ico: '⬅️', blurb: 'Letters added at the beginning of a word',
+    items: () => shuffle(TCHILIYOT).map(x => {
+      const bareW = x.w.replace(/[֑-ׇ]/g, ''), wrong1 = x.pl.length > 1 ? bareW[0] : bareW.slice(0, 2);
+      return { show: x.w, show2: `<span class="mk">${x.pre}</span>${x.rest}`, big: true, item: x.w,
+        steps: [
+          { ask: 'Which letters were added at the beginning?', he: true, right: x.pl, choices: shuffle([x.pl, wrong1, shuffle(TCHILIYOT.map(t => t.pl).filter(l => l !== x.pl && l !== wrong1))[0]]) },
+          { ask: `What does ${x.pl} mean here?`, right: x.pm, choices: pick(x.pm, PRE_POOL) }
+        ],
+        after: `${x.pl} = “${x.pm}.” ${x.w} = “${x.en}.”` };
+    }) },
+  sofiyot: { title: 'Endings', he: 'סוֹפִיּוֹת', ico: '➡️', blurb: 'Letters added at the end of a word',
     items: () => shuffle(SOFIYOT).map(x => ({ show: x.w, show2: `${x.rest}<span class="mk">${x.suf}</span>`, big: true, item: x.w,
       steps: [
-        { ask: `What does the ending ${x.suf} mean?`, right: x.sm, choices: pick(x.sm, SUF_POOL) },
+        { ask: `The ending ${x.suf} means…`, he: true, right: x.sh, choices: shuffle(SOFIYOT.map(t => t.sh)) },
         { ask: 'What does the whole word mean?', right: x.en, choices: pick(x.en, SOFIYOT.map(t => t.en)) }
       ],
-      after: `${x.w} = “${x.en}.”` })) },
+      after: `${x.suf} = ${x.sh} = “${x.sm}.” ${x.w} = “${x.en}.”` })) },
   mimi: { title: 'Who Am I?', he: 'מִי אוֹ מָה אֲנִי', ico: '🙋', blurb: 'Who in the story did this?',
     items: () => shuffle(MIMI).map(x => ({ show: hw(x.s), en: x.en, item: x.s,
       steps: [{ ask: 'Who am I?', he: true, right: x.a, choices: shuffle(MIMI_POOL.slice()) }], after: `${x.s} – ${x.a}` })) },
@@ -1325,7 +1333,7 @@ function drillStep() {
       $('next').onclick = () => { D.i++; if (D.i < D.items.length) drillItem(); else drillDone(); };
     } else {
       nope(); D.miss = true; b.disabled = true; b.classList.add('wrong');
-      $('say').className = 'say no'; $('say').textContent = 'Not that one. Try again!';
+      $('say').className = 'say no'; $('say').innerHTML = D.def.rule && D.si === 0 ? 'Not that one. Remember: ' + bidi(D.def.rule) : 'Not that one. Try again!';
     }
   });
 }
