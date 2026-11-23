@@ -14,6 +14,7 @@ Review for Parshas Vayera, perek 18, made from both sides of the teacher's answe
 
 1. **The Story**: the whole story of the pesukim (with the Rashis the test uses) in English, in four short chapters with comprehension questions after each one and "Show me in the story". Finishing it once opens steps 2 and 3 on that iPad.
 2. **Learn the Words**: flip cards and Word Match for the key Hebrew words, starting with the question words (מִי, לָמָּה, מַדּוּעַ, אֵיזוֹ, מָה).
+   - **Spelling** (not locked): the 29 basic words from the sheet, spelled the way the teacher writes them in her answer key, without nekudot (ביקור, אהל, שלשה). Spelling List (each word with its letters by name), Letter Bank (tap the letters in order, with hints for look-alike, sound-alike and final letters), Aleph-Bet Keys (type the whole word, then check, like a test) and Look, Cover, Write (write it with a finger, then check). Each round starts with the words he missed last time, and a missed word comes back once at the end of the round.
 3. **The Worksheet**: the teacher crosses out the question word and writes the answer back in the question's own words, so these games practice exactly that.
 4. **More from the Review Sheet** (pages 3-4 of the blank review sheet on Google Classroom): Vav Hahipuch (root and meaning), Prefixes and Endings (what the added letters mean, then the whole word), Who Am I?, Who Said It? and True or False. Data is in `HIPUCH`, `TCHILIYOT`, `SOFIYOT`, `MIMI`, `SAID` and `TF`; roots are written without final letters, like the class does.
 
@@ -33,7 +34,7 @@ Help everywhere: tap any Hebrew word to see what it means, and the **EN** button
 - **Malach Match**: match Refael, Gavriel and Michael to their jobs, then a bonus question.
 - **The six words**: study and quiz for the six verb forms (roots and meanings) from the earlier worksheet.
 
-Everything is at the top of the script in `chumash/index.html`: `STORY` (chapters, questions with the right answer first, and `look` sentences copied exactly from the chapter), `VOCAB`, `SHEET` (each question has its number on the sheet as `n`; `stmt: true` marks a fill-in sentence with no question mark), `SEQ` (the order on the sheet, with question 5 as `'M'`) and `MALACHIM` (in each answer, `tiles` must read the same as the answer `a` when joined with spaces), and `GLOSS` / `PHRASES` (the English for every Hebrew word and piece).
+Everything is at the top of the script in `chumash/index.html`: `STORY` (chapters, questions with the right answer first, and `look` sentences copied exactly from the chapter), `VOCAB`, `SPELL` (the spelling words: `w` is the plain spelling and `n` the same letters with nekudot), `SHEET` (each question has its number on the sheet as `n`; `stmt: true` marks a fill-in sentence with no question mark), `SEQ` (the order on the sheet, with question 5 as `'M'`) and `MALACHIM` (in each answer, `tiles` must read the same as the answer `a` when joined with spaces), and `GLOSS` / `PHRASES` (the English for every Hebrew word and piece).
 
 Play it at https://tzirelsmulevitz-wq.github.io/shorashim-game/chumash/
 
