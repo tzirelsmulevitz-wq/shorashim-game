@@ -318,7 +318,7 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 .pav:active { transform: translateY(2px); box-shadow: none; }
 .pav .emo { font-size: 46px; line-height: 1.1; }
 .pav .nm { font-weight: 800; font-size: 17px; }
-.pinfo { flex: 1; min-width: 0; }
+.pinfo { flex: 1; min-width: 0; padding-right: 34px; }
 .prank { font-size: 22px; font-weight: 800; line-height: 1.2; }
 .ppts { color: var(--muted); font-weight: 700; }
 .ppts b { color: var(--ink); font-size: 26px; font-variant-numeric: tabular-nums; }
@@ -411,6 +411,43 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 @keyframes glow { 50% { box-shadow: 0 5px 0 var(--block-edge), 0 0 0 10px rgba(242,181,68,.45); } }
 @keyframes popbig { 0% { transform: scale(.5); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
 
+/* ---------- avatars ---------- */
+.pcard { position: relative; }
+.pav { position: relative; }
+.avct { font-size: 12px; font-weight: 800; color: var(--muted); }
+.pav .newb { top: -10px; bottom: auto; left: auto; right: -12px; }
+.pswitch { position: absolute; top: 10px; right: 10px; min-height: 40px; padding: 0 10px; font-size: 20px; }
+.avbanner { display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 10px; padding: 12px 16px; border-radius: 20px; border: 3px solid #b06ad9; background: linear-gradient(135deg, #f6eaff, #fff3c4); color: var(--ink); font: inherit; font-size: 17px; text-align: left; cursor: pointer; box-shadow: var(--shadow); }
+.avbanner .ave { font-size: 38px; white-space: nowrap; }
+.avnew { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 18px; border: 3px solid #b06ad9; background: linear-gradient(135deg, #f6eaff, #fff3c4); text-align: left; }
+.avnew .ave { font-size: 54px; line-height: 1; }
+.avnew div { flex: 1; display: grid; }
+.avnew b { font-size: 20px; }
+.avnew span { color: var(--muted); font-size: 15px; font-weight: 600; }
+.avnew button:disabled { opacity: 1; background: var(--good); }
+.avhead { display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, var(--sand), var(--teal-bg)); border: 3px solid var(--teal); border-radius: 24px; padding: 12px 18px; box-shadow: var(--shadow); }
+.avhead .ae.big { font-size: 72px; line-height: 1.1; }
+.avhead div { display: grid; gap: 4px; }
+.avhead b { font-size: 22px; }
+.avhead span { color: var(--muted); font-weight: 600; }
+.avhead span b { font-size: inherit; color: var(--ink); }
+.avg { margin: 20px 4px 8px; font-size: 19px; }
+.avgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.avc { position: relative; display: grid; justify-items: center; align-content: start; gap: 3px; padding: 12px 8px; border-radius: 20px; border: 2px solid var(--line); background: var(--sand); color: var(--ink); font: inherit; text-align: center; box-shadow: var(--shadow); }
+button.avc { cursor: pointer; }
+button.avc:active { transform: translateY(2px); }
+.avc .ae { font-size: 56px; line-height: 1.15; }
+.avc b { font-size: 17px; }
+.avc.on { border: 3px solid var(--teal); background: var(--teal-bg); }
+.avc.new { border: 3px solid #b06ad9; animation: popbig .7s ease-out; }
+.avc.locked .ae { filter: brightness(0); opacity: .18; }
+.avc.locked b { color: var(--muted); }
+.avc .avneed { font-size: 13px; color: var(--muted); font-weight: 600; line-height: 1.3; }
+.avc .mini { width: 85%; height: 7px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 3px; }
+.avc .mini i { display: block; height: 100%; background: var(--sun); border-radius: 99px; }
+.wearing { font-size: 12px; font-weight: 900; color: #fff; background: var(--teal); border-radius: 999px; padding: 1px 9px; }
+.newb2 { position: absolute; top: -9px; right: -6px; background: var(--bad); color: #fff; font-size: 12px; font-weight: 900; padding: 2px 7px; border-radius: 999px; transform: rotate(10deg); }
+
 @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 @keyframes pop { 0% { transform: scale(.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes drawx { to { stroke-dashoffset: 0; } }
@@ -443,7 +480,7 @@ const store = {
 const PLAYERS = [{ id: 'Jack', emo: '🦁' }, { id: 'Abba', emo: '🧔' }, { id: 'Ima', emo: '👩' }, { id: 'Atara', emo: '🦋' }, { id: 'Leora', emo: '🌸' }, { id: 'Aviva', emo: '🐬' }];
 const IDLE_MS = 30 * 60 * 1000;
 const whoOf = e => e.who || 'Jack';
-const pemo = id => (PLAYERS.find(p => p.id === id) || { emo: '🙂' }).emo;
+const pemo = id => store.get('av@' + id, null) || (PLAYERS.find(p => p.id === id) || { emo: '🙂' }).emo;   /* the avatar they wear */
 let player = 'Jack';
 function setPlayer(id) { player = PLAYERS.some(p => p.id === id) ? id : 'Jack'; store.set('player', { id: player, t: Date.now() }); }
 function touchPlayer() { if (player !== 'Jack') store.set('player', { id: player, t: Date.now() }); }
@@ -995,7 +1032,7 @@ function home() {
       ${countdownHTML()}
     </div>
     ${playerCardHTML(pts)}
-    ${isJack ? '' : `<section class="guest"><p>${pemo(player)} <b>${esc(player)}</b> is playing. Every level is open. Beat Jack’s best score on a level to take the 👑!</p><button class="btnbig" id="backJack">🦁 Switch back to Jack</button></section>`}
+    ${isJack ? '' : `<section class="guest"><p>${pemo(player)} <b>${esc(player)}</b> is playing. Every level is open. Beat Jack’s best score on a level to take the 👑!</p><button class="btnbig" id="backJack">${pemo('Jack')} Switch back to Jack</button></section>`}
     ${mapHTML(st)}
     ${isJack ? readyCardHTML() : ''}
     <section class="step">
@@ -1018,6 +1055,8 @@ function home() {
   wireReadyCard();
   wireMap(st);
   $('whoBtn').onclick = openSheet; $('whoBtn2').onclick = openSheet;
+  $('avBtn').onclick = () => { tick(); avatarScreen(); };
+  if ($('avBanner')) $('avBanner').onclick = () => { tick(); avatarScreen(); };
   if ($('backJack')) $('backJack').onclick = () => { setPlayer('Jack'); tick(); home(); };
   $('mKey').onclick = answerKey;
   $('vFlip').onclick = () => startFlip();
@@ -1760,7 +1799,8 @@ function roundExtras(mode, t) {
     else if (!better(ob, cur, low) && !better(cur, ob, low)) rec = `🤝 You tied ${pemo(whoOf(ob))} ${esc(whoOf(ob))}’s record (${esc(ob.label)}).`;
     else if (better(ob, cur, low)) rec = `👑 ${pemo(whoOf(ob))} ${esc(whoOf(ob))} still holds the record: <b>${esc(ob.label)}</b>. Try again to beat it!`;
   }
-  if (r1 > r0 || opened.length || rec.startsWith('🏆')) setTimeout(() => { confetti(); fanfare(); }, 350);
+  const avs = avExtras();
+  if (r1 > r0 || opened.length || rec.startsWith('🏆') || avs) setTimeout(() => { confetti(); fanfare(); }, 350);
   return `<div class="xtras">
     <div class="xp popin">+${earned.toLocaleString()} <span>points</span></div>
     ${helped && helper ? '<p class="rnote" style="margin:4px 0 0">Some answers had the EN help on, so they didn’t earn points. Turn EN off to earn more!</p>' : ''}
@@ -1768,23 +1808,120 @@ function roundExtras(mode, t) {
     ${r1 > r0 ? `<div class="rankup popin">🎉 RANK UP! 🎉<b>${rankName(r1)}</b></div>` : ''}
     ${opened.map(i => `<div class="unlocked">🔓 Level ${i + 1} is open: ${LEVELS[i].ico} ${esc(LEVELS[i].name)}! <button class="btnbig sm" data-golv="${i}">Play it ›</button></div>`).join('')}
     ${rec ? `<div class="record">${rec}</div>` : ''}
+    ${avs}
   </div>`;
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-golv]'); if (b) { tick(); LEVELS[+b.dataset.golv].go(); } });
 
+/* ============================================================ AVATARS
+   Each player wears an avatar (shown on the player card, high scores and the family board).
+   Four are free; the rest are earned with points (one for each rank), stars on the map, and
+   special feats. Once earned, an avatar is never taken away (the earned list is kept in avGot@name),
+   even if, say, someone later takes back a family record. */
+const AVATARS = [
+  { e: '🦁', n: 'Lion' }, { e: '🐶', n: 'Puppy' }, { e: '🐱', n: 'Kitten' }, { e: '🐻', n: 'Bear' },
+  { e: '🐑', n: 'Sheep', pts: 100 }, { e: '🐪', n: 'Camel', pts: 300 }, { e: '🦊', n: 'Fox', pts: 600 },
+  { e: '🐂', n: 'Ox', pts: 1000 }, { e: '🐆', n: 'Cheetah', pts: 1500 }, { e: '🦅', n: 'Eagle', pts: 2200 },
+  { e: '🦸', n: 'Superhero', pts: 3000 }, { e: '🦈', n: 'Shark', pts: 4000 }, { e: '🦄', n: 'Unicorn', pts: 5500 },
+  { e: '🐸', n: 'Frog', stars: 5 }, { e: '🐼', n: 'Panda', stars: 15 }, { e: '🦖', n: 'T-Rex', stars: 25 },
+  { e: '🤖', n: 'Robot', stars: 35 }, { e: '🚀', n: 'Rocket', stars: 45 },
+  { e: '🐧', n: 'Penguin', perfect: 1 }, { e: '🐿️', n: 'Chipmunk', days: 3 }, { e: '🦉', n: 'Owl', spell: 1 },
+  { e: '🦍', n: 'Gorilla', record: 1 }, { e: '👻', n: 'Ghost', ghost: 20 }, { e: '🐲', n: 'Dragon', boss: 1 }
+];
+const AV_GROUPS = [['Starters', a => !avNeed(a, null)], ['Rank rewards', a => a.pts], ['Star collector', a => a.stars], ['Special', a => a.perfect || a.days || a.spell || a.record || a.ghost || a.boss]];
+const avDefault = who => (PLAYERS.find(p => p.id === who) || { emo: '🙂' }).emo;
+const AV_OWN = { '🧔': 'Abba', '👩': 'Ima', '🦋': 'Butterfly', '🌸': 'Blossom', '🐬': 'Dolphin' };
+function avList(who) { const own = avDefault(who); return AVATARS.some(a => a.e === own) ? AVATARS : [{ e: own, n: AV_OWN[own] || who, own: 1 }, ...AVATARS]; }
+function avStats(who) {
+  const st = levelState(who), recs = records();
+  const days = new Set(readLog().filter(e => e.game === 'chumash' && whoOf(e) === who).map(e => new Date(e.t).toDateString())).size;
+  return { pts: pointsOf(who), stars: st.reduce((a, s) => a + s.stars, 0), perfect: st.filter(s => s.stars === 3).length, days,
+    spell: spellKnown(who), record: Object.values(recs).filter(r => whoOf(r) === who).length, boss: st.find(s => s.L.boss).stars,
+    /* Ghost: worksheet answers right with the EN help invisible (off) */
+    ghost: readLog().filter(e => e.game === 'chumash' && whoOf(e) === who && e.pts > 0 && (EN_MODE(e.mode) || e.mode === 'ptest' || e.mode === 'today')).length };
+}
+/* what it takes to earn an avatar (null = free), and how far along this player is */
+function avNeed(a, S) {
+  const s = S || {};
+  if (a.pts) { const r = RANKS.find(x => x[0] === a.pts); return { txt: `Reach ${r[1]} ${r[2]}`, have: s.pts, need: a.pts, unit: 'points' }; }
+  if (a.stars) return { txt: `Collect ${a.stars} ⭐ on the map`, have: s.stars, need: a.stars, unit: 'stars' };
+  if (a.perfect) return { txt: 'Get ⭐⭐⭐ on any level', have: s.perfect, need: 1 };
+  if (a.days) return { txt: `Play on ${a.days} different days`, have: s.days, need: a.days, unit: 'days' };
+  if (a.spell) return { txt: `Spell all ${SPELL.length} words right`, have: s.spell, need: SPELL.length, unit: 'words' };
+  if (a.record) return { txt: 'Take a 👑 family record on any level', have: s.record, need: 1 };
+  if (a.ghost) return { txt: `Make the EN help disappear: get ${a.ghost} worksheet answers right with EN off`, have: s.ghost, need: a.ghost, unit: 'answers' };
+  if (a.boss) return { txt: 'Get ⭐⭐ on the Boss Level', have: s.boss, need: 2, unit: 'stars' };
+  return null;
+}
+const avGotKey = who => 'avGot@' + who;
+function avEarned(who, S) {
+  const got = new Set([avDefault(who), ...(store.get(avGotKey(who), null) || [])]);
+  avList(who).forEach(a => { const nd = avNeed(a, S); if (!nd || nd.have >= nd.need) got.add(a.e); });
+  return got;
+}
+/* avatars earned but not celebrated yet (the free ones never count as new) */
+function avFresh(who, S) {
+  const seen = new Set(store.get(avGotKey(who), null) || []), free = avList(who).filter(a => !avNeed(a, null)).map(a => a.e);
+  return [...avEarned(who, S)].filter(e => !seen.has(e) && !free.includes(e) && e !== avDefault(who));
+}
+const avMark = who => store.set(avGotKey(who), [...avEarned(who, avStats(who))]);
+const avName = (e, who = player) => (avList(who).find(a => a.e === e) || { n: '' }).n;
+function wear(e) { store.set('av@' + player, e); yay(); toast(`You’re now the ${esc(avName(e))}! <span style="font-size:1.6em;vertical-align:-.15em">${e}</span>`); }
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-wear]');
+  if (!b) return;
+  wear(b.dataset.wear);
+  if (b.closest('.avgrid')) return avatarScreen(true);
+  document.querySelectorAll('[data-wear]').forEach(x => { x.disabled = x === b; if (x === b) x.textContent = 'Wearing ✓'; });
+});
+/* results screen: avatars this round earned */
+function avExtras() {
+  const S = avStats(player), fresh = avFresh(player, S);
+  if (!fresh.length) return '';
+  avMark(player);
+  return fresh.map(e => `<div class="avnew popin"><span class="ave">${e}</span><div><b>🎁 New avatar: ${esc(avName(e))}!</b><span>${esc(avNeed(avList(player).find(a => a.e === e), S).txt)}</span></div><button class="btnbig sm" data-wear="${e}">Wear it</button></div>`).join('');
+}
+function avatarScreen(keep) {
+  const S = avStats(player), earned = avEarned(player, S), fresh = new Set(avFresh(player, S)), cur = pemo(player), list = avList(player);
+  store.set(avGotKey(player), [...earned]);   /* they've seen them now */
+  const locked = list.filter(a => !earned.has(a.e)).map(a => ({ a, nd: avNeed(a, S) })).sort((x, y) => (y.nd.have / y.nd.need) - (x.nd.have / x.nd.need));
+  const next = locked[0];
+  const card = a => {
+    const has = earned.has(a.e), nd = avNeed(a, S);
+    if (has) return `<button class="avc${a.e === cur ? ' on' : ''}${fresh.has(a.e) ? ' new' : ''}" data-wear="${a.e}" aria-label="Wear the ${esc(a.n)}"><span class="ae">${a.e}</span><b>${esc(a.n)}</b>${a.e === cur ? '<span class="wearing">Wearing</span>' : fresh.has(a.e) ? '<span class="newb2">NEW!</span>' : ''}</button>`;
+    const pct = Math.min(100, Math.round(100 * (nd.have || 0) / nd.need));
+    return `<div class="avc locked"><span class="ae" aria-hidden="true">${a.e}</span><b>${esc(a.n)}</b><span class="avneed">${esc(nd.txt)}</span>${nd.unit ? `<span class="mini"><i style="width:${pct}%"></i></span><span class="avneed">${Math.min(nd.have || 0, nd.need).toLocaleString()} / ${nd.need.toLocaleString()} ${nd.unit}</span>` : ''}</div>`;
+  };
+  app.innerHTML = topbar('🎭 My Avatars', `<span class="pill">${earned.size} of ${list.length}</span>`) + `
+    <div class="avhead">
+      <span class="ae big">${cur}</span>
+      <div><b>${esc(player)} is wearing: ${esc(avName(cur) || player)}</b>
+      ${next ? `<span>Next up: <b>${next.a.e} ${esc(next.a.n)}</b> · ${esc(next.nd.txt)}${next.nd.unit ? ` (${Math.max(0, next.nd.need - (next.nd.have || 0)).toLocaleString()} more ${next.nd.unit})` : ''}</span>` : '<span>You have every avatar! 🎉</span>'}</div>
+    </div>
+    <p class="say" style="margin:8px 0 0">Tap an avatar to wear it. Earn more with points, stars and special wins!</p>
+    ${AV_GROUPS.map(([g, f]) => { const items = list.filter(a => a.own ? g === 'Starters' : f(a)); return items.length ? `<h3 class="avg">${g}</h3><div class="avgrid">${items.map(card).join('')}</div>` : ''; }).join('')}
+    <div class="actions"><button class="btnbig" id="menu">🗺️ Level map</button></div>`;
+  wireTop();
+  $('menu').onclick = home;
+  if (!keep) top0();
+  if (fresh.size && !keep) setTimeout(() => { confetti(); fanfare(); }, 300);
+}
+
 /* ---------- the home screen parts ---------- */
 function playerCardHTML(pts) {
-  const rk = rankOf(pts), nx = RANKS[rk + 1], p = PLAYERS.find(x => x.id === player);
+  const rk = rankOf(pts), nx = RANKS[rk + 1], S = avStats(player), n = avEarned(player, S).size, fresh = avFresh(player, S);
   const pct = nx ? Math.round(100 * (pts - RANKS[rk][0]) / (nx[0] - RANKS[rk][0])) : 100;
   return `<section class="pcard">
-    <button class="pav" id="whoBtn" aria-label="Who’s playing? Tap to change"><span class="emo">${p.emo}</span><span class="nm">${esc(p.id)} ▾</span></button>
+    <button class="pav" id="avBtn" aria-label="My avatars"><span class="emo">${pemo(player)}</span><span class="nm">${esc(player)}</span><span class="avct">🎭 ${n}/${avList(player).length}</span>${fresh.length ? '<span class="newb">NEW!</span>' : ''}</button>
     <div class="pinfo">
       <div class="prank">${rankName(rk)}</div>
       <div class="ppts"><b>${pts.toLocaleString()}</b> points</div>
       <div class="bar"><i style="width:${pct}%"></i></div>
       <div class="pnext">${nx ? `${(nx[0] - pts).toLocaleString()} more to ${nx[1]} <b>${nx[2]}</b>` : 'Top rank! You’re a Chumash Master!'}</div>
     </div>
+    <button class="ghost sm pswitch" id="whoBtn" aria-label="Who’s playing?">👥</button>
   </section>
+  ${fresh.length ? `<button class="avbanner popin" id="avBanner"><span class="ave">${fresh.slice(0, 4).join(' ')}</span><span><b>🎁 You earned ${fresh.length === 1 ? 'a new avatar' : fresh.length + ' new avatars'}!</b> Tap to see ${fresh.length === 1 ? 'it' : 'them'} and pick one.</span></button>` : ''}
   <p class="pnote">⭐ 10 points for every answer right the first time${helper ? ' (worksheet answers need <b>EN</b> off)' : ''}, and 50 for every star on the map.</p>`;
 }
 function mapHTML(st) {
@@ -1831,7 +1968,7 @@ function familyHTML() {
   const rows = PLAYERS.filter(p => played.has(p.id)).map(p => ({ p, pts: pointsOf(p.id) })).sort((a, b) => b.pts - a.pts);
   return `<section class="family">
     <div class="fhead"><h2>🏆 Family Challenge</h2><button class="ghost sm" id="whoBtn2">👥 Who’s playing?</button></div>
-    ${rows.map((r, i) => `<div class="frow${r.p.id === player ? ' me' : ''}"><span class="fpos">${['🥇', '🥈', '🥉'][i] || '#' + (i + 1)}</span><span class="femo">${r.p.emo}</span><b>${esc(r.p.id)}</b><span class="frank">${rankName(rankOf(r.pts))}</span><span class="fpts">${r.pts.toLocaleString()}</span></div>`).join('')}
+    ${rows.map((r, i) => `<div class="frow${r.p.id === player ? ' me' : ''}"><span class="fpos">${['🥇', '🥈', '🥉'][i] || '#' + (i + 1)}</span><span class="femo">${pemo(r.p.id)}</span><b>${esc(r.p.id)}</b><span class="frank">${rankName(rankOf(r.pts))}</span><span class="fpts">${r.pts.toLocaleString()}</span></div>`).join('')}
     <p class="fnote">${rows.length < 2 ? 'Can anyone beat Jack? Tap <b>Who’s playing?</b>, pick your name and play any level. Beat his score to take the 👑!' : 'Beat someone’s best score on a level to take the 👑.'} Only Jack’s answers count toward his test checklist.</p>
   </section>`;
 }
@@ -1840,7 +1977,7 @@ function openSheet() {
   closeSheet();
   const d = document.createElement('div'); d.id = 'sheetBg'; d.className = 'sheetbg';
   d.innerHTML = `<div class="psheet popin" role="dialog" aria-label="Who’s playing?"><h2>Who’s playing?</h2>
-    <div class="pgrid">${PLAYERS.map(p => `<button class="pbtn${p.id === player ? ' on' : ''}" data-p="${p.id}"><span class="emo">${p.emo}</span><b>${esc(p.id)}</b><span>${rankName(rankOf(pointsOf(p.id)))}</span></button>`).join('')}</div>
+    <div class="pgrid">${PLAYERS.map(p => `<button class="pbtn${p.id === player ? ' on' : ''}" data-p="${p.id}"><span class="emo">${pemo(p.id)}</span><b>${esc(p.id)}</b><span>${rankName(rankOf(pointsOf(p.id)))}</span></button>`).join('')}</div>
     <p class="fnote">Everyone plays on this iPad and shows up on the same high-score lists. After 30 minutes without playing, it switches back to Jack.</p>
     <button class="ghost" id="sheetClose">Close</button></div>`;
   document.body.appendChild(d);
@@ -1983,13 +2120,13 @@ function sessDone() {
    A word he misses comes back once at the end of the round. Score = words right on the first try. */
 const heL = c => `<bdi class="he hl" lang="he">${c}</bdi>`;
 /* each word's latest result in any spelling mode: right / missed / new */
-function spellStatus() {
+function spellStatus(who = player) {
   const st = {};
-  readLog().forEach(e => { if (e.game === 'chumash' && e.spell && e.w && whoOf(e) === player) st[e.w] = e.ok ? 'right' : 'missed'; });
+  readLog().forEach(e => { if (e.game === 'chumash' && e.spell && e.w && whoOf(e) === who) st[e.w] = e.ok ? 'right' : 'missed'; });
   return st;
 }
 const spBest = (k, n) => { const b = store.get('bestSp_' + k, null); return b != null ? `Best: ${b} / ${n}` : ''; };
-const spellKnown = () => { const st = spellStatus(); return SPELL.filter(v => st[v.w] === 'right').length; };
+const spellKnown = (who = player) => { const st = spellStatus(who); return SPELL.filter(v => st[v.w] === 'right').length; };
 /* the words for a round: missed ones first, then new ones, then ones he already knows */
 function spellPick(n) {
   const st = spellStatus(), g = k => shuffle(SPELL.filter(v => (st[v.w] || 'new') === k));
