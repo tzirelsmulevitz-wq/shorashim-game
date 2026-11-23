@@ -51,6 +51,7 @@ function chumashReadiness(entries) {
   var by = {};
   (entries || []).forEach(function (e) {
     if (!e || e.game !== 'chumash' || !e.skill) return;
+    if (e.who && e.who !== 'Jack') return;   /* someone else in the family played */
     var s = by[e.skill] || (by[e.skill] = { tries: 0, t: 0, lastNoHelp: null });
     s.tries++; s.t = Math.max(s.t, e.t || 0);
     if (!e.help) s.lastNoHelp = !!e.ok;

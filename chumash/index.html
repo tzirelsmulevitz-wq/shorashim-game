@@ -312,6 +312,105 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 .spcard .info bdi { font-size: 22px; }
 .spcard .lnames { justify-content: flex-start; }
 
+/* ---------- player card, points, ranks ---------- */
+.pcard { display: flex; align-items: center; gap: 16px; margin-top: 16px; background: linear-gradient(135deg, var(--sand), var(--teal-bg)); border: 3px solid var(--teal); border-radius: 24px; box-shadow: var(--shadow); padding: 14px 18px; }
+.pav { flex: none; display: grid; justify-items: center; gap: 2px; background: var(--btn); border: 2px solid var(--line); border-radius: 20px; padding: 8px 12px; cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.pav:active { transform: translateY(2px); box-shadow: none; }
+.pav .emo { font-size: 46px; line-height: 1.1; }
+.pav .nm { font-weight: 800; font-size: 17px; }
+.pinfo { flex: 1; min-width: 0; }
+.prank { font-size: 22px; font-weight: 800; line-height: 1.2; }
+.ppts { color: var(--muted); font-weight: 700; }
+.ppts b { color: var(--ink); font-size: 26px; font-variant-numeric: tabular-nums; }
+.pinfo .bar { margin: 6px 0 4px; height: 12px; }
+.pinfo .bar i { background: var(--sun); }
+.pnext { color: var(--muted); font-size: 15px; font-weight: 600; }
+.pnote { color: var(--muted); font-size: 15px; text-align: center; margin: 8px 0 0; }
+.pchip { white-space: nowrap; font-weight: 800; font-size: 15px; padding: 4px 10px; border-radius: 999px; background: var(--sun); color: #1d2b45; }
+.guest { margin-top: 16px; background: var(--sand); border: 3px dashed var(--sun); border-radius: 22px; padding: 14px 18px; text-align: center; }
+.guest p { margin: 0 0 10px; font-size: 18px; }
+.btnbig.sm, .ghost.sm { min-height: 44px; padding: 0 16px; font-size: 17px; }
+
+/* ---------- level map ---------- */
+.mapwrap { margin-top: 16px; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 14px 8px; }
+.maphead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 0 4px; }
+.maphead h2 { margin: 0; font-size: 24px; }
+.maphead span { color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+.map { position: relative; margin-top: 8px; }
+.trail { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.trail path { fill: none; stroke: var(--sun); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 2 14; opacity: .8; }
+.mstart { position: absolute; top: 0; transform: translateX(-50%); font-weight: 800; color: var(--teal); font-size: 15px; white-space: nowrap; }
+.lv { position: absolute; width: 0; height: 0; }
+.lvb { position: absolute; left: -40px; top: -40px; width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--block-edge); background: var(--block); color: #fff; cursor: pointer; box-shadow: 0 5px 0 var(--block-edge), 0 8px 18px rgba(29,43,69,.18); padding: 0; display: grid; place-items: center; z-index: 2; }
+.lvb:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--block-edge); }
+.lico { font-size: 36px; line-height: 1; }
+.lv.cleared .lvb { background: var(--good); border-color: #1e7a52; box-shadow: 0 5px 0 #1e7a52, 0 8px 18px rgba(29,43,69,.18); }
+.lv.locked .lvb { background: var(--line); border-color: var(--line); box-shadow: 0 5px 0 rgba(29,43,69,.15); }
+.lv.locked .lico { opacity: .35; filter: grayscale(1); }
+.lock { position: absolute; right: -6px; bottom: -4px; font-size: 26px; }
+.lv.cur .lvb { animation: glow 1.6s ease-in-out infinite; }
+.play { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); background: var(--sun); color: #1d2b45; font-size: 13px; font-weight: 900; letter-spacing: .06em; padding: 2px 9px; border-radius: 999px; box-shadow: 0 2px 0 rgba(0,0,0,.15); }
+.newb { position: absolute; bottom: -8px; left: -20px; background: var(--bad); color: #fff; font-size: 12px; font-weight: 900; padding: 2px 7px; border-radius: 999px; transform: rotate(12deg); }
+.lv.fresh .lvb { animation: popbig .7s ease-out 2, glow 1.6s ease-in-out 1.4s infinite; }
+.lv.boss .lvb { left: -52px; top: -52px; width: 104px; height: 104px; background: #7b4bc4; border-color: #57309a; box-shadow: 0 6px 0 #57309a, 0 10px 22px rgba(29,43,69,.25); }
+.lv.boss .lico { font-size: 50px; }
+.lv.boss.locked .lvb { background: var(--line); border-color: var(--line); box-shadow: 0 6px 0 rgba(29,43,69,.15); }
+.lv.boss.cleared .lvb { background: var(--sun); border-color: #c48a1d; box-shadow: 0 6px 0 #c48a1d; }
+.lvl { position: absolute; top: 0; transform: translateY(-50%); display: grid; gap: 1px; background: var(--sky); border-radius: 14px; padding: 6px 10px; line-height: 1.25; box-shadow: 0 1px 0 var(--line); z-index: 1; }
+.lvl.l { right: 50px; text-align: right; justify-items: end; }
+.lvl.r { left: 50px; text-align: left; justify-items: start; }
+.lv.boss .lvl.l { right: 62px; } .lv.boss .lvl.r { left: 62px; }
+.lvl b { font-size: 16px; }
+.lv.locked .lvl b { color: var(--muted); }
+.lst { font-size: 21px; letter-spacing: 2px; line-height: 1.1; }
+.lst i { font-style: normal; color: var(--line); }
+.lst i.on { color: var(--sun); }
+.lsub { font-size: 13px; color: var(--muted); font-weight: 600; }
+.crown { font-size: 13px; font-weight: 800; color: #7b4bc4; background: rgba(123,75,196,.12); border-radius: 999px; padding: 1px 8px; margin-top: 2px; }
+.crown.mine { color: var(--good); background: var(--good-bg); }
+.lv.shake .lvb { animation: shake .35s; }
+.toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 30px); opacity: 0; z-index: 80; max-width: min(520px, 92vw); background: var(--ink); color: var(--sky); border-radius: 16px; padding: 12px 18px; font-weight: 700; font-size: 18px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,.25); pointer-events: none; transition: opacity .2s, transform .2s; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- results extras ---------- */
+.xtras { margin-top: 12px; display: grid; gap: 10px; }
+.xp { font-size: 40px; font-weight: 900; color: #c48a1d; line-height: 1.1; }
+.xp span { font-size: 22px; }
+.xline { font-weight: 800; font-size: 19px; }
+.rankup { display: grid; gap: 2px; padding: 14px; border-radius: 18px; background: linear-gradient(135deg, #fff3c4, #ffe08a); color: #1d2b45; font-weight: 900; font-size: 22px; border: 3px solid var(--sun); }
+.rankup b { font-size: 28px; }
+.xtras .unlocked { margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.record { padding: 12px 14px; border-radius: 16px; background: rgba(123,75,196,.12); color: var(--ink); font-size: 19px; font-weight: 700; }
+
+/* ---------- family challenge ---------- */
+.family { margin-top: 16px; background: var(--sand); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); padding: 16px 18px; }
+.fhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.fhead h2 { margin: 0; font-size: 23px; }
+.frow { display: grid; grid-template-columns: 40px 36px 1fr auto auto; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 14px; margin-top: 8px; background: var(--btn); border: 2px solid var(--line); }
+.frow.me { border-color: var(--teal); background: var(--teal-bg); }
+.fpos { font-size: 24px; text-align: center; font-weight: 800; color: var(--muted); }
+.femo { font-size: 28px; }
+.frow b { font-size: 19px; }
+.frank { color: var(--muted); font-size: 14px; font-weight: 700; text-align: right; }
+.fpts { font-weight: 900; font-variant-numeric: tabular-nums; min-width: 60px; text-align: right; }
+.fnote { color: var(--muted); font-size: 15px; margin: 10px 0 0; }
+@media (max-width: 480px) { .frank { display: none; } .frow { grid-template-columns: 36px 32px 1fr auto; } }
+.sheetbg { position: fixed; inset: 0; z-index: 70; background: rgba(17,26,43,.5); display: grid; place-items: center; padding: 16px; }
+.psheet { width: min(520px, 100%); background: var(--sand); border-radius: 26px; padding: 20px; box-shadow: 0 16px 40px rgba(0,0,0,.3); text-align: center; }
+.psheet h2 { margin: 0 0 14px; }
+.pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pbtn { display: grid; justify-items: center; gap: 2px; padding: 12px 6px; border-radius: 18px; border: 3px solid var(--line); background: var(--btn); cursor: pointer; box-shadow: 0 3px 0 var(--line); }
+.pbtn.on { border-color: var(--teal); background: var(--teal-bg); }
+.pbtn .emo { font-size: 40px; line-height: 1.1; }
+.pbtn b { font-size: 19px; }
+.pbtn span:last-child { font-size: 12px; color: var(--muted); font-weight: 700; }
+.psheet .ghost { margin-top: 14px; }
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 90; overflow: hidden; }
+.confetti i { position: absolute; top: -20px; width: 10px; height: 16px; border-radius: 3px; animation: fall 2s ease-in forwards; }
+@keyframes fall { to { top: 105%; transform: rotate(720deg) translateX(40px); opacity: .6; } }
+@keyframes glow { 50% { box-shadow: 0 5px 0 var(--block-edge), 0 0 0 10px rgba(242,181,68,.45); } }
+@keyframes popbig { 0% { transform: scale(.5); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+
 @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 @keyframes pop { 0% { transform: scale(.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes drawx { to { stroke-dashoffset: 0; } }
@@ -319,6 +418,7 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 @keyframes hl { from { background: rgba(242,181,68,.55); } to { background: transparent; } }
 .popin { animation: pop .35s ease-out; }
 @media (prefers-reduced-motion: reduce) {
+  .lv.cur .lvb, .lv.fresh .lvb, .lv.shake .lvb, .toast { animation: none; transition: none; }
   .popin, .opt.wrong, .sopt.wrong, .tw.oops, .tile.oops, .qw.bad, .blank.cur, .fill.new, .bubble, .lockmsg.shake { animation: none; }
   .qw svg.draw path { animation-duration: .01s; }
 }
@@ -327,15 +427,28 @@ button.qw:active { transform: translateY(2px); box-shadow: none; }
 <body>
 <div class="band" aria-hidden="true"></div>
 <main class="wrap" id="app" aria-live="polite"></main>
-<script src="ready.js?v=1" charset="utf-8"></script>
+<script src="ready.js?v=2" charset="utf-8"></script>
 <script>
 const $ = id => document.getElementById(id), app = $('app');
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const store = {
-  get(k, d) { try { const v = localStorage.getItem('chumash:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem('chumash:' + k, JSON.stringify(v)); } catch (e) {} }
+  key: k => k.startsWith('best') && player !== 'Jack' ? k + '@' + player : k,   /* best scores are kept for each player */
+  get(k, d) { try { const v = localStorage.getItem('chumash:' + store.key(k)); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('chumash:' + store.key(k), JSON.stringify(v)); } catch (e) {} }
 };
+/* ---------- who's playing: Jack, or someone else in the family on this iPad ----------
+   Jack's log entries have no `who`. Everyone else's have who: their name, so they never count
+   toward Jack's test checklist or his Progress page. Someone else's turn ends after 30 idle minutes. */
+const PLAYERS = [{ id: 'Jack', emo: '🦁' }, { id: 'Abba', emo: '🧔' }, { id: 'Ima', emo: '👩' }, { id: 'Atara', emo: '🦋' }, { id: 'Leora', emo: '🌸' }, { id: 'Aviva', emo: '🐬' }];
+const IDLE_MS = 30 * 60 * 1000;
+const whoOf = e => e.who || 'Jack';
+const pemo = id => (PLAYERS.find(p => p.id === id) || { emo: '🙂' }).emo;
+let player = 'Jack';
+function setPlayer(id) { player = PLAYERS.some(p => p.id === id) ? id : 'Jack'; store.set('player', { id: player, t: Date.now() }); }
+function touchPlayer() { if (player !== 'Jack') store.set('player', { id: player, t: Date.now() }); }
+function checkIdle() { const p = store.get('player', null); player = p && p.id !== 'Jack' && PLAYERS.some(x => x.id === p.id) && Date.now() - p.t < IDLE_MS ? p.id : 'Jack'; }
+checkIdle();
 
 /* ============================================================
    STEP 1: THE STORY (Bereishis 18:1-16, with the Rashis the test uses), in English.
@@ -719,26 +832,32 @@ const WORDS = [
 const ROUND = 12;
 
 /* ---------- shared results log (same browser), high scores, sending ---------- */
-function logAnswer(rec) { try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now(), game: 'chumash' }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
+function logAnswer(rec) {
+  if (rec.pts == null) rec.pts = rec.ok && !(EN_MODE(rec.mode) && !testMode && (helper || tapped)) ? 10 : 0;   /* points: worksheet answers need EN off */
+  if (player !== 'Jack') rec.who = player;
+  touchPlayer();
+  try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t: Date.now(), game: 'chumash' }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {} }
 const readLog = () => { try { return JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) { return []; } };
 const SKILL_LABEL = {}; CHUMASH_TEST.sections.forEach(sec => sec.skills.forEach(k => { SKILL_LABEL[k[0]] = k[1]; }));
 /* A test question was answered: ok = right on the first try. help = English help on, or a word was tapped. */
 function logSkill(skill, ok, src) {
   const help = !testMode && (helper || tapped);
-  logAnswer({ mode: src, skill, item: SKILL_LABEL[skill] || skill, ok: !!ok, help });
+  /* points: the practice test and Today's practice log only here; the other games already got points for the same answer */
+  logAnswer({ mode: src, skill, item: SKILL_LABEL[skill] || skill, ok: !!ok, help, pts: (src === 'ptest' || src === 'today') && ok && !help ? 10 : 0 });
   tapped = false;
   return help;
 }
 function logRound(rec) {
   const t = Date.now();
+  if (player !== 'Jack') rec.who = player;
+  touchPlayer();
   try { const a = JSON.parse(localStorage.getItem('jacklog') || '[]'); a.push(Object.assign({ t, round: true, game: 'chumash' }, rec)); if (a.length > 3000) a.splice(0, a.length - 3000); localStorage.setItem('jacklog', JSON.stringify(a)); } catch (e) {}
   return t;
 }
 function rankHTML(mode, low, t, total) {
-  let a = []; try { a = JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) {}
-  const rows = a.filter(e => e.round && e.game === 'chumash' && e.mode === mode && (total == null || e.total === total)).sort((x, y) => (low ? x.score - y.score : y.score - x.score) || x.t - y.t);
+  const rows = readLog().filter(e => e.round && e.game === 'chumash' && e.mode === mode && (total == null || e.total === total)).sort((x, y) => (low ? x.score - y.score : y.score - x.score) || x.t - y.t);
   const pos = rows.findIndex(r => r.t === t) + 1;
-  return `<div class="rank"><h3>High scores${pos ? ' · your rank #' + pos : ''}</h3>${rows.slice(0, 10).map((r, i) => `<div class="hsrow${r.t === t ? ' me' : ''}"><span>#${i + 1}</span><span>${esc(r.label)}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')}</div>`;
+  return roundExtras(mode, t) + `<div class="rank"><h3>Family high scores${pos ? ' · this round is #' + pos : ''}</h3>${rows.slice(0, 10).map((r, i) => `<div class="hsrow${r.t === t ? ' me' : ''}"><span>${i === 0 ? '👑' : '#' + (i + 1)}</span><span>${pemo(whoOf(r))} ${esc(whoOf(r))} · ${esc(r.label)}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')}</div>`;
 }
 /* After a round, send the log to the jack-progress repo if a token is saved on this iPad. Silent on failure. */
 async function sendLog() {
@@ -792,12 +911,14 @@ function wireEn() {
 function topbar(title, right = '') {
   return `<div class="topbar">
     <button class="iconbtn" id="homeBtn" aria-label="Back to the Chumash menu">‹ Menu</button>
-    <h1>${title}</h1>${right}${enBtnHTML()}
+    <h1>${title}</h1>${player !== 'Jack' ? `<span class="pchip">${pemo(player)} ${esc(player)}</span>` : ''}${right}${enBtnHTML()}
     <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button>
   </div>`;
 }
 function wireTop() {
-  hideGloss();
+  hideGloss(); closeSheet();
+  const x = document.querySelector('.result > .xtras'), big = x && x.parentElement.querySelector('.big');
+  if (big && big.nextElementSibling && big.nextElementSibling !== x) big.nextElementSibling.after(x);
   const h = $('homeBtn'); if (h) h.onclick = home;
   const s = $('sndBtn');
   if (s) s.onclick = () => { soundOn = !soundOn; store.set('sound', soundOn); s.textContent = soundOn ? '🔊' : '🔈'; };
@@ -862,83 +983,50 @@ const unlocked = () => store.get('storyDone', false);
 function home() {
   C = B = M = Q = S = F = W = D = P = SP = null; PAD = null;
   if (testMode) { testMode = false; applyHelper(); }
-  hideGloss();
-  const open = unlocked(), bs = store.get('bestStory', null);
-  const bc = store.get('bestCross2', null), bb = store.get('bestBuild2', null), bm = store.get('bestMatch', null), bv = store.get('bestWords', null);
+  hideGloss(); closeSheet(); checkIdle();
+  const isJack = player === 'Jack', st = levelState(), pts = pointsOf(player);
   let bw = null; try { bw = JSON.parse(localStorage.getItem('jackchumash') || 'null'); } catch (e) {}
-  const lock = `<button class="lockmsg" style="width:100%;border:none;cursor:pointer" data-lock="1">🔒 Read the story first (Step 1) to open this</button>`;
   app.innerHTML = `
     <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a><h1></h1>${enBtnHTML()}
       <button class="iconbtn" id="sndBtn" aria-label="Sound on or off">${soundOn ? '🔊' : '🔈'}</button></div>
     <div class="hero">
       <div class="t he" lang="he">פָּרָשַׁת וַיֵּרָא</div>
       <div class="s he" lang="he">פֶּרֶק יח · דַּפֵּי חֲזָרָה</div>
-      <p>First read the story. Then learn the words. Then practice the worksheet!</p>
       ${countdownHTML()}
     </div>
-    ${open ? readyCardHTML() : ''}
-    <section class="step${bs != null ? ' done' : ''}" id="step1">
-      <div class="sh"><span class="num">${bs != null ? '✓' : '1'}</span><div><h2>📖 The Story</h2><p>What happened at Avraham’s tent, in English, with questions as you read.</p></div></div>
-      <div class="row"><button class="btnbig" id="sStory">${bs != null ? 'Read it again' : 'Start here ›'}</button>${bs != null ? `<span class="best">Best: ${bs} / ${storyTotal()}</span>` : ''}</div>
-    </section>
-    <section class="step${open ? '' : ' locked'}">
-      <div class="sh"><span class="num">2</span><div><h2>🔤 Learn the Words</h2><p>The Hebrew words from the sheet and what they mean.</p></div></div>
-      ${open ? `<div class="row"><button class="btnbig" id="vFlip">🃏 Flip cards</button><button class="ghost" id="vMatch">🧩 Word Match</button>${bv != null ? `<span class="best">Best: ${plural(bv, 'mistake')}</span>` : ''}</div>` : lock}
-    </section>
-    <section class="step" id="stepSpell">
-      <div class="sh"><span class="num">✏️</span><div><h2>Spelling</h2><p>Spell the basic words from the sheet the way Morah writes them (no nekudot).</p></div></div>
-      <div class="spgot">You know <b>${spellKnown()} of ${SPELL.length}</b> words</div>
+    ${playerCardHTML(pts)}
+    ${isJack ? '' : `<section class="guest"><p>${pemo(player)} <b>${esc(player)}</b> is playing. Every level is open. Beat Jack’s best score on a level to take the 👑!</p><button class="btnbig" id="backJack">🦁 Switch back to Jack</button></section>`}
+    ${mapHTML(st)}
+    ${isJack ? readyCardHTML() : ''}
+    <section class="step">
+      <div class="sh"><span class="num">🎒</span><div><h2>Practice Room</h2><p>Always open, no locks. Study any time.</p></div></div>
       <div class="modes">
-        <button class="mode" id="spList"><div class="ico">📋</div><b>Spelling List</b><span>See all ${SPELL.length} words and say their letters</span></button>
-        <button class="mode" id="spBank"><div class="ico">🔤</div><b>Letter Bank</b><span>Tap the letters in order</span><span class="best">${spBest('bank', SP_ROUND)}</span></button>
-        <button class="mode" id="spKeys"><div class="ico">⌨️</div><b>Aleph-Bet Keys</b><span>Type the whole word, then check, like a test</span><span class="best">${spBest('keys', SP_ROUND)}</span></button>
-        <button class="mode" id="spWrite"><div class="ico">✍️</div><b>Look, Cover, Write</b><span>Write it with your finger, then check</span><span class="best">${spBest('write', SP_WROUND)}</span></button>
+        <button class="mode" id="mKey"><div class="ico">📝</div><b>Answer Key</b><span>Every question and the teacher’s answer</span></button>
+        <button class="mode" id="vFlip"><div class="ico">🃏</div><b>Flip Cards</b><span>The Hebrew words and what they mean</span></button>
+        <button class="mode" id="spList"><div class="ico">📋</div><b>Spelling List</b><span>All ${SPELL.length} words · you know ${spellKnown()}</span></button>
+        <button class="mode" id="todayBtn2"><div class="ico">⭐</div><b>Today’s Practice</b><span>10 questions Jack needs most</span></button>
+      </div>
+      <div class="row" style="justify-content:center">
+        <button class="ghost" id="wStudy">📚 The six words</button>
+        <button class="ghost" id="wQuiz">⭐ Six-word quiz${bw != null ? ` · best ${bw} / ${ROUND}` : ''}</button>
       </div>
     </section>
-    <section class="step${open ? '' : ' locked'}">
-      <div class="sh"><span class="num">3</span><div><h2>📝 The Worksheet</h2><p>Answer the questions just like the teacher’s answer key.</p></div></div>
-      ${open ? `<div class="modes">
-        <button class="mode" id="mKey"><div class="ico">📝</div><b>Answer Key</b><span>Read each question, say the answer, then check</span></button>
-        <button class="mode" id="mCross"><div class="ico">❌</div><b>Cross It Out</b><span>Cross out the question word, then finish the answer</span><span class="best">${bc != null ? `Best: ${bc} / ${crossTotal()}` : ''}</span></button>
-        <button class="mode" id="mBuild"><div class="ico">🧩</div><b>Build the Answer</b><span>Put the answer together, piece by piece</span><span class="best">${bb != null ? `Best: ${plural(bb, 'mistake')}` : ''}</span></button>
-        <button class="mode" id="mMatch"><div class="ico">✨</div><b>Malach Match</b><span>Match each malach to his job</span><span class="best">${bm != null ? `Best: ${plural(bm, 'mistake')}` : ''}</span></button>
-      </div>` : lock}
-    </section>
-    <section class="step${open ? '' : ' locked'}">
-      <div class="sh"><span class="num">4</span><div><h2>📚 More from the Review Sheet</h2><p>The rest of the review sheet: word endings and beginnings, who said it, true or false.</p></div></div>
-      ${open ? `<div class="modes">${Object.keys(DRILLS).map(k => { const d = DRILLS[k], b = store.get('bestD_' + k, null); return `<button class="mode" data-drill="${k}"><div class="ico">${d.ico}</div><b>${d.title}</b><span class="heb" lang="he">${d.he}</span><span>${bidi(d.blurb)}</span><span class="best">${b != null ? `Best: ${b} / ${drillTotal(k)}` : ''}</span></button>`; }).join('')}</div>` : lock}
-    </section>
-    <div class="sec">
-      <h2>The six words (roots and meanings)</h2>
-      <div class="row">
-        <button class="ghost" id="wStudy">📚 Study the words</button>
-        <button class="ghost" id="wQuiz">⭐ Word quiz${bw != null ? ` · best ${bw} / ${ROUND}` : ''}</button>
-      </div>
-    </div>
+    ${familyHTML()}
     <p class="foot">Tip: tap any Hebrew word to see what it means. The <b>EN</b> button turns English help on and off.</p>`;
+  mapW = app.clientWidth;
   wireTop();
-  $('sStory').onclick = () => startStory();
   wireReadyCard();
-  document.querySelectorAll('[data-lock]').forEach(b => b.onclick = () => {
-    nope(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
-    $('step1').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
-  if (open) {
-    $('vFlip').onclick = () => startFlip();
-    $('vMatch').onclick = startWordMatch;
-    $('mKey').onclick = answerKey;
-    $('mCross').onclick = startCross;
-    $('mBuild').onclick = startBuild;
-    $('mMatch').onclick = startMatch;
-    document.querySelectorAll('[data-drill]').forEach(b => b.onclick = () => startDrill(b.dataset.drill));
-  }
+  wireMap(st);
+  $('whoBtn').onclick = openSheet; $('whoBtn2').onclick = openSheet;
+  if ($('backJack')) $('backJack').onclick = () => { setPlayer('Jack'); tick(); home(); };
+  $('mKey').onclick = answerKey;
+  $('vFlip').onclick = () => startFlip();
   $('spList').onclick = spellList;
-  $('spBank').onclick = () => startSpell('bank');
-  $('spKeys').onclick = () => startSpell('keys');
-  $('spWrite').onclick = () => startSpell('write');
+  $('todayBtn2').onclick = () => startSession('today');
   $('wStudy').onclick = study;
   $('wQuiz').onclick = startQuiz;
   top0();
+  if (document.querySelector('.lv.fresh')) setTimeout(() => { const f = document.querySelector('.lv.fresh'); if (f) { f.scrollIntoView({ behavior: 'smooth', block: 'center' }); confetti(); fanfare(); } }, 500);
 }
 
 /* ============================================================ STEP 1: THE STORY */
@@ -1003,7 +1091,6 @@ function storyAnswer(btn, q) {
 function storyDone() {
   sendLog();
   const n = storyTotal(), s = S.score, stars = s === n ? 3 : s >= n - 2 ? 2 : s >= n - 5 ? 1 : 0;
-  const wasOpen = unlocked();
   store.set('storyDone', true);
   const best = store.get('bestStory', null), isBest = best == null || s > best;
   if (isBest) store.set('bestStory', s);
@@ -1014,10 +1101,9 @@ function storyDone() {
       ${starsHTML(stars)}
       <div class="big">${s} / ${n}</div>
       <div>${s === n ? 'Perfect! You know the whole story.' : stars >= 2 ? 'Great reading!' : 'Good try! Read it again to get more stars.'}${isBest && best != null ? ' New best!' : ''}</div>
-      ${wasOpen ? '' : '<div class="unlocked">🔓 You opened Step 2 and Step 3!</div>'}
       ${missed.length ? `<div class="reviewlist"><h3>Let’s look at these again</h3>${missed.map(q => `<div class="rv"><b>${esc(q.q)}</b><span>${esc(q.a[0])}</span></div>`).join('')}</div>` : ''}
       ${rankHTML('story', false, rt)}
-      <div class="actions"><button class="btnbig" id="toWords">Step 2: Learn the Words ›</button><button class="ghost" id="again">Read it again</button><button class="ghost" id="menu">Menu</button></div>
+      <div class="actions"><button class="btnbig" id="toWords">🃏 Learn the words ›</button><button class="ghost" id="again">Read it again</button><button class="ghost" id="menu">Menu</button></div>
     </div>`;
   wireTop();
   if (stars === 3) yay();
@@ -1097,7 +1183,7 @@ function wordMatchDone() {
       <div>${m === 0 ? 'No mistakes at all!' : plural(m, 'mistake') + '.'}${isBest && best != null ? ' New best!' : ''}</div>
       <div class="reviewlist">${set.map(v => `<div class="rv"><b class="he" lang="he" style="font-size:26px;text-align:right">${v.h}</b><span>${v.emo} ${esc(v.en)}</span></div>`).join('')}</div>
       ${rankHTML('words', true, rt)}
-      <div class="actions"><button class="btnbig" id="again">Match more words</button><button class="ghost" id="toSheet">Step 3: The Worksheet ›</button><button class="ghost" id="menu">Menu</button></div>
+      <div class="actions"><button class="btnbig" id="again">Match more words</button><button class="ghost" id="toSheet">🗺️ Level map</button><button class="ghost" id="menu">Menu</button></div>
     </div>`;
   wireTop();
   $('again').onclick = startWordMatch; $('toSheet').onclick = home; $('menu').onclick = home;
@@ -1560,6 +1646,211 @@ function drillDone() {
   $('again').onclick = () => startDrill(k); $('menu').onclick = home;
 }
 
+/* ============================================================
+   LEVELS, POINTS, RANKS AND THE FAMILY CHALLENGE
+   The menu is a map of levels. Each level is one game; its stars are the best stars from any round of
+   it (the same stars the results screen shows). A level opens when the one before it has 2 stars or
+   has been played 3 times, so Jack can never get stuck. A level he has already played stays open.
+   The Boss Level (the practice test) also opens by itself the day before the test.
+   Everyone else in the family has every level open.
+   Points: 10 for each answer right the first time (worksheet answers only count with English help
+   off), plus 50 for each star on the map. Points are added up from the log, so nothing is lost.
+   ============================================================ */
+const LEVELS = [
+  { mode: 'story', ico: '📖', name: 'The Story', go: () => startStory() },
+  { mode: 'words', ico: '🧩', name: 'Word Match', go: () => startWordMatch() },
+  { mode: 'cross', ico: '❌', name: 'Cross It Out', go: () => startCross() },
+  { mode: 'match', ico: '✨', name: 'Malach Match', go: () => startMatch() },
+  { mode: 'sp-bank', ico: '🔤', name: 'Spelling: Letter Bank', go: () => startSpell('bank') },
+  { mode: 'build', ico: '🧱', name: 'Build the Answer', go: () => startBuild() },
+  { drill: 'mimi' }, { drill: 'hipuch' },
+  { mode: 'sp-keys', ico: '⌨️', name: 'Spelling: Aleph-Bet Keys', go: () => startSpell('keys') },
+  { drill: 'tchiliyot' }, { drill: 'sofiyot' }, { drill: 'said' }, { drill: 'tf' },
+  { mode: 'sp-write', ico: '✍️', name: 'Spelling: Look, Cover, Write', go: () => startSpell('write') },
+  { mode: 'ptest', ico: '👑', name: 'BOSS: Practice Test', boss: true, go: () => startSession('test') }
+];
+LEVELS.forEach(L => { if (L.drill) Object.assign(L, { mode: 'd-' + L.drill, ico: DRILLS[L.drill].ico, name: DRILLS[L.drill].title, go: () => startDrill(L.drill) }); });
+const LOW_MODE = m => m === 'words' || m === 'match' || m === 'build';   /* scored by mistakes: fewer is better */
+function roundStars(e) {
+  const s = e.score, n = e.total;
+  if (e.mode === 'story') return s >= n ? 3 : s >= n - 2 ? 2 : s >= n - 5 ? 1 : 0;
+  if (e.mode === 'build') return s === 0 ? 3 : s <= 3 ? 2 : 1;
+  if (LOW_MODE(e.mode)) return s === 0 ? 3 : s <= 2 ? 2 : 1;
+  return s >= n ? 3 : s >= n - 2 ? 2 : s >= n / 2 ? 1 : 0;
+}
+const better = (a, b, low) => low ? a.score < b.score : a.score / a.total > b.score / b.total;
+const chRounds = () => readLog().filter(e => e.round && e.game === 'chumash');
+function bossDayName() { return new Date(CHUMASH_TEST.y, CHUMASH_TEST.m - 1, CHUMASH_TEST.d - 1).toLocaleDateString('en-US', { weekday: 'long' }); }
+/* each level for one player: stars, tries, cleared (2 stars or 3 tries) and open. skipT leaves out one round (to see "before"). */
+function levelState(who = player, skipT = null) {
+  const rs = chRounds().filter(e => whoOf(e) === who && e.t !== skipT);
+  const out = LEVELS.map(L => { const r = rs.filter(e => e.mode === L.mode); return { L, stars: r.reduce((m, e) => Math.max(m, roundStars(e)), 0), tries: r.length }; });
+  out.forEach((s, i) => {
+    s.passed = s.stars >= 2 || s.tries >= 3;
+    s.open = who !== 'Jack' || i === 0 || out[i - 1].passed || s.tries > 0 || (s.L.boss && chumashDaysLeft() <= 1);
+  });
+  return out;
+}
+/* points for one answer in the log */
+const EN_MODE = m => m === 'cross' || m === 'build' || m === 'match' || /^d-/.test(m || '');
+function entryPts(e) {
+  if (e.pts != null) return e.pts;
+  if (!e.ok) return 0;
+  if (e.skill) return (e.mode === 'ptest' || e.mode === 'today') && !e.help ? 10 : 0;
+  return EN_MODE(e.mode) ? 0 : 10;   /* from before points existed: worksheet answers then had no record of the EN help */
+}
+function pointsOf(who) {
+  let p = 0;
+  readLog().forEach(e => { if (e.game === 'chumash' && !e.round && whoOf(e) === who) p += entryPts(e); });
+  return p + 50 * levelState(who).reduce((s, x) => s + x.stars, 0);
+}
+const RANKS = [[0, '🐣', 'New Talmid'], [100, '⛺', 'Tent Helper'], [300, '💧', 'Water Carrier'], [600, '🍞', 'Bread Baker'],
+  [1000, '🐄', 'Calf Chaser'], [1500, '🏃', 'Zariz Runner'], [2200, '✨', 'Malach Spotter'], [3000, '🏠', 'Hachnasat Orchim Hero'],
+  [4000, '🌟', 'Chumash Star'], [5500, '👑', 'Chumash Master']];
+const rankOf = p => RANKS.reduce((k, r, i) => p >= r[0] ? i : k, 0);
+const rankName = i => `${RANKS[i][1]} ${RANKS[i][2]}`;
+/* the best round of each level, once two or more people have played it */
+function records() {
+  const out = {}, rs = chRounds();
+  LEVELS.forEach(L => {
+    const r = rs.filter(e => e.mode === L.mode);
+    if (new Set(r.map(whoOf)).size < 2) return;
+    out[L.mode] = r.reduce((b, e) => !b || better(e, b, LOW_MODE(L.mode)) ? e : b, null);
+  });
+  return out;
+}
+
+/* ---------- celebrations ---------- */
+function confetti() {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box = document.createElement('div'); box.className = 'confetti'; box.setAttribute('aria-hidden', 'true');
+  const cols = ['#f2b544', '#2f63c9', '#2b9a68', '#d9534f', '#2f9e8f', '#b06ad9'];
+  box.innerHTML = Array.from({ length: 46 }, (_, i) => `<i style="left:${Math.random() * 100}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * .5).toFixed(2)}s;animation-duration:${(1.6 + Math.random() * 1.2).toFixed(2)}s;transform:rotate(${Math.floor(Math.random() * 360)}deg)"></i>`).join('');
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 3400);
+}
+const fanfare = () => tone([523, 659, 784, 1047], .14);
+function toast(html) {
+  let t = $('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+  t.innerHTML = html; t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 3400);
+}
+/* what this round earned: points, new stars, a new rank, new levels, a family record. Goes at the top of the results. */
+function roundExtras(mode, t) {
+  const log = readLog(), me = player;
+  const mine = log.filter(e => e.game === 'chumash' && whoOf(e) === me);
+  const prev = mine.filter(e => e.round && e.t < t).reduce((m, e) => Math.max(m, e.t), 0);
+  const answers = mine.filter(e => !e.round && e.t > prev && e.t <= t);
+  let earned = answers.reduce((s, e) => s + entryPts(e), 0);
+  const helped = answers.some(e => e.ok && !entryPts(e));
+  const before = levelState(me, t), after = levelState(me), li = LEVELS.findIndex(L => L.mode === mode);
+  const newStars = li >= 0 ? Math.max(0, after[li].stars - before[li].stars) : 0;
+  earned += 50 * newStars;
+  const total = pointsOf(me), r0 = rankOf(total - earned), r1 = rankOf(total);
+  const opened = after.map((s, i) => s.open && !before[i].open ? i : -1).filter(i => i >= 0);
+  /* family record */
+  let rec = '';
+  const rs = log.filter(e => e.round && e.game === 'chumash' && e.mode === mode), cur = rs.find(e => e.t === t);
+  const low = LOW_MODE(mode), others = rs.filter(e => whoOf(e) !== me && e.t < t);
+  if (cur && others.length) {
+    const ob = others.reduce((b, e) => !b || better(e, b, low) ? e : b, null);
+    const myPrev = rs.filter(e => whoOf(e) === me && e.t < t).reduce((b, e) => !b || better(e, b, low) ? e : b, null);
+    if (better(cur, ob, low) && (!myPrev || !better(myPrev, ob, low))) rec = `🏆 <b>New family record!</b> You beat ${pemo(whoOf(ob))} ${esc(whoOf(ob))} (${esc(ob.label)}). You get the 👑!`;
+    else if (!better(ob, cur, low) && !better(cur, ob, low)) rec = `🤝 You tied ${pemo(whoOf(ob))} ${esc(whoOf(ob))}’s record (${esc(ob.label)}).`;
+    else if (better(ob, cur, low)) rec = `👑 ${pemo(whoOf(ob))} ${esc(whoOf(ob))} still holds the record: <b>${esc(ob.label)}</b>. Try again to beat it!`;
+  }
+  if (r1 > r0 || opened.length || rec.startsWith('🏆')) setTimeout(() => { confetti(); fanfare(); }, 350);
+  return `<div class="xtras">
+    <div class="xp popin">+${earned.toLocaleString()} <span>points</span></div>
+    ${helped && helper ? '<p class="rnote" style="margin:4px 0 0">Some answers had the EN help on, so they didn’t earn points. Turn EN off to earn more!</p>' : ''}
+    ${newStars ? `<div class="xline">${'⭐'.repeat(newStars)} New star${newStars > 1 ? 's' : ''} on ${esc(LEVELS[li].name)}! (+${50 * newStars})</div>` : ''}
+    ${r1 > r0 ? `<div class="rankup popin">🎉 RANK UP! 🎉<b>${rankName(r1)}</b></div>` : ''}
+    ${opened.map(i => `<div class="unlocked">🔓 Level ${i + 1} is open: ${LEVELS[i].ico} ${esc(LEVELS[i].name)}! <button class="btnbig sm" data-golv="${i}">Play it ›</button></div>`).join('')}
+    ${rec ? `<div class="record">${rec}</div>` : ''}
+  </div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-golv]'); if (b) { tick(); LEVELS[+b.dataset.golv].go(); } });
+
+/* ---------- the home screen parts ---------- */
+function playerCardHTML(pts) {
+  const rk = rankOf(pts), nx = RANKS[rk + 1], p = PLAYERS.find(x => x.id === player);
+  const pct = nx ? Math.round(100 * (pts - RANKS[rk][0]) / (nx[0] - RANKS[rk][0])) : 100;
+  return `<section class="pcard">
+    <button class="pav" id="whoBtn" aria-label="Who’s playing? Tap to change"><span class="emo">${p.emo}</span><span class="nm">${esc(p.id)} ▾</span></button>
+    <div class="pinfo">
+      <div class="prank">${rankName(rk)}</div>
+      <div class="ppts"><b>${pts.toLocaleString()}</b> points</div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="pnext">${nx ? `${(nx[0] - pts).toLocaleString()} more to ${nx[1]} <b>${nx[2]}</b>` : 'Top rank! You’re a Chumash Master!'}</div>
+    </div>
+  </section>
+  <p class="pnote">⭐ 10 points for every answer right the first time${helper ? ' (worksheet answers need <b>EN</b> off)' : ''}, and 50 for every star on the map.</p>`;
+}
+function mapHTML(st) {
+  const n = st.length, W = Math.max(300, (app.clientWidth || 700) - 28), rowH = 124, top = 64, H = top + (n - 1) * rowH + 90;
+  const xs = st.map((_, i) => 50 + 25 * Math.sin(i * 1.05)), ys = st.map((_, i) => top + i * rowH);
+  let d = `M ${xs[0].toFixed(1)} ${ys[0]}`;
+  for (let i = 1; i < n; i++) { const my = (ys[i - 1] + ys[i]) / 2; d += ` C ${xs[i - 1].toFixed(1)} ${my}, ${xs[i].toFixed(1)} ${my}, ${xs[i].toFixed(1)} ${ys[i]}`; }
+  const cur = st.findIndex(s => s.open && !s.passed), recs = records();
+  const seen = store.get('seen@' + player, null), fresh = seen ? st.map((s, i) => s.open && !seen.includes(s.L.mode) ? i : -1).filter(i => i >= 0) : [];
+  store.set('seen@' + player, st.filter(s => s.open).map(s => s.L.mode));
+  const cleared = st.filter(s => s.passed).length, stars = st.reduce((a, s) => a + s.stars, 0);
+  const node = (s, i) => {
+    const x = xs[i], left = x >= 50, room = (left ? x : 100 - x) / 100 * W - 56, lw = Math.max(110, Math.min(200, Math.round(room)));
+    const cls = [s.L.boss ? 'boss' : '', !s.open ? 'locked' : s.passed ? 'cleared' : 'open', i === cur ? 'cur' : '', fresh.includes(i) ? 'fresh' : ''].join(' ');
+    const r = recs[s.L.mode], rh = r ? whoOf(r) : '';
+    const recTag = r ? `<span class="crown${rh === player ? ' mine' : ''}">👑 ${rh === player ? 'You' : esc(rh)}: ${esc(r.label)}${rh !== player ? ' · beat it!' : ''}</span>` : '';
+    const sub = !s.open ? (s.L.boss ? `Opens ${bossDayName()}, or clear level ${n - 1}` : `Get ⭐⭐ on level ${i} to open`) : '';
+    return `<div class="lv ${cls}" style="left:${x.toFixed(1)}%;top:${ys[i]}px">
+      <button class="lvb" data-lv="${i}" aria-label="Level ${i + 1}: ${esc(s.L.name)}${s.open ? '' : ' (locked)'}"><span class="lico">${s.L.ico}</span>${!s.open ? '<span class="lock">🔒</span>' : ''}${i === cur ? '<span class="play">PLAY</span>' : ''}${fresh.includes(i) ? '<span class="newb">NEW!</span>' : ''}</button>
+      <div class="lvl ${left ? 'l' : 'r'}" style="width:${lw}px"><b>${i + 1}. ${esc(s.L.name)}</b>
+        ${s.open ? `<span class="lst">${[0, 1, 2].map(k => `<i class="${k < s.stars ? 'on' : ''}">★</i>`).join('')}</span>` : `<span class="lsub">${sub}</span>`}${recTag}</div>
+    </div>`;
+  };
+  return `<section class="mapwrap" id="mapSec">
+    <div class="maphead"><h2>🗺️ Level Map</h2><span>${cleared} of ${n} cleared · ⭐ ${stars} of ${n * 3}</span></div>
+    ${cur >= 0 ? `<button class="btnbig wide" style="margin-top:10px" data-golv="${cur}">▶ Play level ${cur + 1}: ${st[cur].L.ico} ${esc(st[cur].L.name)}</button>` : `<div class="unlocked">🏆 Every level is cleared! Go for ⭐⭐⭐ everywhere.</div>`}
+    <div class="map" style="height:${H}px">
+      <svg class="trail" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" vector-effect="non-scaling-stroke"/></svg>
+      <div class="mstart" style="left:${xs[0].toFixed(1)}%">⛺ Start</div>
+      ${st.map(node).join('')}
+    </div>
+  </section>`;
+}
+function wireMap(st) {
+  document.querySelectorAll('[data-lv]').forEach(b => b.onclick = () => {
+    const i = +b.dataset.lv, s = st[i];
+    if (s.open) { tick(); return s.L.go(); }
+    nope(); b.parentElement.classList.remove('shake'); void b.offsetWidth; b.parentElement.classList.add('shake');
+    toast(s.L.boss ? `👑 The Boss Level opens ${bossDayName()}, or as soon as you clear level ${st.length - 1}!` : `🔒 Get ⭐⭐ on level ${i}, ${esc(st[i - 1].L.name)}, to open this one (or play it 3 times).`);
+  });
+}
+function familyHTML() {
+  const played = new Set(['Jack']); readLog().forEach(e => { if (e.game === 'chumash' && e.who) played.add(e.who); });
+  const rows = PLAYERS.filter(p => played.has(p.id)).map(p => ({ p, pts: pointsOf(p.id) })).sort((a, b) => b.pts - a.pts);
+  return `<section class="family">
+    <div class="fhead"><h2>🏆 Family Challenge</h2><button class="ghost sm" id="whoBtn2">👥 Who’s playing?</button></div>
+    ${rows.map((r, i) => `<div class="frow${r.p.id === player ? ' me' : ''}"><span class="fpos">${['🥇', '🥈', '🥉'][i] || '#' + (i + 1)}</span><span class="femo">${r.p.emo}</span><b>${esc(r.p.id)}</b><span class="frank">${rankName(rankOf(r.pts))}</span><span class="fpts">${r.pts.toLocaleString()}</span></div>`).join('')}
+    <p class="fnote">${rows.length < 2 ? 'Can anyone beat Jack? Tap <b>Who’s playing?</b>, pick your name and play any level. Beat his score to take the 👑!' : 'Beat someone’s best score on a level to take the 👑.'} Only Jack’s answers count toward his test checklist.</p>
+  </section>`;
+}
+function closeSheet() { const d = $('sheetBg'); if (d) d.remove(); }
+function openSheet() {
+  closeSheet();
+  const d = document.createElement('div'); d.id = 'sheetBg'; d.className = 'sheetbg';
+  d.innerHTML = `<div class="psheet popin" role="dialog" aria-label="Who’s playing?"><h2>Who’s playing?</h2>
+    <div class="pgrid">${PLAYERS.map(p => `<button class="pbtn${p.id === player ? ' on' : ''}" data-p="${p.id}"><span class="emo">${p.emo}</span><b>${esc(p.id)}</b><span>${rankName(rankOf(pointsOf(p.id)))}</span></button>`).join('')}</div>
+    <p class="fnote">Everyone plays on this iPad and shows up on the same high-score lists. After 30 minutes without playing, it switches back to Jack.</p>
+    <button class="ghost" id="sheetClose">Close</button></div>`;
+  document.body.appendChild(d);
+  d.onclick = e => { if (e.target === d) closeSheet(); };
+  d.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { setPlayer(b.dataset.p); tick(); closeSheet(); home(); });
+  $('sheetClose').onclick = closeSheet;
+}
+let mapW = 0;
+window.addEventListener('resize', () => { if ($('mapSec') && Math.abs(app.clientWidth - mapW) > 30) { const y = window.scrollY; home(); window.scrollTo(0, y); } });
+
 /* ============================================================ READY FOR THE TEST?
    The checklist on the Chumash page, Today's practice (weakest questions first, at most two from each part)
    and the practice test (a few questions from every part, one try each, English help off). */
@@ -1572,7 +1863,7 @@ function readyCardHTML() {
     <div class="bar"><i style="width:${pct}%"></i></div>
     <div class="rlist">${R.sections.map(s => `<button class="rrow ${s.state}" data-go="${s.id}"><span class="ricon">${s.state === 'ready' ? '✓' : s.state === 'practicing' ? '½' : ''}</span><span class="rname">${esc(s.name)}${s.he ? ` <bdi lang="he">${s.he}</bdi>` : ''}</span><span class="rcount">${s.ready}/${s.total}</span><span class="rmini"><i style="width:${Math.round(100 * s.ready / s.total)}%"></i></span></button>`).join('')}</div>
     <p class="rnote">${helper ? '⚠️ The <b>EN</b> help is on. Questions only turn green when you answer them right with EN off.' : 'A question turns green when you get it right the first time, with no help.'}</p>
-    <div class="row"><button class="btnbig" id="todayBtn">⭐ Today’s practice</button><button class="ghost" id="ptestBtn">📝 Practice test</button></div>
+    <div class="row"><button class="btnbig" id="todayBtn">⭐ Today’s practice</button>${levelState().find(s => s.L.boss).open ? '<button class="ghost" id="ptestBtn">👑 Practice test (Boss Level)</button>' : `<span class="best">👑 The practice test is the Boss Level. It opens ${bossDayName()}!</span>`}</div>
   </section>`;
 }
 function wireReadyCard() {
@@ -1582,7 +1873,7 @@ function wireReadyCard() {
     if (id === 'sheet1' || id === 'sheet2') startCross(); else if (id === 'mal') startMatch(); else startDrill(id);
   });
   $('todayBtn').onclick = () => startSession('today');
-  $('ptestBtn').onclick = () => startSession('test');
+  if ($('ptestBtn')) $('ptestBtn').onclick = () => startSession('test');
 }
 function buildTest() {
   return SECS.flatMap(sec => shuffle(sec.skills.map(k => k[0])).slice(0, TEST_PLAN[sec.id] || 1).map(id => Object.assign(makeItem(id), { sec: sec.id })));
@@ -1675,7 +1966,7 @@ function sessDone() {
       ${helped ? `<p class="rnote">${helped} ${helped === 1 ? 'answer' : 'answers'} had English help, so ${helped === 1 ? 'it doesn’t' : 'they don’t'} count toward Ready yet. Try them again with EN off.</p>` : ''}
       <div class="secres">${SECS.filter(s => per[s.id]).map(s => `<div class="srow2 ${per[s.id][0] === per[s.id][1] ? '' : 'no'}"><span>${esc(s.name)}</span><b>${per[s.id][0]} / ${per[s.id][1]}</b></div>`).join('')}</div>
       ${missed.length ? `<div class="reviewlist"><h3>Look at these again</h3>${missed.map(it => `<div class="rv"><div class="dshow" lang="he">${it.show}</div><span>${bidi(it.answer)}</span></div>`).join('')}</div>` : ''}
-      ${k === 'test' ? rankHTML('ptest', false, rt, n) : ''}
+      ${k === 'test' ? rankHTML('ptest', false, rt, n) : roundExtras('today', rt)}
       <div class="actions"><button class="btnbig" id="again">${k === 'test' ? 'Take it again' : 'Practice more'}</button><button class="ghost" id="menu">Menu</button></div>
     </div>`;
   wireTop();
@@ -1694,7 +1985,7 @@ const heL = c => `<bdi class="he hl" lang="he">${c}</bdi>`;
 /* each word's latest result in any spelling mode: right / missed / new */
 function spellStatus() {
   const st = {};
-  readLog().forEach(e => { if (e.game === 'chumash' && e.spell && e.w) st[e.w] = e.ok ? 'right' : 'missed'; });
+  readLog().forEach(e => { if (e.game === 'chumash' && e.spell && e.w && whoOf(e) === player) st[e.w] = e.ok ? 'right' : 'missed'; });
   return st;
 }
 const spBest = (k, n) => { const b = store.get('bestSp_' + k, null); return b != null ? `Best: ${b} / ${n}` : ''; };

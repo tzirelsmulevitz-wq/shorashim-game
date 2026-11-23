@@ -47,7 +47,7 @@ h3 { font-size: 17px; color: var(--muted); margin: 14px 0 6px; }
 <body>
 <main class="wrap">
   <div class="topbar"><a class="iconbtn" href="../">‹ Jack's Games</a><h1>High Scores</h1></div>
-  <p class="sub">The top 10 rounds for each game, best first. Scores come from this iPad, plus any sent to Claude.</p>
+  <p class="sub">The top 10 rounds for each game, best first. In Chumash, anyone in the family can play (tap “Who’s playing?”). Scores come from this iPad, plus any sent to Claude.</p>
   <div id="boards"></div>
 </main>
 <script>
@@ -67,7 +67,7 @@ function render() {
       const rows = all.filter(e => e.game === g.game && e.mode === m.mode)
         .sort((x, y) => (m.low ? x.score - y.score : y.score - x.score) || x.t - y.t).slice(0, 10);
       return `<h3>${m.name}</h3><div class="card">${rows.length
-        ? rows.map((r, i) => `<div class="hsrow"><span>#${i + 1}</span><span>${esc(r.label)}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')
+        ? rows.map((r, i) => `<div class="hsrow"><span>${i === 0 ? '👑' : '#' + (i + 1)}</span><span>${esc(r.who || 'Jack')} · ${esc(r.label)}</span><span>${new Date(r.t).toLocaleDateString()}</span></div>`).join('')
         : '<div class="empty">No rounds yet.</div>'}</div>`;
     }).join('')}`).join('');
 }

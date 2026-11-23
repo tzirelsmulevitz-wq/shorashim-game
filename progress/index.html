@@ -103,9 +103,10 @@ h3 { font-size: 17px; margin: 16px 0 6px; }
   </div>
   <div id="status" role="status"></div>
 </main>
-<script src="../chumash/ready.js?v=1" charset="utf-8"></script>
+<script src="../chumash/ready.js?v=2" charset="utf-8"></script>
 <script>
 const NAMES = { times: 'Times Tables', shorashim: 'Shorashim', vocab: 'Vocabulary', chumash: 'Chumash' };
+const jackOnly = a => a.filter(e => !e.who || e.who === 'Jack');   /* others in the family can play the Chumash game too */
 function load() { try { return JSON.parse(localStorage.getItem('jacklog') || '[]'); } catch (e) { return []; } }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -156,7 +157,7 @@ async function fetchRemote() {
   setSrc();
 }
 function render() {
-  const entries = current(), { byGame, items } = summarize(entries);
+  const entries = jackOnly(current()), { byGame, items } = summarize(entries);
   renderReady(entries);
   const totals = Object.keys(NAMES).map(k => {
     const g = byGame[k];
@@ -172,7 +173,7 @@ function render() {
 }
 
 function report() {
-  const entries = current(), { byGame, items } = summarize(entries);
+  const entries = jackOnly(current()), { byGame, items } = summarize(entries);
   const lines = ['Jack\'s game results (from the Progress page, ' + new Date().toLocaleString() + ')', ''];
   if (typeof chumashReadiness === 'function') {
     const R = chumashReadiness(entries);
